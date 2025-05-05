@@ -1,0 +1,32 @@
+button {
+  font-size: inherit;
+  text-transform: inherit;
+  font-weight: inherit;
+}
+
+input {
+  background: none;
+}
+select {
+  font-size: inherit;
+}
+/* Specific to webkit browsers (Safari, Chrome) */
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Hide number input arrows for all major browsers */
+input.no-arrows[type='number']::-webkit-inner-spin-button,
+input.no-arrows[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input.no-arrows[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Optional: For Internet Explorer/Edge */
+input.no-arrows[type='number']::-ms-clear {
+  display: none;
+}

@@ -1,0 +1,43 @@
+@import 'reset.css';
+@import 'fonts.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-lavender: #dbc2ff;
+
+  --color-img-overlay-1: rgba(255, 0, 0, 0.5);
+  --color-panels-1: color-mix(in srgb, var(--color-lavender) 55%, transparent);
+
+  --blendmode-img-overlay-1: difference;
+
+  --btn-bevel-bg: #d1acd9b3;
+  --btn-bevel-bg-inset: #02ffbe; /*magenta; /*#be99d478;*/
+  --btn-bevel-bg-inset-hinrg: #eeff00; /*red; /*#be99d478;*/
+  --btn-bevel-bg-inset-hover: #be99d478;
+  --btn-bevel-base-color: rgba(255, 255, 255, 1);
+
+  --btn-shiny-whitept: rgb(116, 185, 184); /*rgb(183, 226, 225);*/
+}
+
+*:focus {
+  @apply outline-none;
+}
+/* *:focus-visible{
+  @apply bg-[rgba(0,255,255,0.75)]
+} */
+input:focus {
+  @apply outline-none bg-[#FDF4FF];
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
