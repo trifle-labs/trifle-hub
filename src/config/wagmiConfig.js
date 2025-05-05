@@ -1,6 +1,6 @@
 import { createAppKit } from '@reown/appkit/vue'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
-import { base, mainnet } from '@reown/appkit/networks'
+import { mainnet, base } from '@reown/appkit/networks'
 
 // 1. Get projectId from https://cloud.reown.com
 const projectId = import.meta.env.VITE_REOWN_ID

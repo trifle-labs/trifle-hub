@@ -55,6 +55,18 @@ import { Index as TrifleHub } from 'balls-hub'
 import 'balls-hub/dist/style.css'
 ```
 
+4. Using the wagmiConfig:
+```javascript
+import { wagmiConfig } from 'balls-hub'
+
+// Use the wagmiConfig with @wagmi/vue hooks
+import { useAccount } from '@wagmi/vue'
+
+const { address, isConnected } = useAccount({
+  config: wagmiConfig
+})
+```
+
 ### Development Workflow
 
 1. Make changes to the component library
