@@ -13,12 +13,11 @@
   },
   "peerDependencies": {
     "vue": "^3.0.0",
-    "@reown/appkit/vue": "*",
+    "@reown/appkit": "*",
     "@wagmi/vue": "*",
     "@wagmi/core": "*",
     "vue-router": "^4.0.0",
-    "@reown/appkit-adapter-wagmi": "*",
-    "@reown/appkit/networks": "*"
+    "@reown/appkit-adapter-wagmi": "*"
   },
   "dependencies": {
     "@vueuse/core": "^10.0.0",

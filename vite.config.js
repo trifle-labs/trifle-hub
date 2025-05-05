@@ -14,22 +14,24 @@ export default defineConfig({
     rollupOptions: {
       external: [
         'vue',
+        '@reown/appkit',
         '@reown/appkit/vue',
+        '@reown/appkit/networks',
         '@wagmi/vue',
         '@wagmi/core',
         'vue-router',
-        '@reown/appkit-adapter-wagmi',
-        '@reown/appkit/networks'
+        '@reown/appkit-adapter-wagmi'
       ],
       output: {
         globals: {
           vue: 'Vue',
+          '@reown/appkit': 'Appkit',
           '@reown/appkit/vue': 'AppkitVue',
+          '@reown/appkit/networks': 'AppkitNetworks',
           '@wagmi/vue': 'WagmiVue',
           '@wagmi/core': 'WagmiCore',
           'vue-router': 'VueRouter',
-          '@reown/appkit-adapter-wagmi': 'AppkitAdapterWagmi',
-          '@reown/appkit/networks': 'AppkitNetworks'
+          '@reown/appkit-adapter-wagmi': 'AppkitAdapterWagmi'
         }
       }
     }
