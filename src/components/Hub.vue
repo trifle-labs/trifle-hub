@@ -1,18 +1,18 @@
 <template>
   <div
     id="hub"
-    class="fixed left-0 top-0 w-full h-full pointer-events-none select-none font-sans text-md sm:text-sans-base"
+    class="_fixed _left-0 _top-0 _w-full _h-full _pointer-events-none _select-none _font-sans _text-md sm:_text-sans-base"
   >
     <!-- (tap bg to close) -->
     <button
       v-show="hubOpen"
-      class="absolute top-0 left-0 w-full h-full pointer-events-auto"
+      class="_absolute _top-0 _left-0 _w-full _h-full _pointer-events-auto"
       @click="hubOpen = false"
     ></button>
     <!-- hub menu button / labels -->
-    <div class="absolute z-10 bottom-0 left-0 p-2 sm:p-4">
+    <div class="_absolute _z-10 _bottom-0 _left-0 _p-2 sm:_p-4">
       <button
-        class="size-16 rounded-full bg-zinc-500 flex items-center justify-center pointer-events-auto"
+        class="_size-16 _rounded-full _bg-zinc-500 _flex _items-center _justify-center _pointer-events-auto"
         @click="hubOpen = !hubOpen"
       >
         {{ hubOpen ? 'X' : '' }}
@@ -22,11 +22,11 @@
     <transition name="slide-up-fade-in-scale-up">
       <aside
         v-if="hubOpen"
-        class="absolute bottom-0 left-0 w-full h-full px-1 pb-1 pt-3 sm:pt-10 flex sm:pb-12 sm:pl-24 max-w-[36rem] max-h-[60rem] z-10"
+        class="_absolute _bottom-0 _left-0 _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_pl-24 _max-w-[36rem] _max-h-[60rem] _z-10"
       >
         <!-- panel -->
         <div
-          class="w-full pointer-events-auto flex flex-col animate-float relative overflow-hidden"
+          class="_w-full _pointer-events-auto _flex _flex-col _animate-float _relative _overflow-hidden"
           :style="{
             'border-image-source': `url(${borderImg})`,
             'border-image-slice': '82 95 77 92 fill',
@@ -40,7 +40,7 @@
           }"
         >
           <div
-            class="absolute top-0 left-0 w-full h-full opacity-[0.6] bg-cover bg-center"
+            class="_absolute _top-0 _left-0 _w-full _h-full _opacity-[0.6] _bg-cover _bg-center"
             :style="`background-image: url(${bgImg})`"
           ></div>
           <!-- <div class="w-full flex justify-between pt-3 px-4.5 absolute top-0 right-0 z-10">
@@ -48,66 +48,66 @@
             <div class="text-lg">32 🪩 4<sup>th</sup></div>
           </div> -->
           <nav
-            class="order-last w-full flex justify-between items-end pb-4.5 sm:pb-6 leading-snug pl-3.5 pr-5 sm:pl-6 sm:pr-9 tracking-[-0.01em] -mt-7 sm:-mt-12 relative z-10 sm:text-[1.1em]"
+            class="_order-last _w-full _flex _justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug _pl-3.5 _pr-5 sm:_pl-6 sm:_pr-9 _tracking-[-0.01em] _-mt-7 sm:_-mt-12 _relative _z-10 sm:_text-[1.1em]"
           >
             <button
-              class="flex flex-col items-center -mr-6"
+              class="_flex _flex-col _items-center _-mr-6"
               @click="openHub('games')"
-              :class="{ underline: props.hubPageKey === 'games' }"
+              :class="{ '_underline': props.hubPageKey === 'games' }"
             >
               <img
                 src="../assets/imgs/gigi-tilt-heads.png"
                 alt="fidget spinner creature, Titl standing on black cat, GiGi's head"
-                class="h-[5em] sm:h-[6em] origin-bottom"
-                :class="{ 'animate-wiggle-sm': props.hubPageKey === 'games' }"
+                class="_h-[5em] sm:_h-[6em] _origin-bottom"
+                :class="{ '_animate-wiggle-sm': props.hubPageKey === 'games' }"
               />
               games
             </button>
             <button
-              class="flex flex-col items-center gap-2"
+              class="_flex _flex-col _items-center _gap-2"
               @click="openHub('leaderboard')"
-              :class="{ underline: props.hubPageKey === 'leaderboard' }"
+              :class="{ '_underline': props.hubPageKey === 'leaderboard' }"
             >
               <img
                 src="../assets/imgs/trifle-trophyy-sm.png"
                 alt="🏆"
-                class="h-11 sm:h-13 origin-bottom"
-                :class="{ 'animate-wiggle': props.hubPageKey === 'leaderboard' }"
+                class="_h-11 sm:_h-13 _origin-bottom"
+                :class="{ '_animate-wiggle': props.hubPageKey === 'leaderboard' }"
               />
               leaderboard
             </button>
             <button
-              class="flex flex-col items-center gap-2 -ml-2"
+              class="_flex _flex-col _items-center _gap-2 _-ml-2"
               @click="openHub('earn')"
-              :class="{ underline: props.hubPageKey === 'earn' }"
+              :class="{ '_underline': props.hubPageKey === 'earn' }"
             >
               <img
                 src="../assets/imgs/disco-ball-on-graph.png"
                 alt="📈🪩"
-                class="h-11 sm:h-14 origin-bottom"
-                :class="{ 'animate-wiggle': props.hubPageKey === 'earn' }"
+                class="_h-11 sm:_h-14 _origin-bottom"
+                :class="{ '_animate-wiggle': props.hubPageKey === 'earn' }"
               />
               earn
             </button>
             <button
-              class="flex flex-col items-center gap-2"
+              class="_flex _flex-col _items-center _gap-2"
               @click="openHub('account')"
-              :class="{ underline: props.hubPageKey === 'account' }"
+              :class="{ '_underline': props.hubPageKey === 'account' }"
             >
               <!-- <div
-                class="size-11 sm:size-13 rounded-full bg-zinc-400 origin-bottom"
-                :class="{ 'animate-wiggle': props.hubPageKey === 'account' }"
+                class="_size-11 sm:_size-13 _rounded-full _bg-zinc-400 _origin-bottom"
+                :class="{ '_animate-wiggle': props.hubPageKey === 'account' }"
               ></div> -->
               <img
                 src="../assets/imgs/smiley-face-dashed-outline.svg"
                 alt="smiley face with dashed outline"
-                class="size-[3.1em] sm:size-[3.5em] -mb-[0.5em] origin-bottom"
-                :class="{ 'animate-wiggle': props.hubPageKey === 'account' }"
+                class="_size-[3.1em] sm:_size-[3.5em] _-mb-[0.5em] _origin-bottom"
+                :class="{ '_animate-wiggle': props.hubPageKey === 'account' }"
               />
               account
             </button>
           </nav>
-          <div class="flex-1 flex overflow-y-scroll select-text relative">
+          <div class="_flex-1 _flex _overflow-y-scroll _select-text _relative">
             <component :is="hubPage.component" />
           </div>
         </div>
@@ -152,11 +152,11 @@ const { openHub } = inject('hub')
   }
 }
 
-.animate-float {
+._animate-float {
   animation: float 4s ease-in-out infinite;
 }
 
-.overflow-y-scroll-masked {
+._overflow-y-scroll-masked {
   overflow-y: scroll;
   padding-top: 1rem;
   padding-bottom: 3.75rem;

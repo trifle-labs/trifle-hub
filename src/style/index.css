@@ -22,22 +22,46 @@
 }
 
 *:focus {
-  @apply outline-none;
+  @apply _outline-none;
 }
 /* *:focus-visible{
   @apply bg-[rgba(0,255,255,0.75)]
 } */
 input:focus {
-  @apply outline-none bg-[#FDF4FF];
+  @apply _outline-none _bg-[#FDF4FF];
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
-.no-scrollbar::-webkit-scrollbar {
+._no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
+._no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+._bubble-btn {
+  border-radius: 10px;
+  border-image-source: url(../assets/imgs/bubblegum-recess.png);
+  border-image-slice: 82 95 77 92 fill;
+  border-image-width: 17px;
+  border-image-outset: 0px;
+  border-image-repeat: stretch;
+  background-color: transparent;
+  user-select: none;
+  margin: -4px -8px -5px -8px;
+}
+._bubble-btn:active:not([disabled]) {
+  border-image-width: 15px;
+}
+._bubble-btn:active:not([disabled]) > * {
+  transform: scale(0.995);
+  transform-origin: center;
+}
+@media (hover: hover) {
+  ._bubble-btn:hover {
+    border-image-width: 19px;
+  }
 }

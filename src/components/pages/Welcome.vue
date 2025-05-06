@@ -34,21 +34,21 @@
     </div>
   </div> -->
 
-  <div class="w-full relative pt-5 px-1.5 pb-3 flex">
-    <div class="w-full relative">
+  <div class="_w-full _relative _pt-5 _px-1.5 _pb-3 _flex">
+    <div class="_w-full _relative">
       <img
         src="../../assets/imgs/trifle-masthead-for-embossing.png"
-        class="absolute top-[5%] left-0 w-[110%] h-[95%] object-contain object-center pointer-events-none"
+        class="_absolute _top-[5%] _left-0 _w-[110%] _h-[95%] _object-contain _object-center _pointer-events-none"
         style="opacity: 0.06; mix-blend-mode: difference"
       />
       <img
         src="../../assets/imgs/gigi-tilt-welcome+bubbles.png"
-        class="absolute h-auto max-h-full max-w-full w-auto bottom-0 left-1/2 -translate-x-1/2 pointer-events-none"
+        class="_absolute _h-auto _max-h-full _max-w-full _w-auto _bottom-0 _left-1/2 _-translate-x-1/2 _pointer-events-none"
       />
       <!-- TODO: hide if connected wallet already? -->
       <img
         src="../../assets/imgs/gigi-tilt-welcome+bubbles-BOTTOM.png"
-        class="absolute h-auto max-h-full max-w-full w-auto bottom-0 left-1/2 -translate-x-1/2 pointer-events-none"
+        class="_absolute _h-auto _max-h-full _max-w-full _w-auto _bottom-0 _left-1/2 _-translate-x-1/2 _pointer-events-none"
       />
     </div>
   </div>

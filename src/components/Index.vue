@@ -18,7 +18,7 @@ const wagmiConfig = inject('wagmiConfig')
 /* HUB OPEN/CLOSE */
 const route = useRoute()
 const hubOpen = ref(route.query.hub !== undefined)
-const hubPageKey = ref(route.query.hub || sessionStorage.getItem('hubPageKey') || 'welcome')
+const hubPageKey = ref('welcome') //route.query.hub || sessionStorage.getItem('hubPageKey') || 'welcome')
 
 provide('hub', {
   hubOpen,
