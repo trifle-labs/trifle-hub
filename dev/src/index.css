@@ -1,0 +1,7 @@
+/* balls-hub component styles */
+@import '../../src/style/index.css';
+
+/* dev styles */
+button{
+  @apply _px-2 _border;
+}

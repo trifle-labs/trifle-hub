@@ -1,7 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   prefix: '_',
-  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+  content: [
+    // for vite build
+    './src/**/*.{vue,js,ts,jsx,tsx}',
+    // for local dev from /dev
+    '../src/**/*.{vue,js,ts,jsx,tsx}'
+  ],
   theme: {
     extend: {
       spacing: { 4.5: '1.125rem', 5.5: '1.375rem', 13: '3.25rem', 18: '4.5rem' },
