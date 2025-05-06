@@ -7,11 +7,13 @@
 import { useAppKit, useAppKitEvents } from '@reown/appkit/vue'
 import { useAccount, useDisconnect } from '@wagmi/vue'
 import { signMessage } from '@wagmi/core'
-import { computed, provide, ref, watch } from 'vue'
-import { wagmiConfig } from '../config/wagmiConfig'
+import { computed, inject, provide, ref, watch } from 'vue'
+// import { wagmiConfig } from '../config/wagmiConfig'
 import { useRoute } from 'vue-router'
 import hubPages from './pages/config'
 import Hub from './Hub.vue'
+
+const wagmiConfig = inject('wagmiConfig')
 
 /* HUB OPEN/CLOSE */
 const route = useRoute()
