@@ -8,7 +8,6 @@ import { useAppKit, useAppKitEvents } from '@reown/appkit/vue'
 import { useAccount, useDisconnect } from '@wagmi/vue'
 import { signMessage } from '@wagmi/core'
 import { computed, inject, provide, ref, watch } from 'vue'
-// import { wagmiConfig } from '../config/wagmiConfig'
 import { useRoute } from 'vue-router'
 import hubPages from './pages/config'
 import Hub from './Hub.vue'
@@ -18,7 +17,7 @@ const wagmiConfig = inject('wagmiConfig')
 /* HUB OPEN/CLOSE */
 const route = useRoute()
 const hubOpen = ref(route.query.hub !== undefined)
-const hubPageKey = ref('welcome') //route.query.hub || sessionStorage.getItem('hubPageKey') || 'welcome')
+const hubPageKey = ref(route.query.hub || sessionStorage.getItem('hubPageKey') || 'welcome')
 
 provide('hub', {
   hubOpen,

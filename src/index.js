@@ -14,8 +14,10 @@ const BallsHubVuePlugin = {
       throw new Error('wagmiConfig is required when installing BallsHub')
     }
     app.provide('wagmiConfig', options.wagmiConfig)
+    
     app.use(VueQueryPlugin, { queryClient })
     app.use(WagmiPlugin, { config: options.wagmiConfig })
+    
     app.component('TrifleHub', Index)
   }
 } 
