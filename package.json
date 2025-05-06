@@ -1,5 +1,5 @@
 {
-  "name": "balls-hub",
+  "name": "@trifle/trifle-hub",
   "version": "1.0.0",
   "description": "Vue component library for Trifle Hub",
   "main": "dist/index.js",
