@@ -21,7 +21,7 @@ const hubOpen = ref(route.query.hub !== undefined)
 const hubPageKey = ref(route.query.hub || sessionStorage.getItem('hubPageKey') || 'welcome')
 
 provide('hub', {
-  isOpen: hubOpen,
+  hubOpen,
   openHub: (page) => {
     hubOpen.value = true
     return page && (hubPageKey.value = page)

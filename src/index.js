@@ -1,3 +1,4 @@
+import './style/index.css'
 import Index from './components/Index.vue'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import { WagmiPlugin } from '@wagmi/vue'

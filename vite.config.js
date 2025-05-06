@@ -32,8 +32,9 @@ export default defineConfig({
           '@wagmi/core': 'WagmiCore',
           'vue-router': 'VueRouter',
           '@reown/appkit-adapter-wagmi': 'AppkitAdapterWagmi'
-        }
+        },
       }
-    }
+    },
+    cssCodeSplit: false
   }
 }) 

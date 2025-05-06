@@ -1,5 +1,6 @@
 <template>
   <div
+    id="hub"
     class="fixed left-0 top-0 w-full h-full pointer-events-none select-none font-sans text-md sm:text-sans-base"
   >
     <!-- (tap bg to close) -->
