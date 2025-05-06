@@ -33,6 +33,11 @@ export default defineConfig({
           'vue-router': 'VueRouter',
           '@reown/appkit-adapter-wagmi': 'AppkitAdapterWagmi'
         },
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === 'style.css') return 'index.css'
+          if (assetInfo.name === 'balls-hub.css') return 'index.css'
+          return assetInfo.name
+        }
       }
     },
     cssCodeSplit: false
