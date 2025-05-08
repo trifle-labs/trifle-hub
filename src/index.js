@@ -1,24 +1,20 @@
 import './style/index.css'
-import Index from './components/Index.vue'
+import TrifleHub from './components/TrifleHub.vue'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import { WagmiPlugin } from '@wagmi/vue'
 import { initializeWagmiConfig } from './config/wagmiConfig'
 import { createPinia } from 'pinia'
 import { useAuthStore } from './store'
-export { BallsHubVuePlugin }
+export { TrifleHubVuePlugin, TrifleHub }
 
 const queryClient = new QueryClient()
 
-const BallsHubVuePlugin = {
+const TrifleHubVuePlugin = {
   install: async (app, options = {}) => {
     console.log('install')
     if (!options.reownConfig) {
-      throw new Error('reownConfig is required when installing BallsHub')
+      throw new Error('reownConfig is required when installing TrifleHub')
     }
-
-    const { wagmiConfig, appKit } = await initializeWagmiConfig(options.reownConfig)
-    app.provide('BallsHub/wagmiConfig', wagmiConfig)
-    app.provide('BallsHub/appKit', appKit)
 
     let piniaInstanceForPlugin
 
@@ -32,17 +28,22 @@ const BallsHubVuePlugin = {
     // Provide this instance (either the hooked one or the new internal one)
     // for your plugin's components to inject.
     const store = useAuthStore(piniaInstanceForPlugin)
+
+    const { wagmiConfig, appKit } = initializeWagmiConfig(options.reownConfig)
+
+    app.provide('TrifleHub/wagmiConfig', wagmiConfig)
+    app.provide('TrifleHub/appKit', appKit)
+
     store.initializeAuth(appKit, wagmiConfig)
-
-    app.provide('trifleHubInternalPinia', piniaInstanceForPlugin)
-    console.log({ store })
-    app.provide('BallsHub/store', store)
-
-    app.use(VueQueryPlugin, { queryClient })
     app.use(WagmiPlugin, { config: wagmiConfig })
 
-    app.component('TrifleHub', Index)
+    app.provide('trifleHubInternalPinia', piniaInstanceForPlugin)
+    app.provide('TrifleHub/store', store)
+
+    app.use(VueQueryPlugin, { queryClient })
+
+    app.component('TrifleHub', TrifleHub)
   }
 }
 
-export default BallsHubVuePlugin
+export default TrifleHubVuePlugin

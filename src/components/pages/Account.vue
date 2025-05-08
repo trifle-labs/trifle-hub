@@ -367,7 +367,7 @@
 import { computed, ref, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 
-const auth = inject('BallsHub/store')
+const auth = inject('TrifleHub/store')
 const { isAuthenticated, user } = storeToRefs(auth)
 const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 

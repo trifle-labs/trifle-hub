@@ -17,11 +17,11 @@ const defaultConfig = {
     analytics: true,
     email: true,
     socials: [], //['google', 'x', 'github', 'discord', 'apple', 'facebook', 'farcaster'],
-    emailShowWallets: false
+    emailShowWallets: true
   },
   // coinbasePreference: 'smartWalletOnly',
   featuredWalletIds: [
-    // 'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa' // coinbase
+    'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa' // coinbase
     // '1ae92b26df02f0abca6304df07debccd18262fdf5fe82daa81593582dac9a369' // rainbow
   ],
   themeMode: 'light',
@@ -30,7 +30,7 @@ const defaultConfig = {
   }
 }
 
-export async function initializeWagmiConfig(config) {
+export function initializeWagmiConfig(config) {
   const finalConfig = {
     ...defaultConfig,
     ...(config || {}),
@@ -44,9 +44,8 @@ export async function initializeWagmiConfig(config) {
     },
     featuredWalletIds: [...defaultConfig.featuredWalletIds, ...(config.featuredWalletIds || [])]
   }
-
-  const context = await sdk.context
-  const connectors = context ? [miniAppConnector()] : []
+  // const context = await sdk.context
+  const connectors = [] //[miniAppConnector()]
 
   // Create Wagmi Adapter
   const wagmiAdapter = new WagmiAdapter({
