@@ -1,6 +1,6 @@
 {
   "name": "@trifle/trifle-hub",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "Vue component library for Trifle Hub",
   "main": "dist/index.js",
