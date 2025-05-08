@@ -48,12 +48,12 @@
             <div class="text-lg">32 🪩 4<sup>th</sup></div>
           </div> -->
           <nav
-            class="_order-last _w-full _flex _justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug _pl-3.5 _pr-5 sm:_pl-6 sm:_pr-9 _tracking-[-0.01em] _-mt-7 sm:_-mt-12 _relative _z-10 sm:_text-[1.1em]"
+            class="_order-last _w-full _flex _justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug _pl-3.5 _pr-5 sm:_pl-6 sm:_pr-9 _tracking-[-0.01em] _-mt-7 sm:_-mt-12 _relative _z-10 sm:_text-[1.1em] _pointer-events-none"
           >
             <button
-              class="_flex _flex-col _items-center _-mr-6"
+              class="_flex _flex-col _items-center _-mr-6 _pointer-events-auto"
               @click="openHub('games')"
-              :class="{ '_underline': props.hubPageKey === 'games' }"
+              :class="{ _underline: props.hubPageKey === 'games' }"
             >
               <img
                 src="../assets/imgs/gigi-tilt-heads.png"
@@ -64,9 +64,9 @@
               games
             </button>
             <button
-              class="_flex _flex-col _items-center _gap-2"
+              class="_flex _flex-col _items-center _gap-2 _pointer-events-auto"
               @click="openHub('leaderboard')"
-              :class="{ '_underline': props.hubPageKey === 'leaderboard' }"
+              :class="{ _underline: props.hubPageKey === 'leaderboard' }"
             >
               <img
                 src="../assets/imgs/trifle-trophyy-sm.png"
@@ -77,9 +77,9 @@
               leaderboard
             </button>
             <button
-              class="_flex _flex-col _items-center _gap-2 _-ml-2"
+              class="_flex _flex-col _items-center _gap-2 _-ml-2 _pointer-events-auto"
               @click="openHub('earn')"
-              :class="{ '_underline': props.hubPageKey === 'earn' }"
+              :class="{ _underline: props.hubPageKey === 'earn' }"
             >
               <img
                 src="../assets/imgs/disco-ball-on-graph.png"
@@ -90,9 +90,9 @@
               earn
             </button>
             <button
-              class="_flex _flex-col _items-center _gap-2"
+              class="_flex _flex-col _items-center _gap-2 _pointer-events-auto"
               @click="openHub('account')"
-              :class="{ '_underline': props.hubPageKey === 'account' }"
+              :class="{ _underline: props.hubPageKey === 'account' }"
             >
               <!-- <div
                 class="_size-11 sm:_size-13 _rounded-full _bg-zinc-400 _origin-bottom"
