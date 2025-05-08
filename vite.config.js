@@ -1,7 +1,12 @@
 // /Users/billy/GitHub/trifle-labs/trifle-hub/vite.config.js
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from 'node:path' // Use node: prefix
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+// Helper to get __dirname in ES module
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export default defineConfig({
   plugins: [vue()],
@@ -14,16 +19,15 @@ export default defineConfig({
       formats: ['es', 'umd'] // Include ES and UMD formats
     },
     rollupOptions: {
-      // Make sure to externalize deps that shouldn't be bundled
-      // into your library
+      // Externalize peer dependencies so they aren't bundled
       external: [
         'vue',
         'vue-router',
         '@wagmi/core',
         '@wagmi/vue',
         '@reown/appkit',
-        '@reown/appkit/vue', // Make sure deep imports are external too
-        '@reown/appkit/networks', // Make sure deep imports are external too
+        '@reown/appkit/vue', // Externalize deep imports too
+        '@reown/appkit/networks', // Externalize deep imports too
         '@reown/appkit-adapter-wagmi',
         '@reown/appkit-siwe',
         'viem',
@@ -33,17 +37,12 @@ export default defineConfig({
         '@vueuse/core',
         'pinia',
         'siwe',
-        'tailwindcss' // Usually external if host provides Tailwind setup
-        // Or use a regex for broader matching if needed:
-        // /^vue/,
-        // /^@wagmi\\/.*/,
-        // /^@reown\\/appkit/,
-        // /^viem/,
-        // ... etc
+        'tailwindcss' // Usually external
+        // Optional: Use regex for broader matching if listing all gets tedious
+        // e.g., /^vue/, /^@wagmi\\/.*/, /^@reown\\/appkit/, /^viem/
       ],
       output: {
         // Provide global variables to use in the UMD build
-        // for externalized deps (less critical for ES module usage)
         globals: {
           vue: 'Vue',
           'vue-router': 'VueRouter',
@@ -52,7 +51,7 @@ export default defineConfig({
           viem: 'Viem',
           '@reown/appkit': 'ReownAppkit',
           pinia: 'Pinia'
-          // Add globals for other externalized dependencies if UMD support is important
+          // Add other globals if needed for UMD
         }
       }
     }
