@@ -9,7 +9,11 @@
     "hub"
   ],
   "license": "ISC",
-  "author": "",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "author": "Trifle UG",
   "type": "module",
   "exports": {
     ".": {
