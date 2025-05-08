@@ -28,7 +28,8 @@
     "build": "vite build",
     "dev": "vite",
     "watch": "vite build --watch",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "patch": "npm version patch && npm publish"
   },
   "dependencies": {},
   "devDependencies": {
