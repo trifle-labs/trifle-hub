@@ -542,8 +542,11 @@ export const useAuthStore = defineStore('auth', {
         const check = setInterval(() => {
           const connected = this._appKitInstance.getIsConnectedState()
           if (connected) {
+            this.accountConnected = true
             clearInterval(check)
             resolve()
+          } else {
+            this.accountConnected = false
           }
         }, 500)
       })
