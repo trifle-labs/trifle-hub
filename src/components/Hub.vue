@@ -2,6 +2,7 @@
   <div
     id="trifle-hub"
     class="_fixed _left-0 _top-0 _w-full _h-full _pointer-events-none _select-none _font-trifle _text-md sm:_text-sans-base"
+    :data-position="props.position"
   >
     <!-- (tap bg to close) -->
     <button
@@ -10,7 +11,7 @@
       @click="hubOpen = false"
     ></button>
     <!-- hub menu button / labels -->
-    <div class="_absolute _z-10 _bottom-0 _left-0 _p-2 sm:_p-4">
+    <div class="_absolute _z-10 _p-2 sm:_p-4 trifle-hub-position">
       <button
         class="_size-16 _rounded-full _bg-zinc-500 _flex _items-center _justify-center _pointer-events-auto"
         @click="hubOpen = !hubOpen"
@@ -19,10 +20,10 @@
       </button>
     </div>
     <!-- (hub page) -->
-    <transition name="slide-up-fade-in-scale-up">
+    <transition name="thub-fade-in-scale-up">
       <aside
         v-if="hubOpen"
-        class="_absolute _bottom-0 _left-0 _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_pl-24 _max-w-[36rem] _max-h-[60rem] _z-10"
+        class="_absolute trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[43rem] _max-h-[60rem] _z-10"
       >
         <!-- panel -->
         <div
@@ -123,7 +124,10 @@ import borderImg from '../assets/imgs/metalbubble-border.png'
 import bgImg from '../assets/imgs/metal-gradient-conical.png'
 
 const hubOpen = defineModel('hubOpen')
-const props = defineProps({ hubPageKey: { type: String, required: true } })
+const props = defineProps({
+  hubPageKey: { type: String, required: true },
+  position: { type: String, default: 'bottom-left', required: true }
+})
 
 const hubPage = computed(() => hubPages[props.hubPageKey])
 
@@ -131,16 +135,83 @@ const { openHub } = inject('hub')
 </script>
 
 <style>
-.slide-up-fade-in-scale-up-enter-active,
-.slide-up-fade-in-scale-up-leave-active {
+#trifle-hub {
+  &[data-position='bottom-left'] {
+    & .trifle-hub-position {
+      bottom: 0;
+      left: 0;
+    }
+    & .thub-fade-in-scale-up-enter-active,
+    & .thub-fade-in-scale-up-leave-active {
+      transition: all 0.3s ease;
+      transform-origin: left 80%;
+    }
+    & .thub-fade-in-scale-up-enter-from,
+    & .thub-fade-in-scale-up-leave-to {
+      opacity: 0;
+      transform: translateY(20%) scale(0) rotate(10deg);
+    }
+  }
+  &[data-position='bottom-right'] {
+    & .trifle-hub-position {
+      bottom: 0;
+      right: 0;
+    }
+    & .thub-fade-in-scale-up-enter-active,
+    & .thub-fade-in-scale-up-leave-active {
+      transition: all 0.3s ease;
+      transform-origin: right 80%;
+    }
+    & .thub-fade-in-scale-up-enter-from,
+    & .thub-fade-in-scale-up-leave-to {
+      opacity: 0;
+      transform: translateY(20%) scale(0) rotate(10deg);
+    }
+  }
+  &[data-position='top-left'] {
+    & .trifle-hub-position {
+      top: 0;
+      left: 0;
+    }
+    & .thub-fade-in-scale-up-enter-active,
+    & .thub-fade-in-scale-up-leave-active {
+      transition: all 0.3s ease;
+      transform-origin: left -20%;
+    }
+    & .thub-fade-in-scale-up-enter-from,
+    & .thub-fade-in-scale-up-leave-to {
+      opacity: 0;
+      transform: translateY(20%) scale(0) rotate(10deg);
+    }
+  }
+  &[data-position='top-right'] {
+    & .trifle-hub-position {
+      top: 0;
+      right: 0;
+    }
+    & .thub-fade-in-scale-up-enter-active,
+    & .thub-fade-in-scale-up-leave-active {
+      transition: all 0.3s ease;
+      transform-origin: right -20%;
+    }
+    & .thub-fade-in-scale-up-enter-from,
+    & .thub-fade-in-scale-up-leave-to {
+      opacity: 0;
+      transform: translateY(20%) scale(0) rotate(10deg);
+    }
+  }
+}
+
+/* .thub-fade-in-scale-up-enter-active,
+.thub-fade-in-scale-up-leave-active {
   transition: all 0.3s ease;
-  transform-origin: left 80%;
+  transform-origin: right 20%;
 }
-.slide-up-fade-in-scale-up-enter-from,
-.slide-up-fade-in-scale-up-leave-to {
+.thub-fade-in-scale-up-enter-from,
+.thub-fade-in-scale-up-leave-to {
   opacity: 0;
-  transform: translateY(20%) scale(0) rotate(10deg);
-}
+  transform: translateY(-20%) scale(0) rotate(10deg);
+} */
 
 @keyframes float {
   0%,
