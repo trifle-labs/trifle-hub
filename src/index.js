@@ -26,7 +26,7 @@ const TrifleHubVuePlugin = {
     }
     // Provide this instance (either the hooked one or the new internal one)
     // for your plugin's components to inject.
-    import.meta.env.VITE_API_URL = options.backendUrl || 'http://localhost:3000'
+    options.backendUrl = options.backendUrl || 'https://bot-staging.trifle.life'
     const store = useAuthStore(piniaInstanceForPlugin)
 
     const { wagmiConfig, appKit } = initializeWagmiConfig(options.reownConfig)
@@ -34,10 +34,7 @@ const TrifleHubVuePlugin = {
     app.provide('TrifleHub/wagmiConfig', wagmiConfig)
     app.provide('TrifleHub/appKit', appKit)
 
-    store.initializeAuth(appKit, wagmiConfig)
-    if (options.backendUrl) {
-      store.backendUrl = options.backendUrl
-    }
+    store.initializeAuth(appKit, wagmiConfig, options.backendUrl)
 
     app.use(WagmiPlugin, { config: wagmiConfig })
 

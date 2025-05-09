@@ -16,7 +16,7 @@ const PLATFORMS = {
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    backendUrl: import.meta.env.VITE_API_URL,
+    backendUrl: null,
     initialized: false,
     user: null, // { id, email, linkedAccounts: { discord: [{id, username}], telegram: [{id, username}], wallet: [{address, chainId}] } }
     isAuthenticated: false,
@@ -81,9 +81,10 @@ export const useAuthStore = defineStore('auth', {
         wagmiConfig
       })
     },
-    async initializeAuth(appKit, wagmiConfig) {
+    async initializeAuth(appKit, wagmiConfig, backendUrl) {
       console.log('initializeAuth')
       if (this.initialized) return
+      this.backendUrl = backendUrl
       this.setInstances(appKit, wagmiConfig)
       if (!this._wagmiConfigInstance || !this._appKitInstance) {
         console.warn('AuthStore: initializeAuth called before appKit/wagmiConfig were set.')
@@ -577,6 +578,7 @@ export const useAuthStore = defineStore('auth', {
           // Update user state with correct structure
           this.user = {
             id: user.id,
+            avatar: user.avatar,
             username: user.username,
             linkedAccounts: {}
           }
