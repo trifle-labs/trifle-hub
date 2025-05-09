@@ -1,7 +1,7 @@
 <template>
   <div
     id="trifle-hub"
-    class="_fixed _left-0 _top-0 _w-full _h-full _pointer-events-none _select-none _font-trifle _text-md sm:_text-sans-base"
+    class="trifle-hub-ui _fixed _left-0 _top-0 _w-full _h-full _pointer-events-none _select-none _font-trifle _text-base _text-stroke-xs"
     :data-position="props.position"
   >
     <!-- (tap bg to close) -->
@@ -49,7 +49,7 @@
             <div class="text-lg">32 🪩 4<sup>th</sup></div>
           </div> -->
           <nav
-            class="_order-last _w-full _flex _justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug _pl-3.5 _pr-5 sm:_pl-6 sm:_pr-9 _tracking-[-0.01em] _-mt-7 sm:_-mt-12 _relative _z-10 sm:_text-[1.1em] _pointer-events-none"
+            class="_order-last _w-full _flex _justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug _pl-3.5 _pr-5 sm:_pl-6 sm:_pr-9 _-mt-8 sm:_-mt-18 _relative _z-10 _text-stroke-sm _text-em-md sm:_text-mlg _pointer-events-none"
           >
             <button
               class="_flex _flex-col _items-center _-mr-6 _pointer-events-auto"
@@ -108,7 +108,8 @@
               account
             </button>
           </nav>
-          <div class="_flex-1 _flex _overflow-y-scroll _select-text _relative">
+          <!-- pages, scrollable -->
+          <div class="_flex-1 _flex _overflow-y-scroll _select-text _relative _no-scrollbar">
             <component :is="hubPage.component" />
           </div>
         </div>
@@ -225,7 +226,7 @@ const { openHub } = inject('hub')
     to bottom,
     transparent 0rem,
     black 1.125rem,
-    black calc(100% - 5rem),
+    black calc(100% - 4rem),
     transparent 100%
   );
 }
