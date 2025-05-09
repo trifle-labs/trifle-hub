@@ -1,6 +1,6 @@
 <template>
   <slot />
-  <Hub v-model:hubOpen="hubOpen" :hubPageKey="hubPageKey" />
+  <Hub v-model:hubOpen="hubOpen" :hubPageKey="hubPageKey" :position="props.position" />
 </template>
 
 <script setup>
@@ -9,6 +9,13 @@ import { useRoute } from 'vue-router'
 import hubPages from './pages/config'
 import Hub from './Hub.vue'
 const store = inject('TrifleHub/store')
+
+const props = defineProps({
+  position: {
+    type: String,
+    default: 'bottom-left'
+  }
+})
 
 onMounted(() => {
   console.log('TrifleHub mounted')
