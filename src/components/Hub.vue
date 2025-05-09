@@ -23,7 +23,7 @@
     <transition name="thub-fade-in-scale-up">
       <aside
         v-if="hubOpen"
-        class="_absolute trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[43rem] _max-h-[60rem] _z-10"
+        class="_absolute trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[42rem] _max-h-[60rem] _z-10"
       >
         <!-- panel -->
         <div
