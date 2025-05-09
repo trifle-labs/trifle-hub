@@ -2,8 +2,9 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 import './index.css'
-import { BallsHubVuePlugin } from '../../src'
+import { TrifleHubVuePlugin } from '@trifle/trifle-hub'
 import { createPinia } from 'pinia'
+import '@trifle/trifle-hub/dist/trifle-hub.css'
 
 // Initialize wagmi config for dev
 const reownConfig = {
@@ -31,9 +32,9 @@ app.use(router)
 const pinia = createPinia()
 app.use(pinia)
 
-// wagmiConfig and appKit are available as inject('BallsHub/wagmiConfig') and inject('BallsHub/appKit')
+// wagmiConfig and appKit are available as inject('TrifleHub/wagmiConfig') and inject('TrifleHub/appKit')
 // as wel as via inject('wagmiConfig') thanks to WagmiPlugin from '@wagmi/vue'
-app.use(BallsHubVuePlugin, { reownConfig, devHookPiniaInstance: pinia })
+app.use(TrifleHubVuePlugin, { reownConfig, devHookPiniaInstance: pinia })
 
 router.isReady().then(() => {
   app.mount('#app')

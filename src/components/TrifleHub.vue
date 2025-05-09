@@ -4,11 +4,15 @@
 </template>
 
 <script setup>
-import { provide, ref, watch, inject, computed } from 'vue'
+import { provide, ref, watch, inject, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import hubPages from './pages/config'
 import Hub from './Hub.vue'
-const store = inject('BallsHub/store')
+const store = inject('TrifleHub/store')
+
+onMounted(() => {
+  console.log('TrifleHub mounted')
+})
 
 /* HUB OPEN/CLOSE */
 const route = useRoute()
@@ -37,10 +41,10 @@ watch(hubPageKey, (val) => {
 
 // TODO: delete everything below here once backwards compatibility is no longer needed
 const emit = defineEmits(['connected', 'disconnected'])
-const address = computed(() => store.accountAddress)
-const chainId = computed(() => store.accountChainId)
-const isConnected = computed(() => store.accountConnected)
-const isConnecting = computed(() => store.authSteps.wallet.connecting)
+const address = computed(() => store?.accountAddress)
+const chainId = computed(() => store?.accountChainId)
+const isConnected = computed(() => store?.accountConnected)
+const isConnecting = computed(() => store?.authSteps?.wallet?.connecting)
 provide('account', { address, chainId, isConnected, isConnecting })
 watch(
   address,

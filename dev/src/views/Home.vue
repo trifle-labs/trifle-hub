@@ -9,7 +9,7 @@
 
 <script setup>
 import { inject, computed } from 'vue'
-const store = inject('BallsHub/store')
+const store = inject('TrifleHub/store')
 
 const isAuthenticated = computed(() => store.isAuthenticated)
 const isConnected = computed(() => store.accountConnected)
