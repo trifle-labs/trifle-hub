@@ -1,6 +1,1 @@
 /* balls-hub component styles */
-
-/* dev styles */
-button {
-  @apply _px-2 _border;
-}

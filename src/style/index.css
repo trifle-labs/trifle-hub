@@ -1,34 +1,22 @@
 @import 'reset.css';
 @import 'fonts.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --color-lavender: #dbc2ff;
+  --thub-color-blue: #4100FF;
 
-  --color-img-overlay-1: rgba(255, 0, 0, 0.5);
-  --color-panels-1: color-mix(in srgb, var(--color-lavender) 55%, transparent);
-
-  --blendmode-img-overlay-1: difference;
-
-  --btn-bevel-bg: #d1acd9b3;
-  --btn-bevel-bg-inset: #02ffbe; /*magenta; /*#be99d478;*/
-  --btn-bevel-bg-inset-hinrg: #eeff00; /*red; /*#be99d478;*/
-  --btn-bevel-bg-inset-hover: #be99d478;
-  --btn-bevel-base-color: rgba(255, 255, 255, 1);
-
-  --btn-shiny-whitept: rgb(116, 185, 184); /*rgb(183, 226, 225);*/
+  --thub-color-primary: var(--thub-color-blue);
+  --thub-color-primary-75: color-mix(in srgb, var(--thub-color-primary) 75%, transparent);
 }
 
-*:focus {
+#trifle-hub *:focus {
   @apply _outline-none;
 }
-/* *:focus-visible{
-  @apply bg-[rgba(0,255,255,0.75)]
-} */
-input:focus {
-  @apply _outline-none _bg-[#FDF4FF];
+#trifle-hub *:focus-visible {
+  @apply _ring-2 _ring-offset-2 _ring-[var(--thub-color-primary-75)] _ring-offset-transparent;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

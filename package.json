@@ -1,6 +1,6 @@
 {
   "name": "@trifle/trifle-hub",
-  "version": "1.0.16",
+  "version": "1.0.18",
   "description": "Vue component library for Trifle Hub",
   "keywords": [
     "vue",
@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "build": "vite build",
-    "dev": "vite",
+    "dev": "cd dev && vite",
     "watch": "vite build --watch",
     "prepublishOnly": "yarn build",
     "patch": "npm version patch && npm publish"

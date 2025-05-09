@@ -42,7 +42,7 @@ export default {
         wiggle: 'wiggle 0.8s ease-in-out infinite',
         'wiggle-sm': 'wiggle-sm 0.8s ease-in-out infinite'
       },
-      fontFamily: { sans: ['APL333', 'sans-serif'] },
+      fontFamily: { trifle: ['APL333', 'sans-serif'] },
       fontSize: {
         xs: '0.875rem',
         sm: '1rem',
