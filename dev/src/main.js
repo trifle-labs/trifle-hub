@@ -2,9 +2,10 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 import './index.css'
-import { TrifleHubVuePlugin } from '@trifle/trifle-hub'
 import { createPinia } from 'pinia'
-import '@trifle/trifle-hub/dist/trifle-hub.css'
+// load plugin from local /src
+import { TrifleHubVuePlugin } from '../../src'
+import '../../src/style/index.css'
 
 // Initialize wagmi config for dev
 const reownConfig = {
