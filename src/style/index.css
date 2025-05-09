@@ -12,6 +12,99 @@
   --thub-color-primary-75: color-mix(in srgb, var(--thub-color-primary) 75%, transparent);
 }
 
+.trifle-hub-ui {
+  font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* typography */
+
+.trifle-hub-ui h1,
+.trifle-hub-ui h2,
+.trifle-hub-ui h3,
+.trifle-hub-ui h4,
+.trifle-hub-ui h5,
+.trifle-hub-ui h6 {
+  font-weight: normal;
+}
+._text-stroke-xs {
+  -webkit-text-stroke: 0.015em currentColor;
+}
+._text-stroke-sm {
+  -webkit-text-stroke: 0.025em currentColor;
+}
+._text-stroke-md {
+  -webkit-text-stroke: 0.04em currentColor;
+}
+._text-stroke-lg {
+  -webkit-text-stroke: 0.0525em currentColor;
+}
+._text-stroke-xl {
+  -webkit-text-stroke: 0.06em currentColor;
+}
+._text-stroke-2xl {
+  -webkit-text-stroke: 0.068em currentColor;
+}
+._bodytext {
+  @apply _text-base _leading-tight;
+}
+._fineprint {
+  @apply _text-sm _leading-tight;
+}
+._h1 {
+  @apply _text-4xl _text-stroke-xl;
+}
+._h2 {
+  @apply _text-3xl _text-stroke-xl;
+}
+._h3 {
+  @apply _text-2xl _text-stroke-lg;
+}
+._h4 {
+  @apply _text-xl _text-stroke-lg;
+}
+._h5 {
+  @apply _text-lg _text-stroke-lg;
+}
+._h6 {
+  @apply _text-base _text-stroke-lg;
+}
+._semibold, ._weight-semibold {
+  @apply _text-stroke-lg;
+}
+._bold, ._weight-bold, 
+.trifle-hub-ui b,
+.trifle-hub-ui strong {
+  font-weight: normal;
+  @apply _text-stroke-xl;
+}
+._weight-black {
+  @apply _text-stroke-2xl;
+}
+
+._bodytext + *,
+._fineprint + * {
+  margin-top: 1rem;
+}
+._h1 + *,
+._h2 + *,
+._h3 + *,
+._h4 + *,
+._h5 + *,
+._h6 + * {
+  margin-top: 0.25rem;
+}
+._h1:not(:first-child),
+._h2:not(:first-child),
+._h3:not(:first-child),
+._h4:not(:first-child),
+._h5:not(:first-child),
+  ._h6:not(:first-child) {
+  margin-top: 1.25rem;
+}
+
+/* states */
+
 #trifle-hub *:focus {
   @apply _outline-none;
 }

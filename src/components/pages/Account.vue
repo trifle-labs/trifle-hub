@@ -15,12 +15,11 @@
           class="_w-full _block _transform _origin-center _scale-[1.35] sm:_scale-[1.45]"
         />
       </div>
-      <h1
-        class="_text-3xl sm:_text-4xl _tracking-wide _w-full _text-center _truncate _min-w-0 _leading-tight"
-        style="-webkit-text-stroke: 0.06em"
+      <div
+        class="_text-5xl _tracking-wide _w-full _text-center _truncate _min-w-0 _leading-tight _weight-black"
       >
         {{ isAuthenticated ? 'Connections' : 'who r u??' }}
-      </h1>
+      </div>
       <div v-if="!isAuthenticated">
         Link identities &rarr;
         <span class="_ffborder-b _border-current" style="border-style: dashed"> earn BALL$</span>

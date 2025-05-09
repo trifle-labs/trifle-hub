@@ -1,7 +1,7 @@
 <template>
   <div
     id="trifle-hub"
-    class="_fixed _left-0 _top-0 _w-full _h-full _pointer-events-none _select-none _font-trifle _text-md sm:_text-sans-base"
+    class="trifle-hub-ui _fixed _left-0 _top-0 _w-full _h-full _pointer-events-none _select-none _font-trifle _text-base _text-stroke-xs"
     :data-position="props.position"
   >
     <!-- (tap bg to close) -->
@@ -10,7 +10,7 @@
       class="_absolute _top-0 _left-0 _w-full _h-full _pointer-events-auto"
       @click="hubOpen = false"
     ></button>
-    <!-- hub menu button / labels -->
+    <!-- menu button / labels -->
     <div class="_absolute _z-10 _p-2 sm:_p-4 trifle-hub-position">
       <button
         class="_size-16 _rounded-full _bg-zinc-500 _flex _items-center _justify-center _pointer-events-auto"
@@ -19,13 +19,13 @@
         {{ hubOpen ? 'X' : '' }}
       </button>
     </div>
-    <!-- (hub page) -->
+    <!-- (hub panel) -->
     <transition name="thub-fade-in-scale-up">
       <aside
         v-if="hubOpen"
         class="_absolute trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[42rem] _max-h-[60rem] _z-10"
       >
-        <!-- panel -->
+        <!-- panel rendered -->
         <div
           class="_w-full _pointer-events-auto _flex _flex-col _animate-float _relative _overflow-hidden"
           :style="{
@@ -40,6 +40,32 @@
             'box-shadow': '0 12px 16px 0 rgba(0, 0, 0, 0.35)'
           }"
         >
+          <!-- close -->
+          <div class="_absolute _top-0 _right-0 _pt-3 _pr-4 _z-50 sm:_pt-4 sm:_pr-4.5">
+            <button
+              class="_p-1 _-m-1 _block _rounded-full _pointer-events-auto"
+              @click="hubOpen = false"
+            >
+              <div
+                class="_size-7 md:_size-8 _flex _items-center _justify-center _overflow-hidden _rounded-full _pointer-events-auto"
+                style="box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25) inset"
+              >
+                <!-- <img src="../assets/imgs/x-cross-rebar-shadow-sm.png" alt="close" class="_size-11" /> -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="black"
+                  class="_w-full _scale-[1.7] _opacity-[0.12] mouse:hover:_opacity-20 _duration-[75ms]"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
           <div
             class="_absolute _top-0 _left-0 _w-full _h-full _opacity-[0.6] _bg-cover _bg-center"
             :style="`background-image: url(${bgImg})`"
@@ -49,7 +75,7 @@
             <div class="text-lg">32 🪩 4<sup>th</sup></div>
           </div> -->
           <nav
-            class="_order-last _w-full _flex _justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug _pl-3.5 _pr-5 sm:_pl-6 sm:_pr-9 _tracking-[-0.01em] _-mt-7 sm:_-mt-12 _relative _z-10 sm:_text-[1.1em] _pointer-events-none"
+            class="_order-last _w-full _flex _justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug _pl-3.5 _pr-5 sm:_pl-6 sm:_pr-9 _-mt-8 sm:_-mt-18 _relative _z-10 _text-stroke-sm _text-em-md sm:_text-mlg _pointer-events-none"
           >
             <button
               class="_flex _flex-col _items-center _-mr-6 _pointer-events-auto"
@@ -108,8 +134,11 @@
               account
             </button>
           </nav>
-          <div class="_flex-1 _flex _overflow-y-scroll _select-text _relative">
-            <component :is="hubPage.component" />
+          <!-- pages, scrollable -->
+          <div class="_flex-1 _flex _overflow-y-scroll _select-text _relative _no-scrollbar">
+            <transition name="thub-page" mode="out-in">
+              <component :is="hubPage.component" />
+            </transition>
           </div>
         </div>
       </aside>
@@ -208,7 +237,7 @@ const { openHub } = inject('hub')
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
   }
 }
 
@@ -225,8 +254,23 @@ const { openHub } = inject('hub')
     to bottom,
     transparent 0rem,
     black 1.125rem,
-    black calc(100% - 5rem),
+    black calc(100% - 4rem),
     transparent 100%
   );
+}
+
+.thub-page-enter-active,
+.thub-page-leave-active {
+  transition: all 150ms ease;
+}
+
+.thub-page-enter-from {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.thub-page-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
 }
 </style>

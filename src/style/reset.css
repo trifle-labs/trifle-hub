@@ -1,13 +1,6 @@
-#trifle-hub button {
+button {
   font-size: inherit;
   text-transform: inherit;
   font-weight: inherit;
-}
-
-#trifle-hub input {
-  background: none;
-}
-#trifle-hub select {
-  font-size: inherit;
 }
 
