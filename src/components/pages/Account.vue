@@ -368,8 +368,7 @@ import { computed, ref, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 
 const auth = inject('TrifleHub/store')
-const { isAuthenticated, user } = storeToRefs(auth)
-const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const { isAuthenticated, user, backendUrl } = storeToRefs(auth)
 
 const telegramEnabled = ref(false)
 const twitterEnabled = ref(false)
@@ -453,7 +452,7 @@ const checkUsername = async (username) => {
   isCheckingUsername.value = true
   try {
     const response = await fetch(
-      `${backendUrl}/auth/username/check?username=${encodeURIComponent(username)}`
+      `${backendUrl.value}/auth/username/check?username=${encodeURIComponent(username)}`
     )
     if (!response.ok) throw new Error('Failed to check username availability')
     const data = await response.json()

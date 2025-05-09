@@ -13,10 +13,10 @@ const PLATFORMS = {
   DISCORD: 'discord',
   FARCASTER: 'farcaster'
 }
-const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
+    backendUrl: import.meta.env.VITE_API_URL,
     initialized: false,
     user: null, // { id, email, linkedAccounts: { discord: [{id, username}], telegram: [{id, username}], wallet: [{address, chainId}] } }
     isAuthenticated: false,
@@ -98,8 +98,10 @@ export const useAuthStore = defineStore('auth', {
       try {
         // Check for existing session
         const savedSession = localStorage.getItem('auth_session')
+        console.log('savedSession', { savedSession })
         if (savedSession) {
           const session = JSON.parse(savedSession)
+          console.log('session', { session })
           await this.restoreSession(session)
         }
 
@@ -180,11 +182,10 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         // const hasDiscordAuth = this.user?.linkedAccounts?.discord?.length > 0
-        let url = `${backendUrl}/auth/discord`
-        console.log({ url })
+        let url = `${this.backendUrl}/auth/discord`
         if (this.isAuthenticated) {
           // For additional auth, get a nonce first
-          const nonceResponse = await fetch(`${backendUrl}/auth/discord-nonce`, {
+          const nonceResponse = await fetch(`${this.backendUrl}/auth/discord-nonce`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -208,7 +209,7 @@ export const useAuthStore = defineStore('auth', {
           const handleMessage = async (event) => {
             console.log({ event })
             // Only accept messages from our backend
-            if (event.origin === backendUrl) {
+            if (event.origin === this.backendUrl) {
               console.log('event.data', event.data)
               const { token } = event.data
               if (token) {
@@ -295,7 +296,7 @@ export const useAuthStore = defineStore('auth', {
           return true
         }
 
-        const url = `${backendUrl}/auth/wallet/${this.isAuthenticated ? 'add-nonce' : 'nonce'}`
+        const url = `${this.backendUrl}/auth/wallet/${this.isAuthenticated ? 'add-nonce' : 'nonce'}`
         const headers = {
           'Content-Type': 'application/json'
         }
@@ -329,7 +330,7 @@ export const useAuthStore = defineStore('auth', {
         this.authSteps.wallet.signing = false
         this.authSteps.wallet.verifying = true
 
-        const verifyUrl = `${backendUrl}/auth/wallet/${
+        const verifyUrl = `${this.backendUrl}/auth/wallet/${
           this.isAuthenticated ? 'add-verify' : 'verify'
         }`
         console.log({ verifyUrl })
@@ -555,7 +556,7 @@ export const useAuthStore = defineStore('auth', {
     async fetchUserStatus() {
       console.log('fetchUserStatus')
       try {
-        const response = await fetch(`${backendUrl}/auth/status`, {
+        const response = await fetch(`${this.backendUrl}/auth/status`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`
           }
@@ -620,7 +621,7 @@ export const useAuthStore = defineStore('auth', {
 
     async updateUsername(newUsername) {
       try {
-        const response = await fetch(`${backendUrl}/auth/username`, {
+        const response = await fetch(`${this.backendUrl}/auth/username`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -657,7 +658,7 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         // Call the server to disconnect the instance
-        const response = await fetch(`${backendUrl}/auth/disconnect-instance`, {
+        const response = await fetch(`${this.backendUrl}/auth/disconnect-instance`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

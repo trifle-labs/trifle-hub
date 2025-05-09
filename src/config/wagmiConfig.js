@@ -65,7 +65,6 @@ export function initializeWagmiConfig(config) {
     themeMode: finalConfig.themeMode,
     themeVariables: finalConfig.themeVariables
   })
-  console.log({ appKit })
 
   return { wagmiConfig: wagmiAdapter.wagmiConfig, appKit }
 }
