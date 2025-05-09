@@ -17,7 +17,6 @@ const TrifleHubVuePlugin = {
     }
 
     let piniaInstanceForPlugin
-
     if (options.devHookPiniaInstance) {
       // If a Pinia instance is passed for devtools hook, use it
       piniaInstanceForPlugin = options.devHookPiniaInstance
@@ -27,6 +26,7 @@ const TrifleHubVuePlugin = {
     }
     // Provide this instance (either the hooked one or the new internal one)
     // for your plugin's components to inject.
+    options.backendUrl = options.backendUrl || 'https://bot-staging.trifle.life'
     const store = useAuthStore(piniaInstanceForPlugin)
 
     const { wagmiConfig, appKit } = initializeWagmiConfig(options.reownConfig)
@@ -34,7 +34,8 @@ const TrifleHubVuePlugin = {
     app.provide('TrifleHub/wagmiConfig', wagmiConfig)
     app.provide('TrifleHub/appKit', appKit)
 
-    store.initializeAuth(appKit, wagmiConfig)
+    store.initializeAuth(appKit, wagmiConfig, options.backendUrl)
+
     app.use(WagmiPlugin, { config: wagmiConfig })
 
     app.provide('trifleHubInternalPinia', piniaInstanceForPlugin)
