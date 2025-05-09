@@ -202,17 +202,6 @@ const { openHub } = inject('hub')
   }
 }
 
-/* .thub-fade-in-scale-up-enter-active,
-.thub-fade-in-scale-up-leave-active {
-  transition: all 0.3s ease;
-  transform-origin: right 20%;
-}
-.thub-fade-in-scale-up-enter-from,
-.thub-fade-in-scale-up-leave-to {
-  opacity: 0;
-  transform: translateY(-20%) scale(0) rotate(10deg);
-} */
-
 @keyframes float {
   0%,
   100% {
