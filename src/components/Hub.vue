@@ -1,7 +1,7 @@
 <template>
   <div
-    id="hub"
-    class="_fixed _left-0 _top-0 _w-full _h-full _pointer-events-none _select-none _font-sans _text-md sm:_text-sans-base"
+    id="trifle-hub"
+    class="_fixed _left-0 _top-0 _w-full _h-full _pointer-events-none _select-none _font-trifle _text-md sm:_text-sans-base"
   >
     <!-- (tap bg to close) -->
     <button
