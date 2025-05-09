@@ -1,5 +1,9 @@
 <template>
-  <div class="_p-5 _pb-0 _bodytext _w-full _flex _flex-col">
+  <div class="_px-5 _bodytext _w-full _flex _flex-col _gap-2">
+    <HubPageHeader>
+      <template #icon>🎨</template>
+      Hub Theme</HubPageHeader
+    >
     <nav class="_flex _gap-0.5 _w-full">
       <button
         class="_bubble-btn _p-4 _flex-1"
@@ -27,6 +31,7 @@ import { ref } from 'vue'
 import TypographyDemo from './TypographyDemo.vue'
 import ComponentsDemo from './ComponentsDemo.vue'
 import { watch } from 'vue'
+import HubPageHeader from '../HubPageHeader.vue'
 const activeTab = ref('typography')
 
 const pages = {

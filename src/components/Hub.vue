@@ -10,7 +10,7 @@
       class="_absolute _top-0 _left-0 _w-full _h-full _pointer-events-auto"
       @click="hubOpen = false"
     ></button>
-    <!-- hub menu button / labels -->
+    <!-- menu button / labels -->
     <div class="_absolute _z-10 _p-2 sm:_p-4 trifle-hub-position">
       <button
         class="_size-16 _rounded-full _bg-zinc-500 _flex _items-center _justify-center _pointer-events-auto"
@@ -19,13 +19,13 @@
         {{ hubOpen ? 'X' : '' }}
       </button>
     </div>
-    <!-- (hub page) -->
+    <!-- (hub panel) -->
     <transition name="thub-fade-in-scale-up">
       <aside
         v-if="hubOpen"
         class="_absolute trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[42rem] _max-h-[60rem] _z-10"
       >
-        <!-- panel -->
+        <!-- panel rendered -->
         <div
           class="_w-full _pointer-events-auto _flex _flex-col _animate-float _relative _overflow-hidden"
           :style="{
@@ -40,6 +40,32 @@
             'box-shadow': '0 12px 16px 0 rgba(0, 0, 0, 0.35)'
           }"
         >
+          <!-- close -->
+          <div class="_absolute _top-0 _right-0 _pt-3 _pr-4 _z-50 sm:_pt-4 sm:_pr-4.5">
+            <button
+              class="_p-1 _-m-1 _block _rounded-full _pointer-events-auto"
+              @click="hubOpen = false"
+            >
+              <div
+                class="_size-7 md:_size-8 _flex _items-center _justify-center _overflow-hidden _rounded-full _pointer-events-auto"
+                style="box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25) inset"
+              >
+                <!-- <img src="../assets/imgs/x-cross-rebar-shadow-sm.png" alt="close" class="_size-11" /> -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="black"
+                  class="_w-full _scale-[1.7] _opacity-[0.12] mouse:hover:_opacity-20 _duration-[75ms]"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
           <div
             class="_absolute _top-0 _left-0 _w-full _h-full _opacity-[0.6] _bg-cover _bg-center"
             :style="`background-image: url(${bgImg})`"
@@ -110,7 +136,9 @@
           </nav>
           <!-- pages, scrollable -->
           <div class="_flex-1 _flex _overflow-y-scroll _select-text _relative _no-scrollbar">
-            <component :is="hubPage.component" />
+            <transition name="thub-page" mode="out-in">
+              <component :is="hubPage.component" />
+            </transition>
           </div>
         </div>
       </aside>
@@ -209,7 +237,7 @@ const { openHub } = inject('hub')
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
   }
 }
 
@@ -229,5 +257,20 @@ const { openHub } = inject('hub')
     black calc(100% - 4rem),
     transparent 100%
   );
+}
+
+.thub-page-enter-active,
+.thub-page-leave-active {
+  transition: all 150ms ease;
+}
+
+.thub-page-enter-from {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.thub-page-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
 }
 </style>

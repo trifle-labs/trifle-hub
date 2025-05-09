@@ -1,5 +1,5 @@
 <template>
-  <div class="_flex-1 _overflow-y-scroll _px-5 _w-full _flex _flex-col _border">
+  <div class="_flex-1 _overflow-y-scroll _px-5 _w-full _flex _flex-col">
     <HubPageHeader>
       <template #icon>
         <img

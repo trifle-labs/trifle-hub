@@ -1,9 +1,10 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
-import './index.css'
+import './devapp.css'
 import { createPinia } from 'pinia'
-// load plugin from local /src
+
+// load TrifleHub plugin from local /src
 import { TrifleHubVuePlugin } from '../../src'
 import '../../src/style/index.css'
 
