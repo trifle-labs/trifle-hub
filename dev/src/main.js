@@ -2,10 +2,8 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 import './devapp.css'
-import { createPinia } from 'pinia'
-
-// load TrifleHub plugin from local /src
 import { TrifleHubVuePlugin } from '../../src'
+import { createPinia } from 'pinia'
 import '../../src/style/index.css'
 
 // Initialize wagmi config for dev
@@ -36,7 +34,11 @@ app.use(pinia)
 
 // wagmiConfig and appKit are available as inject('TrifleHub/wagmiConfig') and inject('TrifleHub/appKit')
 // as wel as via inject('wagmiConfig') thanks to WagmiPlugin from '@wagmi/vue'
-app.use(TrifleHubVuePlugin, { reownConfig, devHookPiniaInstance: pinia })
+app.use(TrifleHubVuePlugin, {
+  reownConfig,
+  devHookPiniaInstance: pinia
+  // backendUrl: 'http://localhost:3000'
+})
 
 router.isReady().then(() => {
   app.mount('#app')
