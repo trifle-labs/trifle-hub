@@ -36,8 +36,8 @@ app.use(pinia)
 // as wel as via inject('wagmiConfig') thanks to WagmiPlugin from '@wagmi/vue'
 app.use(TrifleHubVuePlugin, {
   reownConfig,
-  devHookPiniaInstance: pinia
-  // backendUrl: 'http://localhost:3000'
+  devHookPiniaInstance: pinia,
+  backendUrl: 'http://localhost:3000'
 })
 
 router.isReady().then(() => {

@@ -46,17 +46,17 @@ export const possiblePoints = [
     once: true,
     enabled: false
   },
-  // {
-  //   name: 'Authenticate Email',
-  //   id: 'auth-email',
-  //   description: 'Authenticate with Email to earn 10 pachinko balls and 1 kudzu burn.',
-  //   pachinkoBalls: 10,
-  //   kudzuBurn: 10,
-  //   claimed: false,
-  //   once: true,
-  //   enabled: false,
-  //   link: null
-  // },
+  {
+    name: 'Authenticate Email via Discord',
+    id: 'auth-email',
+    description: 'Discord authentication includes email which earns 10 pachinko balls.',
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: { to: 'account' }
+  },
   // {
   //   name: 'Retweet First Announcement Tweet',
   //   id: 'retweet-0-announcement',
