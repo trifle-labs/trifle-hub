@@ -1,17 +1,18 @@
 <template>
   <div
     id="trifle-hub"
-    class="trifle-hub-ui _fixed _left-0 _top-0 _w-full _h-full _pointer-events-none _select-none _font-trifle _text-base _text-stroke-xs"
+    class="trifle-hub-ui _relative _pointer-events-none _select-none _font-trifle _text-base _text-stroke-xs"
     :data-position="props.position"
+    style="z-index: 900"
   >
     <!-- (tap bg to close) -->
     <button
       v-show="hubOpen"
-      class="_absolute _top-0 _left-0 _w-full _h-full _pointer-events-auto"
+      class="_fixed _top-0 _left-0 _w-full _h-full _pointer-events-auto"
       @click="hubOpen = false"
     ></button>
     <!-- menu button / labels -->
-    <div class="_absolute _z-10 _p-2 sm:_p-4 trifle-hub-position">
+    <div id="trifle-hub__menu-button" class="_fixed _z-10 _p-2 sm:_p-4 trifle-hub-position">
       <button
         class="_size-16 _rounded-full _bg-zinc-500 _flex _items-center _justify-center _pointer-events-auto"
         @click="hubOpen = !hubOpen"
@@ -23,7 +24,7 @@
     <transition name="thub-fade-in-scale-up">
       <aside
         v-if="hubOpen"
-        class="_absolute trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[42rem] _max-h-[60rem] _z-10"
+        class="_fixed trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[42rem] _max-h-[60rem] _z-10"
       >
         <!-- panel rendered -->
         <div
