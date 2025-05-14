@@ -36,6 +36,16 @@ export const possiblePoints = [
     enabled: true,
     link: discordLink
   },
+  {
+    name: 'Authenticate Farcaster',
+    id: 'auth-farcaster',
+    description: 'Authenticate with Farcaster to earn 10 pachinko balls.',
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: false
+  },
   // {
   //   name: 'Authenticate Email',
   //   id: 'auth-email',
@@ -49,7 +59,7 @@ export const possiblePoints = [
   // },
   // {
   //   name: 'Retweet First Announcement Tweet',
-  //   id: 'retweet-announcement',
+  //   id: 'retweet-0-announcement',
   //   description: 'Retweet the First Announcement Tweet to earn 5 kudzu burn.',
   //   pachinkoBalls: 5,
   //   kudzuBurn: 5,
@@ -185,7 +195,7 @@ export const possiblePoints = [
   },
   {
     name: 'Follow Trifle on Farcaster',
-    id: 'follow-trifle',
+    id: 'follow-trifle-farcaster',
     description: 'Follow Trifle on Farcaster to earn 10 pachinko balls.',
     pachinkoBalls: 25,
     kudzuBurn: 0,

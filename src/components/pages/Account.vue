@@ -295,7 +295,7 @@
             </div>
           </button>
           <button
-            v-else-if="isAuthenticated && walletAuths.length === 0 && !auth.accountConnected"
+            v-else-if="isAuthenticated && !auth.accountConnected"
             @click="handleWalletConnect"
             class="_bubble-btn _p-3.5 _w-full"
             style="filter: hue-rotate(-236deg) saturate(1.35)"
@@ -405,6 +405,10 @@ const handleDiscordConnect = async () => {
   try {
     await auth.connectDiscord()
   } catch (err) {
+    if (err.message.includes('Authentication window closed')) {
+      // TODO: @everett we need a message system for this
+      alert('Sorry, can you try that again?')
+    }
     console.error('Discord connection failed:', err)
   }
 }
