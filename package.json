@@ -1,6 +1,6 @@
 {
   "name": "@trifle/trifle-hub",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "Vue component library for Trifle Hub",
   "keywords": [
     "vue",
