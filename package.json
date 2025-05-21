@@ -1,6 +1,6 @@
 {
   "name": "@trifle/trifle-hub",
-  "version": "1.0.22",
+  "version": "1.0.25",
   "description": "Vue component library for Trifle Hub",
   "keywords": [
     "vue",
@@ -33,7 +33,7 @@
     "dev": "cd dev && vite",
     "watch": "vite build --watch",
     "prepublishOnly": "yarn build",
-    "patch": "npm version patch && npm publish"
+    "patch": "npm version patch && npm publish && git push"
   },
   "dependencies": {
     "@farcaster/frame-sdk": "^0.0.35",
