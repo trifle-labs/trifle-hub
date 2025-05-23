@@ -32,21 +32,31 @@
       {{ error }}
     </div>
 
-    <div v-else class="_flex-1 _overflow-y-scroll-masked _no-scrollbar _no-scrollbar">
+    <div v-else class="_flex-1 _overflow-y-scroll-masked _no-scrollbar _no-scrollbar _-mx-5 _px-5">
       <!-- leaderboard list -->
-      <div class="_space-y-2 _mt-4">
+      <div class="_space-y-2">
+        <!-- rows... -->
         <div
           v-for="(entry, index) in leaderboardData"
           :key="entry.UserId || index"
-          class="_flex _items-center _gap-3 _p-3 _bg-zinc-200 _rounded-lg"
+          class="_flex _items-center _gap-2.5 _p-3 _rounded-lg _bg-metalic-linear _shadow-panel _text-mlg _max-w-full _min-w-0"
         >
-          <div class="_font-mono _w-6 _text-right">{{ index + 1 }}.</div>
-          <div class="_size-8 _rounded-full _bg-zinc-400">
-            <!-- Placeholder for avatar, can be replaced with entry.User.avatarUrl if available -->
+          <div class="_min-w-4 _text-right _text-em-xs _opacity-25 _flex-shrink-0">
+            {{ index + 1 }}
           </div>
-          <div class="_flex-1">{{ entry.User?.displayName || entry.username || 'N/A' }}</div>
-          <div class="_font-mono">
-            {{ entry.totalBalls }}
+          <div class="_flex _items-center _gap-2.5 _flex-1 _min-w-0">
+            <div class="_size-[1.625em] _flex-shrink-0 _rounded-full _bg-zinc-400">
+              <!-- Placeholder for avatar, can be replaced with entry.User.avatarUrl if available -->
+            </div>
+            <div class="_flex-1 _weight-semibold _truncate _min-w-0">
+              {{ entry.User?.displayName || entry.username || 'N/A' }}
+            </div>
+          </div>
+          <div class="_weight-black _whitespace-nowrap _flex _gap-[0.15em]">
+            <div>
+              {{ entry.totalBalls.toLocaleString('en-us') }}
+            </div>
+            <div>🪩</div>
           </div>
         </div>
         <div v-if="!leaderboardData.length && !loading" class="_text-center _py-10 _text-gray-500">

@@ -48,7 +48,7 @@ export default {
         xs: '0.875rem',
         sm: '0.9375rem',
         md: '1.025rem',
-        base: '1.15rem',
+        base: '1.12rem',
         mlg: '1.25rem',
         lg: '1.375rem',
         xl: '1.5rem',
@@ -67,6 +67,14 @@ export default {
         'em-4xl': '2em',
         'em-5xl': '2.25em',
         'em-6xl': '2.5em'
+      },
+      borderColor: {
+        DEFAULT: 'currentColor'
+      },
+      boxShadow: {
+        px: '0 1px 1px var(--thub-shadow-color)',
+        panel: '0 1px 1px var(--thub-shadow-color), inset 0 1px 0 rgba(255, 255, 255, 0.75)',
+        'panel-inset': '0 1px 1px var(--thub-shadow-color) inset, 0 1px 0 rgba(255, 255, 255, 0.75)'
       },
       borderWidth: { 3: '3px' },
       keyframes: {
