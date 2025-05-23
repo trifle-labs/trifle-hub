@@ -17,6 +17,8 @@ const props = defineProps({
   }
 })
 
+const defaultPage = inject('TrifleHub/defaultPage', 'welcome')
+
 onMounted(() => {
   console.log('TrifleHub mounted')
 })
@@ -24,7 +26,7 @@ onMounted(() => {
 /* HUB OPEN/CLOSE */
 const route = useRoute()
 const hubOpen = ref(route.query.hub !== undefined)
-const hubPageKey = ref(route.query.hub || sessionStorage.getItem('hubPageKey') || 'welcome')
+const hubPageKey = ref(route.query.hub || sessionStorage.getItem('hubPageKey') || defaultPage)
 
 provide('hub', {
   hubOpen,
@@ -34,7 +36,14 @@ provide('hub', {
   },
   closeHub: async () => {
     hubOpen.value = false
-  }
+  },
+  goToPage: (page) => {
+    if (!hubPages[page]) {
+      throw new Error(`Page '${page}' not found in TrifleHub`)
+    }
+    hubPageKey.value = page
+  },
+  getAvailablePages: () => Object.keys(hubPages)
 })
 
 watch(hubPageKey, (val) => {
