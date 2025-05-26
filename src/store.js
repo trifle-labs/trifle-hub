@@ -205,6 +205,13 @@ export const useAuthStore = defineStore('auth', {
         // Open Discord auth window
         const authWindow = window.open(url, 'Discord Auth', 'width=500,height=800')
 
+        // If window failed to open
+        if (!authWindow) {
+          throw new Error(
+            'Could not open Discord authentication window. Please check your popup blocker settings.'
+          )
+        }
+
         // Listen for the auth response
         const authPromise = new Promise((resolve, reject) => {
           const handleMessage = async (event) => {
@@ -212,12 +219,21 @@ export const useAuthStore = defineStore('auth', {
             // Only accept messages from our backend
             if (event.origin === this.backendUrl) {
               console.log('event.data', event.data)
-              const { token } = event.data
-              if (token) {
-                localStorage.setItem('authToken', token)
+
+              // Handle successful authentication
+              if (event.data.token) {
+                localStorage.setItem('authToken', event.data.token)
                 console.log('listen for successful discord auth')
                 await this.fetchUserStatus()
                 resolve()
+                return
+              }
+
+              // Handle authentication error
+              if (event.data.error) {
+                console.error('Authentication error:', event.data.error)
+                reject(new Error(event.data.error))
+                return
               }
             }
           }
@@ -238,6 +254,7 @@ export const useAuthStore = defineStore('auth', {
 
         await authPromise
       } catch (error) {
+        console.error('Discord authentication error:', error)
         this.error = error.message || 'Failed to connect Discord'
         throw error
       } finally {

@@ -34,6 +34,9 @@ const TrifleHubVuePlugin = {
     app.provide('TrifleHub/wagmiConfig', wagmiConfig)
     app.provide('TrifleHub/appKit', appKit)
 
+    // Provide defaultPage if specified
+    app.provide('TrifleHub/defaultPage', options.defaultPage || 'welcome')
+
     store.initializeAuth(appKit, wagmiConfig, options.backendUrl)
 
     app.use(WagmiPlugin, { config: wagmiConfig })
