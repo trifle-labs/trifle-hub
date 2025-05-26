@@ -144,7 +144,7 @@ export const possiblePoints = [
     name: 'Win Daily Speedy in Anybody Problem',
     id: 'win-speedy-record',
     icon: anybodyIcon,
-    description: 'Win Daily Speedy Record in Anybody Problem to earn 10 pachinko balls.',
+    description: 'Finish fastest of the day!',
     pachinkoBalls: 25,
     kudzuBurn: 0,
     claimed: false,
@@ -156,7 +156,7 @@ export const possiblePoints = [
     name: 'Burn Kudzus',
     id: 'burn-kudzu',
     icon: kudzuIcon,
-    description: 'Burn a kudzu to earn +1 pachinko ball +1 kudzu burn.',
+    description: 'Every Kudzu NFT burned earns kudzu points and a pachinko ball.',
     pachinkoBalls: 1,
     kudzuBurn: 1,
     claimed: false,
@@ -168,13 +168,13 @@ export const possiblePoints = [
     name: 'Nuke to 1st on Kudzus',
     id: 'nuke-kudzu',
     icon: kudzuIcon,
-    description: 'Nuke to 1st on Kudzus to earn 100 pachinko balls.',
+    description: 'Nuke to 1st place and earn bonus balls!',
     pachinkoBalls: 100,
     kudzuBurn: 0,
     claimed: false,
     once: true,
     enabled: false,
-    link: kudzuLink
+    link: kudzuLink + '/nuke'
   },
   // {
   //   name: 'Blind Run Discord Game',

@@ -1,6 +1,6 @@
 <template>
   <div class="_flex-1 _px-5 _w-full _flex _flex-col">
-    <header class="_space-y-3">
+    <header class="_space-y-3.5">
       <HubPageHeader>
         <template #icon>
           <img src="../../assets/imgs/disco-ball-on-graph.png" alt="📈🪩" class="_h-[1.75em]" />
@@ -32,7 +32,7 @@
       </template>
       <template v-if="isAuthenticated">
         <section
-          class="_p-3 _bg-metalic-cone _rounded-lg _shadow-panel _flex _justify-between _items-start _flex-wrap _gap-2 _leading-none"
+          class="_px-3 _py-3.5 _bg-metalic-cone _rounded-lg _shadow-panel _flex _justify-between _items-start _flex-wrap _gap-2 _leading-none"
         >
           <div class="_flex _items-center _gap-[0.5em] _text-base">
             <!-- <div class="_size-[1.5em] _bg-zinc-400 _rounded-full"></div> -->
@@ -130,8 +130,9 @@
             class="_w-full _block _relative"
             :class="{ '_pointer-events-none': quest.completed && quest.link?.to }"
           >
+            <!-- main body, faded if completed -->
             <div
-              class="_bg-metalic-linear _w-full _flex _flex-col _gap-1 _p-2.5 _rounded-lg _transition-colors _text-mlg _relative"
+              class="_bg-metalic-linear _w-full _flex _flex-col _gap-0.5 _p-2.5 _rounded-lg _transition-colors _text-mlg _relative"
               :class="[
                 {
                   'mouse:hover:_scale-[1.006] _duration-100': quest.link,
@@ -186,6 +187,7 @@
                   </svg>
                 </div>
               </header>
+              <!-- (description) -->
               <div v-if="quest.description" class="_flex _items-start _gap-3 _pr-3">
                 <div class="_w-[1.7em] _flex-shrink-0"></div>
                 <p
@@ -193,7 +195,7 @@
                   v-html="quest.description"
                 ></p>
               </div>
-              <!-- progress -->
+              <!-- (progress) -->
               <!-- <div v-if="quest.progress" class="_mt-2">
                 <div class="_bg-zinc-300 _rounded-full _h-2">
                   <div
