@@ -2,11 +2,19 @@ const discordLink = 'https://discord.gg/aEaEZT9Wr9'
 const anybodyLink = 'https://anybody.gg'
 const kudzuLink = 'https://kudzu.rodeo'
 
+import discordIcon from '../assets/imgs/discord-logo-90.png'
+import walletIcon from '../assets/imgs/ethereum-logo-orange-bg.svg'
+import farcasterIcon from '../assets/imgs/farcaster-logo.svg'
+import anybodyIcon from '../assets/imgs/anybody-icon.png'
+import kudzuIcon from '../assets/imgs/kudzu-icon.gif'
+
 export const possiblePoints = [
   {
-    name: 'Authenticate Discord Account',
+    name: 'Link your Discord',
     id: 'auth-discord',
-    description: 'Authenticate with Discord to earn 10 pachinko balls and 1 kudzu burn.',
+    icon: discordIcon,
+    // description: 'Authenticate with Discord to earn 10 pachinko balls and 1 kudzu burn.',
+    // description: 'in the Account page',
     pachinkoBalls: 10,
     kudzuBurn: 10,
     claimed: false,
@@ -15,9 +23,23 @@ export const possiblePoints = [
     link: { to: 'account' }
   },
   {
-    name: 'Authenticate Wallet Address',
+    name: 'Link a Wallet',
     id: 'auth-wallet',
-    description: 'Authenticate with your wallet address to earn 10 pachinko balls.',
+    icon: walletIcon,
+    // description: 'Authenticate with your wallet address to earn 10 pachinko balls.',
+    // description: 'in the Account page',
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: { to: 'account' }
+  },
+  {
+    name: 'Link Farcaster',
+    id: 'auth-farcaster',
+    icon: farcasterIcon,
+    // description: 'Authenticate with Farcaster to earn 10 pachinko balls.',
     pachinkoBalls: 10,
     kudzuBurn: 0,
     claimed: false,
@@ -28,35 +50,26 @@ export const possiblePoints = [
   {
     name: 'Join Trifle Discord',
     id: 'trifler',
-    description: 'Join the server and become a Trifler for 10 pachinko balls',
-    pachinkoBalls: 10,
+    icon: discordIcon,
+    // description: 'Join the server and become a Trifler for 20 pachinko balls',
+    pachinkoBalls: 20,
     kudzuBurn: 0,
     claimed: false,
     once: true,
     enabled: true,
     link: discordLink
   },
-  {
-    name: 'Authenticate Farcaster',
-    id: 'auth-farcaster',
-    description: 'Authenticate with Farcaster to earn 10 pachinko balls.',
-    pachinkoBalls: 10,
-    kudzuBurn: 0,
-    claimed: false,
-    once: true,
-    enabled: false
-  },
-  {
-    name: 'Authenticate Email via Discord',
-    id: 'auth-email',
-    description: 'Discord authentication includes email which earns 10 pachinko balls.',
-    pachinkoBalls: 10,
-    kudzuBurn: 0,
-    claimed: false,
-    once: true,
-    enabled: true,
-    link: { to: 'account' }
-  },
+  // {
+  //   name: 'Link Email via Discord',
+  //   id: 'auth-email',
+  //   description: 'Discord authentication includes email which earns 10 pachinko balls.',
+  //   pachinkoBalls: 10,
+  //   kudzuBurn: 0,
+  //   claimed: false,
+  //   once: true,
+  //   enabled: true,
+  //   link: { to: 'account' }
+  // },
   // {
   //   name: 'Retweet First Announcement Tweet',
   //   id: 'retweet-0-announcement',
@@ -80,11 +93,11 @@ export const possiblePoints = [
   //   link: 'https://kudzu.rodeo'
   // },
   {
-    name: 'General Morning Discord Game',
+    name: 'Play gm-game in Discord',
     id: 'gm',
-    description:
-      'Play the General Morning Game in Discord. Earn 1 pachinko ball for each original greeting and 1 pachinko ball for each reaction someone gives you.',
-    pachinkoBalls: 1,
+    icon: discordIcon,
+    description: 'Every unique "Good Morning" you write in Discord earns +1 pachinko ball',
+    pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
     once: false,
@@ -92,11 +105,11 @@ export const possiblePoints = [
     link: discordLink
   },
   {
-    name: 'General Morning Discord Game (React)',
+    name: "Emoji added to your 'gm'",
     id: 'gm-react',
-    description:
-      'Get a react on Discord for your General Morning greeting and earn 1 pachinko ball.',
-    pachinkoBalls: 1,
+    icon: discordIcon,
+    description: 'Everytime someone adds an emoji to your "gm" message, you earn +1',
+    pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
     once: false,
@@ -104,10 +117,11 @@ export const possiblePoints = [
     link: discordLink
   },
   {
-    name: "Solve today's Anybody Problem",
+    name: 'Beat Anybody Problem',
     id: 'solve-anybody',
-    description: "Solve today's Anybody Problem to earn 10 pachinko balls.",
-    pachinkoBalls: 10,
+    description: 'A new problem every day on <u>anybody.gg</u>',
+    icon: anybodyIcon,
+    pachinkoBalls: '10/day',
     kudzuBurn: 0,
     claimed: false,
     once: false,
@@ -117,8 +131,9 @@ export const possiblePoints = [
   {
     name: "Mint today's Anybody Problem NFT",
     id: 'mint-anybody-nft',
-    description: "Mint today's Anybody Problem NFT to earn 1 pachinko ball.",
-    pachinkoBalls: 10,
+    icon: anybodyIcon,
+    description: 'Bonus balls for minting the daily NFT!',
+    pachinkoBalls: '10/day',
     kudzuBurn: 0,
     claimed: false,
     once: false,
@@ -126,9 +141,10 @@ export const possiblePoints = [
     link: anybodyLink
   },
   {
-    name: 'Win Daily Speedy Record in Anybody Problem',
+    name: 'Win Daily Speedy in Anybody Problem',
     id: 'win-speedy-record',
-    description: 'Win Daily Speedy Record in Anybody Problem to earn 10 pachinko balls.',
+    icon: anybodyIcon,
+    description: 'Finish fastest of the day!',
     pachinkoBalls: 25,
     kudzuBurn: 0,
     claimed: false,
@@ -139,7 +155,8 @@ export const possiblePoints = [
   {
     name: 'Burn Kudzus',
     id: 'burn-kudzu',
-    description: 'Burn a kudzu to earn +1 pachinko ball +1 kudzu burn.',
+    icon: kudzuIcon,
+    description: 'Every Kudzu NFT burned earns kudzu points and a pachinko ball',
     pachinkoBalls: 1,
     kudzuBurn: 1,
     claimed: false,
@@ -150,13 +167,14 @@ export const possiblePoints = [
   {
     name: 'Nuke to 1st on Kudzus',
     id: 'nuke-kudzu',
-    description: 'Nuke to 1st on Kudzus to earn 100 pachinko balls.',
+    icon: kudzuIcon,
+    description: 'Nuke to 1st place and earn bonus balls!',
     pachinkoBalls: 100,
     kudzuBurn: 0,
     claimed: false,
     once: true,
     enabled: false,
-    link: kudzuLink
+    link: kudzuLink + '/nuke'
   },
   // {
   //   name: 'Blind Run Discord Game',
@@ -171,9 +189,10 @@ export const possiblePoints = [
   //   link: discordLink
   // },
   {
-    name: 'Laugh / Cry Discord Game',
+    name: "Play '/laughcry' in Discord",
     id: 'flip',
-    description: 'Play the Laugh / Cry Game in Discord. Flip a coin and win double or nothing.',
+    icon: discordIcon,
+    description: 'Ride a wave of double or nothing coin flips',
     pachinkoBalls: '2ˣ',
     kudzuBurn: 0,
     claimed: false,
@@ -181,22 +200,23 @@ export const possiblePoints = [
     enabled: true,
     link: discordLink
   },
-  {
-    name: 'Bump Discord Game',
-    id: 'bump',
-    description:
-      'Play the Bump Game in Discord. Each 10 pachinko balls for being the last person to bump in an hour, plus 1 pachinko ball for every time someone else bumped. Each bump costs 1 pachinko ball.',
-    pachinkoBalls: '>=10',
-    kudzuBurn: 0,
-    claimed: false,
-    once: false,
-    enabled: true,
-    link: discordLink
-  },
+  // {
+  //   name: 'Bump Discord Game',
+  //   id: 'bump',
+  //   description:
+  //     'Play the Bump Game in Discord. Each 10 pachinko balls for being the last person to bump in an hour, plus 1 pachinko ball for every time someone else bumped. Each bump costs 1 pachinko ball.',
+  //   pachinkoBalls: '>=10',
+  //   kudzuBurn: 0,
+  //   claimed: false,
+  //   once: false,
+  //   enabled: true,
+  //   link: discordLink
+  // },
   {
     name: 'Follow Trifle on Farcaster',
     id: 'follow-trifle-farcaster',
-    description: 'Follow Trifle on Farcaster to earn 10 pachinko balls.',
+    icon: farcasterIcon,
+    description: 'Follow Trifle on Farcaster to earn 10 pachinko balls',
     pachinkoBalls: 25,
     kudzuBurn: 0,
     claimed: false,

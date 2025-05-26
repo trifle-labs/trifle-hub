@@ -24,7 +24,7 @@
     <transition name="thub-fade-in-scale-up">
       <aside
         v-if="hubOpen"
-        class="_fixed trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[42rem] _max-h-[60rem] _z-10"
+        class="_fixed trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[41rem] _max-h-[56rem] _z-10"
       >
         <!-- panel rendered -->
         <div
@@ -67,16 +67,28 @@
               </div>
             </button>
           </div>
-          <div
-            class="_absolute _top-0 _left-0 _w-full _h-full _opacity-[0.6] _bg-cover _bg-center"
-            :style="`background-image: url(${bgImg})`"
-          ></div>
+          <!-- backgroun layer -->
+          <div class="_absolute _inset-0">
+            <transition-group name="thub-bg-fade">
+              <div
+                v-if="hubPage.bgImg"
+                :key="hubPage.bgImg"
+                class="_absolute _top-0 _left-0 _w-full _h-full _opacity-[0.45] _bg-cover _bg-center"
+                :style="{ backgroundImage: `url(${hubPage.bgImg})` }"
+              ></div>
+              <div
+                v-else
+                key="default"
+                class="_absolute _top-0 _left-0 _w-full _h-full _bg-metalic-linear _opacity-[0.6]"
+              ></div>
+            </transition-group>
+          </div>
           <!-- <div class="w-full flex justify-between pt-3 px-4.5 absolute top-0 right-0 z-10">
             <div>&larr; back</div>
             <div class="text-lg">32 🪩 4<sup>th</sup></div>
           </div> -->
           <nav
-            class="_order-last _w-full _flex _justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug _pl-3.5 _pr-5 sm:_pl-6 sm:_pr-9 _-mt-8 sm:_-mt-18 _relative _z-10 _text-stroke-sm _text-em-md sm:_text-mlg _pointer-events-none"
+            class="_order-last _w-full _flex _justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug _pl-3.5 _pr-5 sm:_pl-6 sm:_pr-9 _-mt-14 sm:_-mt-18 _relative _z-10 _text-stroke-md _text-em-md sm:_text-mlg _pointer-events-none"
           >
             <button
               class="_flex _flex-col _items-center _-mr-6 _pointer-events-auto"
@@ -151,7 +163,6 @@
 import { computed, inject } from 'vue'
 import hubPages from './pages/config'
 import borderImg from '../assets/imgs/metalbubble-border.png'
-import bgImg from '../assets/imgs/metal-gradient-conical.png'
 
 const hubOpen = defineModel('hubOpen')
 const props = defineProps({
@@ -247,17 +258,20 @@ const { openHub } = inject('hub')
 }
 
 ._overflow-y-scroll-masked {
-  overflow-y: scroll;
-  padding-top: 1rem;
-  padding-bottom: 3.75rem;
-  mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(
+  --mask-top: 0.75rem;
+  --mask-bottom: 5.5rem;
+  --mask: linear-gradient(
     to bottom,
     transparent 0rem,
-    black 1.125rem,
-    black calc(100% - 4rem),
-    transparent 100%
+    black var(--mask-top),
+    black calc(97% - var(--mask-bottom)),
+    transparent 97%
   );
+  overflow-y: scroll;
+  padding-top: var(--mask-top);
+  padding-bottom: var(--mask-bottom);
+  mask-image: var(--mask);
+  -webkit-mask-image: var(--mask);
 }
 
 .thub-page-enter-active,
@@ -273,5 +287,15 @@ const { openHub } = inject('hub')
 .thub-page-leave-to {
   opacity: 0;
   transform: translateY(-5px);
+}
+
+.thub-bg-fade-enter-active,
+.thub-bg-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.thub-bg-fade-enter-from,
+.thub-bg-fade-leave-to {
+  opacity: 0;
 }
 </style>

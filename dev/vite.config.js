@@ -11,10 +11,10 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3000,
+    port: 5173, // 5173, 5174 allowed on live servers
     fs: {
       // Allow serving files from one level up to the project root
       allow: ['..']
     }
   }
-}) 
+})

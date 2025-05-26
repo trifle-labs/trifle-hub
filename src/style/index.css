@@ -10,6 +10,12 @@
 
   --thub-color-primary: var(--thub-color-blue);
   --thub-color-primary-75: color-mix(in srgb, var(--thub-color-primary) 75%, transparent);
+
+  --thub-metalic-light: rgb(227, 230, 244); 
+  /* --thub-metalic-light: rgb(240, 240, 245, 0.5); */
+  --thub-metalic-dark: #a3abca;
+
+  --thub-shadow-color: rgba(0, 0, 0, 0.5);
 }
 
 .trifle-hub-ui {
@@ -46,10 +52,10 @@
   -webkit-text-stroke: 0.068em currentColor;
 }
 ._bodytext {
-  @apply _text-base _leading-tight;
+  @apply _text-base _leading-snug;
 }
 ._fineprint {
-  @apply _text-sm _leading-tight;
+  @apply _text-sm _leading-snug;
 }
 ._h1 {
   @apply _text-4xl _text-stroke-xl;
@@ -145,4 +151,58 @@
   ._bubble-btn:hover {
     border-image-width: 19px;
   }
+}
+
+._bg-metalic-cone {
+  --light-color: var(--thub-metalic-light);
+  --dark-color: var(--thub-metalic-dark); /* or currentColor ?? */
+  background: repeating-conic-gradient(
+    from 50deg at 60% 65%,
+    var(--light-color) 0%,
+    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 5%,
+    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 9%,
+    color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 13%,
+    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 17%,
+    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 21%,
+    var(--light-color) 25%,
+    var(--light-color) 33.33%,
+    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 38.33%,
+    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 42.33%,
+    color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 46.33%,
+    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 50.33%,
+    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 54.33%,
+    var(--light-color) 58.33%,
+    var(--light-color) 66.66%,
+    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 71.66%,
+    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 75.66%,
+    color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 79.66%,
+    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 83.66%,
+    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 87.66%,
+    var(--light-color) 91.66%,
+    var(--light-color) 100%
+  );
+}
+
+._bg-metalic-linear {
+  --light-color: var(--thub-metalic-light);
+  --dark-color: var(--thub-metalic-dark);
+  background: linear-gradient(
+    -45deg,
+    var(--light-color) 0%,
+    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 15%,
+    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 25%,
+    color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 35%,
+    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 45%,
+    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 55%,
+    var(--light-color) 65%,
+    var(--light-color) 100%
+  );
+}
+
+._metalic-panel{
+  /* @apply _bg-metalic-cone; */
+  /* @apply _bg-metalic-linear; */
+  background: rgba(255, 255, 255, 0.5);
+  @apply _rounded-lg;
+  @apply _shadow-panel;
 }
