@@ -1,6 +1,6 @@
 {
   "name": "@trifle/trifle-hub",
-  "version": "1.0.26",
+  "version": "1.0.28",
   "description": "Vue component library for Trifle Hub",
   "keywords": [
     "vue",
@@ -36,6 +36,7 @@
     "patch": "npm version patch && npm publish && git push"
   },
   "dependencies": {
+    "@farcaster/auth-client": "^0.6.0",
     "@farcaster/frame-sdk": "^0.0.35",
     "@farcaster/frame-wagmi-connector": "^0.0.20",
     "@reown/appkit": "^1.7.3",
