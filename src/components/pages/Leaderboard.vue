@@ -7,7 +7,7 @@
       leaderboard
     </HubPageHeader>
     <!-- tabs -->
-    <nav class="_gap-[0.45rem] _mt-4 _grid _grid-cols-2">
+    <nav class="_gap-[0.45rem] _mt-4 _grid _grid-cols-2 _text-stroke-md _tracking-wide">
       <button
         class="_bubble-btn _p-4.5"
         @click="selectedTab = 'monthly'"
