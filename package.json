@@ -36,6 +36,7 @@
     "patch": "npm version patch && npm publish && git push"
   },
   "dependencies": {
+    "@farcaster/auth-client": "^0.6.0",
     "@farcaster/frame-sdk": "^0.0.35",
     "@farcaster/frame-wagmi-connector": "^0.0.20",
     "@reown/appkit": "^1.7.3",

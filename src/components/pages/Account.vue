@@ -131,7 +131,6 @@
         </button>
         <button
           class="_bubble-btn _p-4.5"
-          :disabled="!farcasterEnabled || (hasFarcasterAuth && isAuthenticated)"
           @click="handleFarcasterConnect"
           :style="{
             filter: !farcasterEnabled ? 'brightness(0.8)' : 'hue-rotate(-335deg) saturate(2)'
@@ -254,7 +253,7 @@
                 style="background-color: #f1584d"
               />
               <span class="_text-sm _font-mono _text-gray-800">
-                {{ truncateAddress(wallet.id) }}
+                {{ wallet.username == wallet.id ? truncateAddress(wallet.id) : wallet.username }}
               </span>
               <span
                 v-if="
@@ -359,6 +358,51 @@
           </button>
         </div>
       </div>
+      <div class="_bg-white/70 _rounded-lg _shadow _p-4 sm:_p-6">
+        <div class="_flex _items-center _justify-between _mb-3">
+          <h3 class="_text-lg _font-medium _text-gray-900">Farcaster</h3>
+        </div>
+        <div class="_mt-2 _space-y-3">
+          <div
+            v-for="farcaster in farcasterAuths"
+            :key="farcaster.id"
+            class="_flex _items-center _justify-between _p-3 _bg-gray-50/80 _rounded-lg"
+          >
+            <div class="_flex _items-center _gap-2">
+              <img
+                v-if="farcaster.avatar"
+                :src="`${farcaster.avatar}`"
+                :alt="farcaster.username"
+                class="_size-6 _rounded-full"
+              />
+              <img v-else src="../../assets/imgs/farcaster-logo.svg" class="_size-6 _rounded-lg" />
+              <span class="_text-gray-800">{{ farcaster.username }}</span>
+            </div>
+            <button
+              @click="() => handleDisconnectPlatform('farcaster', farcaster.id)"
+              class="_text-sm _text-red-600 hover:_text-red-800 _font-medium"
+            >
+              Remove
+            </button>
+          </div>
+          <button
+            v-if="!hasFarcasterAuth"
+            @click="handleFarcasterConnect"
+            class="_bubble-btn _p-3.5 _w-full"
+            style="filter: hue-rotate(-335deg) saturate(2)"
+          >
+            <div
+              class="_flex _justify-center _items-center _gap-2"
+              style="filter: hue-rotate(335deg) saturate(0.5)"
+            >
+              <img src="../../assets/imgs/farcaster-logo.svg" class="_size-6 _rounded-lg" />
+              <span class="_text-center">{{
+                farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster'
+              }}</span>
+            </div>
+          </button>
+        </div>
+      </div>
       <div class="_mt-8 _pt-4 _border-t _border-gray-200/80 _text-center">
         <button
           @click="handleLogout"
@@ -380,7 +424,7 @@ const { isAuthenticated, user, backendUrl } = storeToRefs(auth)
 
 const telegramEnabled = ref(false)
 const twitterEnabled = ref(false)
-const farcasterEnabled = ref(false)
+const farcasterEnabled = ref(true)
 
 const walletAuths = computed(() => auth.getPlatformData('wallet'))
 const discordAuths = computed(() => auth.getPlatformData('discord'))
@@ -392,6 +436,15 @@ const hasDiscordAuth = computed(() => discordAuths.value.length > 0)
 const hasTelegramAuth = computed(() => telegramAuths.value.length > 0)
 const hasTwitterAuth = computed(() => twitterAuths.value.length > 0)
 const hasFarcasterAuth = computed(() => farcasterAuths.value.length > 0)
+
+const handleFarcasterConnect = async () => {
+  console.log('Farcaster connect clicked')
+  try {
+    await auth.connectFarcaster()
+  } catch (err) {
+    console.error('Farcaster connection failed:', err)
+  }
+}
 
 const handleWalletConnect = async () => {
   try {
@@ -421,11 +474,6 @@ const handleTelegramConnect = async () => {
 const handleTwitterConnect = async () => {
   if (!twitterEnabled.value) return
   console.log('Twitter connect clicked (feature not fully implemented yet)')
-}
-
-const handleFarcasterConnect = async () => {
-  if (!farcasterEnabled.value) return
-  console.log('Farcaster connect clicked (feature not fully implemented yet)')
 }
 
 const handleDisconnectPlatform = async (platform, instanceId) => {

@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 // import { useAccount } from '@reown/appkit/vue'
 // import { createAppKit } from '@reown/appkit'
 // import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
+import { createAppClient, viemConnector } from '@farcaster/auth-client'
 
 import { useAccount } from '@wagmi/vue'
 import { signMessage, watchAccount } from '@wagmi/core'
@@ -177,6 +178,65 @@ export const useAuthStore = defineStore('auth', {
       this.saveSession()
     },
 
+    async connectFarcaster() {
+      console.log('connectFarcaster')
+      const appClient = createAppClient({
+        relay: 'https://relay.farcaster.xyz',
+        ethereum: viemConnector({ rpcUrl: 'https://eth.drpc.org' })
+      })
+
+      const { nonce } = await fetch(this.backendUrl + '/farcaster/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then((res) => res.json())
+
+      const channel = await appClient.createChannel({
+        siweUri: 'https://trifle-bot.ngrok.app/farcaster/signin',
+        domain: 'trifle-bot.ngrok.app',
+        nonce
+      })
+
+      const channelToken = channel.data?.channelToken
+
+      console.log({ channel })
+
+      const url = channel.data?.url.replace('warpcast.com', 'farcaster.xyz')
+
+      const authWindow = window.open(url, '_blank', 'width=500,height=800')
+
+      if (!authWindow) {
+        throw new Error(
+          'Could not open Farcaster authentication window. Please check your popup blocker settings.'
+        )
+      }
+
+      await appClient.watchStatus({
+        channelToken,
+        timeout: 60_000,
+        interval: 1_000,
+        onResponse: async ({ response, data }) => {
+          if (response.status !== 200) return
+          console.log('Response code:', response.status)
+          console.log('Status data:', data)
+          authWindow.close()
+          const url = this.backendUrl + '/farcaster/signin'
+          const resp = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          }).then((res) => res.json())
+          console.log({ resp })
+          localStorage.setItem('authToken', resp.token)
+          console.log('listen for successful discord auth')
+          await this.fetchUserStatus()
+        }
+      })
+    },
+
     async connectDiscord() {
       this.loading = true
       this.error = null
@@ -203,7 +263,7 @@ export const useAuthStore = defineStore('auth', {
         }
 
         // Open Discord auth window
-        const authWindow = window.open(url, 'Discord Auth', 'width=500,height=800')
+        const authWindow = window.open(url, '_blank', 'width=500,height=800')
 
         // If window failed to open
         if (!authWindow) {
