@@ -201,7 +201,7 @@ export const useAuthStore = defineStore('auth', {
 
       const channelToken = channel.data?.channelToken
 
-      const url = channel.data?.url //.replace('warpcast.com', 'farcaster.xyz')
+      const url = channel.data?.url.replace('warpcast.com', 'farcaster.xyz')
       let authWindow
       if (isMobile()) {
         authWindow = window.open(url, '_top')
@@ -224,16 +224,24 @@ export const useAuthStore = defineStore('auth', {
           console.log('Response code:', response.status)
           console.log('Status data:', data)
           const url = this.backendUrl + '/farcaster/signin'
-          const resp = await fetch(url, {
+          const res = await fetch(url, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-          }).then((res) => res.json())
-          console.log({ resp })
-          localStorage.setItem('authToken', resp.token)
-          console.log('listen for successful discord auth')
+          })
+
+          if (!res.ok) {
+            console.error('error signing in with farcaster', res)
+            authWindow.close()
+            throw new Error('Failed to sign in with Farcaster')
+          }
+
+          const jsonRes = await res.json()
+          console.log({ jsonRes })
+          localStorage.setItem('authToken', jsonRes.token)
+          console.log('listen for successful farcaster auth')
           await this.fetchUserStatus()
           authWindow.close()
         }
@@ -274,14 +282,20 @@ export const useAuthStore = defineStore('auth', {
             'Could not open Discord authentication window. Please check your popup blocker settings.'
           )
         }
-
-        // Listen for the auth response
         const authPromise = new Promise((resolve, reject) => {
+          let checkClosedInterval
+          let validResponse = false
           const handleMessage = async (event) => {
-            console.log({ event })
+            console.log({ backendUrl: this.backendUrl, event })
             // Only accept messages from our backend
             if (event.origin === this.backendUrl) {
               console.log('event.data', event.data)
+              validResponse = true
+              console.log({ validResponse })
+              // Clear the interval since we got a valid response
+              if (checkClosedInterval) {
+                clearInterval(checkClosedInterval)
+              }
 
               // Handle successful authentication
               if (event.data.token) {
@@ -304,13 +318,15 @@ export const useAuthStore = defineStore('auth', {
           window.addEventListener('message', handleMessage)
 
           // Clean up if window is closed
-          const checkClosed = setInterval(() => {
+          checkClosedInterval = setInterval(() => {
             if (authWindow.closed) {
               console.log('manually closing window')
-              console.log({ authWindow })
-              clearInterval(checkClosed)
+              clearInterval(checkClosedInterval)
               window.removeEventListener('message', handleMessage)
-              reject(new Error('Authentication window closed'))
+              console.log({ validResponse })
+              if (!validResponse) {
+                reject(new Error('Authentication window closed'))
+              }
             }
           }, 1000)
         })

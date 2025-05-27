@@ -477,6 +477,7 @@ const handleTwitterConnect = async () => {
 }
 
 const handleDisconnectPlatform = async (platform, instanceId) => {
+  if (!confirm('Are you sure you want to disconnect this account?')) return
   console.log(`disconnecting ${platform} instance ${instanceId}`)
   try {
     await auth.disconnectPlatformInstance(platform, instanceId)
