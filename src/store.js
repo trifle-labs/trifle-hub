@@ -225,12 +225,20 @@ export const useAuthStore = defineStore('auth', {
           if (response.status !== 200) return
           console.log('Response code:', response.status)
           console.log('Status data:', data)
-          const url = this.backendUrl + '/farcaster/signin'
+          authWindow.close()
+
+          const url = `${this.backendUrl}/farcaster/${
+            this.isAuthenticated ? 'add-signin' : 'signin'
+          }`
+          const headers = {
+            'Content-Type': 'application/json'
+          }
+          if (this.isAuthenticated) {
+            headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
+          }
           const res = await fetch(url, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
           })
 
@@ -245,7 +253,6 @@ export const useAuthStore = defineStore('auth', {
           localStorage.setItem('authToken', jsonRes.token)
           console.log('listen for successful farcaster auth')
           await this.fetchUserStatus()
-          authWindow.close()
         }
       })
     },
