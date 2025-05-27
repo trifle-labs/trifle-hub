@@ -12,13 +12,18 @@
       @click="hubOpen = false"
     ></button>
     <!-- menu button / labels -->
-    <div id="trifle-hub__menu-button" class="_fixed _z-10 _p-2 sm:_p-4 trifle-hub-position">
-      <button
-        class="_size-16 _rounded-full _bg-zinc-500 _flex _items-center _justify-center _pointer-events-auto"
-        @click="hubOpen = !hubOpen"
+    <div id="trifle-hub__menu-button" class="_fixed _z-10 trifle-hub-position">
+      <div
+        class="_block _pointer-events-auto _rounded-full _overflow-hidden"
+        style="width: var(--thub-menu-button-size); height: var(--thub-menu-button-size)"
       >
-        {{ hubOpen ? 'X' : '' }}
-      </button>
+        <TrifleBall
+          mode="metal"
+          :camera-angle="8"
+          @click="hubOpen = !hubOpen"
+          class="_cursor-pointer"
+        />
+      </div>
     </div>
     <!-- (hub panel) -->
     <transition name="thub-fade-in-scale-up">
@@ -167,6 +172,7 @@
 import { computed, inject } from 'vue'
 import hubPages from './pages/config'
 import borderImg from '../assets/imgs/metalbubble-border.png'
+import TrifleBall from './TrifleBall/TrifleBall.vue'
 
 const hubOpen = defineModel('hubOpen')
 const props = defineProps({
