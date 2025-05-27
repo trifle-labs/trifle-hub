@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 // import { createAppKit } from '@reown/appkit'
 // import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { createAppClient, viemConnector } from '@farcaster/auth-client'
-
+import { isMobile } from './utils'
 import { useAccount } from '@wagmi/vue'
 import { signMessage, watchAccount } from '@wagmi/core'
 // Platform types
@@ -200,11 +200,13 @@ export const useAuthStore = defineStore('auth', {
 
       const channelToken = channel.data?.channelToken
 
-      console.log({ channel })
-
-      const url = channel.data?.url.replace('warpcast.com', 'farcaster.xyz')
-
-      const authWindow = window.open(url, '_blank', 'width=500,height=800')
+      const url = channel.data?.url //.replace('warpcast.com', 'farcaster.xyz')
+      let authWindow
+      if (isMobile()) {
+        authWindow = window.open(url, '_top')
+      } else {
+        authWindow = window.open(url, '_blank', 'width=500,height=800')
+      }
 
       if (!authWindow) {
         throw new Error(
@@ -220,7 +222,6 @@ export const useAuthStore = defineStore('auth', {
           if (response.status !== 200) return
           console.log('Response code:', response.status)
           console.log('Status data:', data)
-          authWindow.close()
           const url = this.backendUrl + '/farcaster/signin'
           const resp = await fetch(url, {
             method: 'POST',
@@ -233,6 +234,7 @@ export const useAuthStore = defineStore('auth', {
           localStorage.setItem('authToken', resp.token)
           console.log('listen for successful discord auth')
           await this.fetchUserStatus()
+          authWindow.close()
         }
       })
     },
