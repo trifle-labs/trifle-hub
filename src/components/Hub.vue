@@ -134,11 +134,15 @@
               @click="openHub('account')"
               :class="{ _underline: props.hubPageKey === 'account' }"
             >
-              <!-- <div
-                class="_size-11 sm:_size-13 _rounded-full _bg-zinc-400 _origin-bottom"
-                :class="{ '_animate-wiggle': props.hubPageKey === 'account' }"
-              ></div> -->
               <img
+                v-if="auth.user && auth.user.avatar"
+                :src="auth.user.avatar"
+                alt="user avatar"
+                class="_size-[3.1em] sm:_size-[3.5em] _-mb-[0.5em] _origin-bottom _rounded-full"
+                :class="{ '_animate-wiggle': props.hubPageKey === 'account' }"
+              />
+              <img
+                v-else
                 src="../assets/imgs/smiley-face-dashed-outline.svg"
                 alt="smiley face with dashed outline"
                 class="_size-[3.1em] sm:_size-[3.5em] _-mb-[0.5em] _origin-bottom"
@@ -173,6 +177,7 @@ const props = defineProps({
 const hubPage = computed(() => hubPages[props.hubPageKey])
 
 const { openHub } = inject('hub')
+const auth = inject('TrifleHub/store')
 </script>
 
 <style>

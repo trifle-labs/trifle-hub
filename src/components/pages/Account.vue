@@ -245,7 +245,21 @@
             class="_flex _items-center _justify-between _p-3 _bg-gray-50/80 _rounded-lg"
           >
             <div class="_flex _items-center _gap-2">
-              <img v-if="wallet.avatar" :src="`${wallet.avatar}`" class="_size-6 _rounded-full" />
+              <button
+                v-if="wallet.avatar"
+                @click="() => setAvatar('wallet', wallet.id)"
+                :class="[
+                  '_p-0 _rounded-full _focus:_ring-2 _focus:_ring-blue-300 _transition-shadow _cursor-pointer',
+                  wallet.avatar === auth.user?.avatar
+                    ? '_border-4 _border-blue-500 shadow-[0_0_0_2px_rgba(34,197,94,0.3)]'
+                    : '_border-2 _border-blue-400 hover:_border-blue-600'
+                ]"
+                style="background: none"
+                type="button"
+                title="Set as profile avatar"
+              >
+                <img :src="`${wallet.avatar}`" class="_size-6 _rounded-full" />
+              </button>
               <img
                 v-else
                 src="../../assets/imgs/ethereum-logo-white.svg"
@@ -324,12 +338,25 @@
             class="_flex _items-center _justify-between _p-3 _bg-gray-50/80 _rounded-lg"
           >
             <div class="_flex _items-center _gap-2">
-              <img
+              <button
                 v-if="discord.avatar"
-                :src="`${discord.avatar}`"
-                :alt="discord.username"
-                class="_size-6 _rounded-full"
-              />
+                @click="() => setAvatar('discord', discord.id)"
+                :class="[
+                  '_p-0 _rounded-full _focus:_ring-2 _focus:_ring-blue-300 _transition-shadow _cursor-pointer',
+                  discord.avatar === auth.user?.avatar
+                    ? '_border-4 _border-blue-500 shadow-[0_0_0_2px_rgba(34,197,94,0.3)]'
+                    : '_border-2 _border-blue-400 hover:_border-blue-600'
+                ]"
+                style="background: none"
+                type="button"
+                title="Set as profile avatar"
+              >
+                <img
+                  :src="`${discord.avatar}`"
+                  :alt="discord.username"
+                  class="_size-6 _rounded-full"
+                />
+              </button>
               <img v-else src="../../assets/imgs/discord-logo.svg" class="_size-6 _rounded-lg" />
               <span class="_text-gray-800">{{ discord.username }}</span>
             </div>
@@ -369,12 +396,25 @@
             class="_flex _items-center _justify-between _p-3 _bg-gray-50/80 _rounded-lg"
           >
             <div class="_flex _items-center _gap-2">
-              <img
+              <button
                 v-if="farcaster.avatar"
-                :src="`${farcaster.avatar}`"
-                :alt="farcaster.username"
-                class="_size-6 _rounded-full"
-              />
+                @click="() => setAvatar('farcaster', farcaster.id)"
+                :class="[
+                  '_p-0 _rounded-full _focus:_ring-2 _focus:_ring-blue-300 _transition-shadow _cursor-pointer',
+                  farcaster.avatar === auth.user?.avatar
+                    ? '_border-4 _border-blue-500 shadow-[0_0_0_2px_rgba(34,197,94,0.3)]'
+                    : '_border-2 _border-blue-400 hover:_border-blue-600'
+                ]"
+                style="background: none"
+                type="button"
+                title="Set as profile avatar"
+              >
+                <img
+                  :src="`${farcaster.avatar}`"
+                  :alt="farcaster.username"
+                  class="_size-6 _rounded-full"
+                />
+              </button>
               <img v-else src="../../assets/imgs/farcaster-logo.svg" class="_size-6 _rounded-lg" />
               <span class="_text-gray-800">{{ farcaster.username }}</span>
             </div>
@@ -586,6 +626,24 @@ const handleLogout = async () => {
     console.log('User logged out')
   } catch (error) {
     console.error('Logout failed:', error)
+  }
+}
+
+const setAvatar = async (platform, platformId) => {
+  try {
+    const response = await fetch(`${backendUrl.value}/auth/avatar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+      },
+      body: JSON.stringify({ platform, platformId })
+    })
+    if (!response.ok) throw new Error('Failed to set avatar')
+    await auth.fetchUserStatus()
+  } catch (err) {
+    alert('Failed to set avatar. Please try again.')
+    console.error('Failed to set avatar:', err)
   }
 }
 </script>
