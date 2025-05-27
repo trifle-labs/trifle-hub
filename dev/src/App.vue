@@ -1,5 +1,5 @@
 <template>
-  <TrifleHub position="top-right">
+  <TrifleHub position="bottom-right">
     <router-view />
   </TrifleHub>
 </template>
