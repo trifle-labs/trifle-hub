@@ -7,6 +7,8 @@ import { createAppClient, viemConnector } from '@farcaster/auth-client'
 import { isMobile } from './utils'
 import { useAccount } from '@wagmi/vue'
 import { signMessage, watchAccount } from '@wagmi/core'
+import { createSiweMessage } from 'viem/siwe'
+
 // Platform types
 const PLATFORMS = {
   WALLET: 'wallet',
@@ -393,7 +395,7 @@ export const useAuthStore = defineStore('auth', {
           return true
         }
 
-        const url = `${this.backendUrl}/auth/wallet/${this.isAuthenticated ? 'add-nonce' : 'nonce'}`
+        const url = `${this.backendUrl}/auth/wallet/nonce`
         const headers = {
           'Content-Type': 'application/json'
         }
@@ -406,8 +408,7 @@ export const useAuthStore = defineStore('auth', {
         this.authSteps.wallet.signing = true
         const nonceResponse = await fetch(url, {
           method: 'POST',
-          headers,
-          body: JSON.stringify({ address: normalizedAddress })
+          headers
         })
         console.log('nonceResponse', { nonceResponse })
 
@@ -416,10 +417,23 @@ export const useAuthStore = defineStore('auth', {
         }
 
         const { nonce } = await nonceResponse.json()
+        const message = createSiweMessage({
+          domain: window.location.host,
+          address: normalizedAddress,
+          statement: 'Sign in with Ethereum to the app.',
+          uri: window.location.origin,
+          version: '1',
+          chainId: this.accountChainId,
+          nonce
+        })
+
         console.log('sign the nonce')
         // 2. Sign the nonce message
+        // const signature = await signMessage(this._wagmiConfigInstance, {
+        //   message: nonce
+        // })
         const signature = await signMessage(this._wagmiConfigInstance, {
-          message: nonce
+          message
         })
         console.log({ signature })
 
@@ -435,8 +449,8 @@ export const useAuthStore = defineStore('auth', {
           method: 'POST',
           headers,
           body: JSON.stringify({
-            address: normalizedAddress,
-            signature
+            signature,
+            message
           })
         })
         console.log({ verifyResponse })

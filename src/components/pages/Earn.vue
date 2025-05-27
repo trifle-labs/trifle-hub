@@ -269,7 +269,7 @@ const fetchUserPoints = async () => {
   try {
     if (isAuthenticated.value) {
       // Fetch all points for the user
-      const response = await fetch(`${backendUrl.value}/balls/index`, {
+      const response = await fetch(`${backendUrl.value}/balls/point-categories-with-counts`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
