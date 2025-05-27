@@ -192,9 +192,10 @@ export const useAuthStore = defineStore('auth', {
         }
       }).then((res) => res.json())
 
+      const currentURL = window.location.href
       const channel = await appClient.createChannel({
-        siweUri: 'https://trifle-bot.ngrok.app/farcaster/signin',
-        domain: 'trifle-bot.ngrok.app',
+        siweUri: currentURL,
+        domain: currentURL.split('/')[2],
         nonce
       })
 
