@@ -108,7 +108,7 @@ export const possiblePoints = [
     name: "Emoji added to your 'gm'",
     id: 'gm-react',
     icon: discordIcon,
-    description: 'Everytime someone adds an emoji to your "gm" message, you earn +1',
+    description: 'Every time someone adds an emoji to your "gm" message, you earn +1',
     pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,

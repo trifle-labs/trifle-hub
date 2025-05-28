@@ -58,17 +58,17 @@
           </a>
           <div class="_px-2 _mx-6 _flex _justify-center _-mt-5 _relative _p-2">
             <div
-              class="_bg-metalic-linearff _shadow-panel-insetff _rounded-lg _flex _items-center _w-fullff _justify-between _flex-col _gap-1 _shadow-panel-insetff _rounded-full _w-full _pb-5"
+              class="_bg-metallic-linearff _shadow-panel-insetff _rounded-lg _flex _items-center _w-fullff _justify-between _flex-col _gap-1 _shadow-panel-insetff _rounded-full _w-full _pb-5"
             >
               <a
                 :href="game.link"
                 target="_blank"
-                class="_-mt-7 _relative _bg-metalic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _tracking-[0.2em] _text-em-2xl mouse:hover:_scale-[1.05] _duration-150"
+                class="_-mt-7 _relative _bg-metallic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _tracking-[0.2em] _text-em-2xl mouse:hover:_scale-[1.05] _duration-150"
               >
                 PLAY
               </a>
               <p
-                class="_px-5 _leading-none _py-4.5 _-mt-3.5 _italic _text-em-sm _opacity-50ff _whitespace-nowrap _text-stroke-lg ff_bg-metalic-linear _shadow-panel-inset _rounded-md"
+                class="_px-5 _leading-none _py-4.5 _-mt-3.5 _italic _text-em-sm _opacity-50ff _whitespace-nowrap _text-stroke-lg ff_bg-metallic-linear _shadow-panel-inset _rounded-md"
                 v-html="game.description"
               ></p>
             </div>

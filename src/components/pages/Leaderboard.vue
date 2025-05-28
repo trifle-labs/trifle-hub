@@ -2,7 +2,7 @@
   <div class="_flex-1 _overflow-y-scroll _px-5 _w-full _flex _flex-col">
     <HubPageHeader>
       <template #icon>
-        <img src="../../assets/imgs/trifle-trophyy-sm.png" alt="🏆" class="_h-[1.75em]" />
+        <img src="../../assets/imgs/trifle-trophy-sm.png" alt="🏆" class="_h-[1.75em]" />
       </template>
       leaderboard
     </HubPageHeader>
@@ -39,7 +39,7 @@
         <div
           v-for="(entry, index) in leaderboardData"
           :key="entry.UserId || index"
-          class="_flex _items-center _gap-2.5 _p-3 _rounded-lg _bg-metalic-linear _shadow-panel _text-mlg _max-w-full _min-w-0"
+          class="_flex _items-center _gap-2.5 _p-3 _rounded-lg _bg-metallic-linear _shadow-panel _text-mlg _max-w-full _min-w-0"
         >
           <div class="_min-w-4 _text-right _text-em-xs _opacity-25 _flex-shrink-0">
             {{ index + 1 }}

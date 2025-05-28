@@ -1,8 +1,8 @@
 <template>
   <!-- typography classes redundantly applied to all breakpoints so they aren't purged and are availabe in parent apps -->
   <h1 class="_h1 sm:_h1 md:_h1 lg:_h1 xl:_h1 2xl:_h1">Heading 1 (._h1)</h1>
-  <p class="_bodytext sm:_bodytext md:_bodytext lg:_bodytext xl:_bodytext 2xl:_bodytext">
-    Paragraph text (._bodytext) is ideally legible on all devices as is. Maybe a bit larger than web
+  <p class="_bodyText sm:_bodyText md:_bodyText lg:_bodyText xl:_bodyText 2xl:_bodyText">
+    Paragraph text (._bodyText) is ideally legible on all devices as is. Maybe a bit larger than web
     default 16px because we cozy goofy. Similar for line-height.
   </p>
   <p
@@ -10,19 +10,19 @@
   >
     Arial, 16px (web default) looks like this which is too small and too cramped.
   </p>
-  <p class="_fineprint sm:_fineprint md:_fineprint lg:_fineprint xl:_fineprint 2xl:_fineprint">
-    Fineprint (._fineprint) is a bit smaller than base text because it's smol.
+  <p class="_finePrint sm:_finePrint md:_finePrint lg:_finePrint xl:_finePrint 2xl:_finePrint">
+    Fineprint (._finePrint) is a bit smaller than base text because it's smol.
   </p>
   <h2 class="_h2 sm:_h2 md:_h2 lg:_h2 xl:_h2 2xl:_h2">Heading 2 (._h2)</h2>
-  <p class="_bodytext">Paragraph text is ideally legible on all devices as is</p>
+  <p class="_bodyText">Paragraph text is ideally legible on all devices as is</p>
   <h3 class="_h3 sm:_h3 md:_h3 lg:_h3 xl:_h3 2xl:_h3">Heading 3 (._h3)</h3>
-  <p class="_bodytext">Paragraph text is ideally legible on all devices as is</p>
+  <p class="_bodyText">Paragraph text is ideally legible on all devices as is</p>
   <h4 class="_h4 sm:_h4 md:_h4 lg:_h4 xl:_h4 2xl:_h4">Heading 4 (._h4)</h4>
-  <p class="_bodytext">Paragraph text is ideally legible on all devices as is</p>
+  <p class="_bodyText">Paragraph text is ideally legible on all devices as is</p>
   <h5 class="_h5 sm:_h5 md:_h5 lg:_h5 xl:_h5 2xl:_h5">Heading 5 (._h5)</h5>
-  <p class="_bodytext">Paragraph text is ideally legible on all devices as is</p>
+  <p class="_bodyText">Paragraph text is ideally legible on all devices as is</p>
   <h6 class="_h6 sm:_h6 md:_h6 lg:_h6 xl:_h6 2xl:_h6">Heading 6 (._h6)</h6>
-  <p class="_bodytext">Paragraph text is ideally legible on all devices as is</p>
+  <p class="_bodyText">Paragraph text is ideally legible on all devices as is</p>
 
   <h2 class="_h1">Font sizes</h2>
   <ul>
@@ -58,7 +58,7 @@
   </ul>
 
   <h2 class="_h1">Em sizing</h2>
-  <p class="_bodytext">
+  <p class="_bodyText">
     Em sizing is a relative unit of the font size of the element. It is a percentage of the font
     size of the element.
   </p>

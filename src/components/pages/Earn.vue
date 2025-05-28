@@ -9,11 +9,11 @@
       </HubPageHeader>
       <template v-if="!isAuthenticated">
         <section
-          class="_mt-4 _px-3.5 _py-3 _flex _flex-col _gap-3 _rounded-lg _overflow-hidden _shadow-panel _bg-metalic-cone"
+          class="_mt-4 _px-3.5 _py-3 _flex _flex-col _gap-3 _rounded-lg _overflow-hidden _shadow-panel _bg-metallic-cone"
         >
           <div class="_relative _flex _flex-col _gap-2.5">
             <div>
-              <p class="_bodytext">
+              <p class="_bodyText">
                 Pachinko Balls 🪩 are Trifle's point system—you might already have some!
               </p>
             </div>
@@ -32,7 +32,7 @@
       </template>
       <template v-if="isAuthenticated">
         <section
-          class="_px-3 _py-3.5 _bg-metalic-cone _rounded-lg _shadow-panel _flex _justify-between _items-start _flex-wrap _gap-2 _leading-none"
+          class="_px-3 _py-3.5 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-start _flex-wrap _gap-2 _leading-none"
         >
           <div class="_flex _items-center _gap-[0.5em] _text-base">
             <!-- <div class="_size-[1.5em] _bg-zinc-400 _rounded-full"></div> -->
@@ -131,7 +131,7 @@
         >
           <!-- main body, faded if completed -->
           <div
-            class="_bg-metalic-linear _w-full _flex _flex-col _gap-0.5 _p-2 _rounded-lg _transition-colors _text-mlg _relative"
+            class="_bg-metallic-linear _w-full _flex _flex-col _gap-0.5 _p-2 _rounded-lg _transition-colors _text-mlg _relative"
             :class="[
               {
                 'mouse:hover:_scale-[1.006] _duration-100': quest.link,
@@ -158,13 +158,13 @@
               <div class="_flex _items-center _h-[1.7em] _gap-0.5 _relative _text-em-sm">
                 <div
                   v-if="!quest.enabled"
-                  class="_rounded-full _bg-metalic-cone _shadow-panel _px-[0.5em]"
+                  class="_rounded-full _bg-metallic-cone _shadow-panel _px-[0.5em]"
                 >
                   soon
                 </div>
                 <div
                   v-else
-                  class="_rounded-full _bg-metalic-cone _shadow-panel _pr-[0.5em] _pl-[0.25em] _flex _gap-[0.1em]"
+                  class="_rounded-full _bg-metallic-cone _shadow-panel _pr-[0.5em] _pl-[0.25em] _flex _gap-[0.1em]"
                 >
                   <div>🪩</div>
                   <span v-if="typeof quest.pachinkoBalls === 'string'">

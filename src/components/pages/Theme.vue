@@ -1,5 +1,5 @@
 <template>
-  <div class="_px-5 _bodytext _w-full _flex _flex-col _gap-2">
+  <div class="_px-5 _bodyText _w-full _flex _flex-col _gap-2">
     <HubPageHeader>
       <template #icon>🎨</template>
       Hub Theme</HubPageHeader

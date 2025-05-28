@@ -8,6 +8,7 @@ import { isMobile } from './utils'
 import { useAccount } from '@wagmi/vue'
 import { signMessage, watchAccount } from '@wagmi/core'
 import { createSiweMessage } from 'viem/siwe'
+import { sdk } from '@farcaster/frame-sdk'
 
 // Platform types
 const PLATFORMS = {
@@ -40,6 +41,7 @@ export const useAuthStore = defineStore('auth', {
         verifying: false
       }
     },
+    isFarcaster: false,
     _appKitInstance: null,
     _wagmiConfigInstance: null
   }),
@@ -76,6 +78,16 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
+    handleClick(e) {
+      console.log('handleClick', { isFarcaster: this.isFarcaster })
+      const link = e.target.closest('a')
+      if (!link) return
+      const linkMatchesDomain = link.href.includes(window.location.host)
+      if (this.isFarcaster && !linkMatchesDomain) {
+        e.preventDefault()
+        sdk.actions.openUrl(link.href)
+      }
+    },
     setInstances(appKit, wagmiConfig) {
       this._appKitInstance = appKit
       this._wagmiConfigInstance = wagmiConfig
@@ -129,6 +141,15 @@ export const useAuthStore = defineStore('auth', {
           }
         })
 
+        // Initialize Farcaster miniapp if present
+        await sdk.actions.ready()
+        document.addEventListener('click', this.handleClick)
+
+        const context = await sdk.context
+        if (context?.user) {
+          this.isFarcaster = context
+        }
+
         this.initialized = true
       } catch (error) {
         console.error('Auth initialization failed:', error)
@@ -181,80 +202,97 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async connectFarcaster() {
-      console.log('connectFarcaster')
-      const appClient = createAppClient({
-        relay: 'https://relay.farcaster.xyz',
-        ethereum: viemConnector({ rpcUrl: 'https://eth.drpc.org' })
-      })
-
       const { nonce } = await fetch(this.backendUrl + '/farcaster/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         }
       }).then((res) => res.json())
-
-      const currentURL = window.location.href
-      const channel = await appClient.createChannel({
-        siweUri: currentURL,
-        domain: currentURL.split('/')[2],
-        nonce
-      })
-
-      const channelToken = channel.data?.channelToken
-
-      const url = channel.data?.url.replace('warpcast.com', 'farcaster.xyz')
-      let authWindow
-      if (isMobile()) {
-        authWindow = window.open(url, '_top')
+      let data, authWindow
+      if (this.isFarcaster) {
+        data = await sdk.actions.signIn({
+          nonce
+        })
       } else {
-        authWindow = window.open(url, '_blank', 'width=500,height=800')
-      }
-
-      if (!authWindow) {
-        throw new Error(
-          'Could not open Farcaster authentication window. Please check your popup blocker settings.'
-        )
-      }
-
-      await appClient.watchStatus({
-        channelToken,
-        timeout: 60_000,
-        interval: 1_000,
-        onResponse: async ({ response, data }) => {
-          if (response.status !== 200) return
-          console.log('Response code:', response.status)
-          console.log('Status data:', data)
-          authWindow.close()
-
-          const url = `${this.backendUrl}/farcaster/${
-            this.isAuthenticated ? 'add-signin' : 'signin'
-          }`
-          const headers = {
-            'Content-Type': 'application/json'
-          }
-          if (this.isAuthenticated) {
-            headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
-          }
-          const res = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(data)
-          })
-
-          if (!res.ok) {
-            console.error('error signing in with farcaster', res)
-            authWindow.close()
-            throw new Error('Failed to sign in with Farcaster')
-          }
-
-          const jsonRes = await res.json()
-          console.log({ jsonRes })
-          localStorage.setItem('authToken', jsonRes.token)
-          console.log('listen for successful farcaster auth')
-          await this.fetchUserStatus()
+        const appClient = createAppClient({
+          relay: 'https://relay.farcaster.xyz',
+          ethereum: viemConnector({ rpcUrl: 'https://eth.drpc.org' })
+        })
+        const currentURL = window.location.href
+        const channel = await appClient.createChannel({
+          siweUri: currentURL,
+          domain: currentURL.split('/')[2],
+          nonce
+        })
+        const channelToken = channel.data?.channelToken
+        const url = channel.data?.url.replace('warpcast.com', 'farcaster.xyz')
+        if (isMobile()) {
+          authWindow = window.open(url, '_top')
+        } else {
+          authWindow = window.open(url, '_blank', 'width=500,height=800')
         }
+
+        if (!authWindow) {
+          throw new Error(
+            'Could not open Farcaster authentication window. Please check your popup blocker settings.'
+          )
+        }
+        data = await new Promise((resolve, reject) => {
+          appClient
+            .watchStatus({
+              channelToken,
+              timeout: 60_000,
+              interval: 1_000,
+              onResponse: async ({ response, data }) => {
+                if (response.status !== 200) return
+                console.log('Response code:', response.status)
+                console.log('Status data:', data)
+                authWindow.close()
+                resolve(data)
+              }
+            })
+            .catch((err) => {
+              reject(err)
+            })
+        })
+      }
+
+      const url = `${this.backendUrl}/farcaster/${this.isAuthenticated ? 'add-signin' : 'signin'}`
+      const headers = {
+        'Content-Type': 'application/json'
+      }
+      if (this.isAuthenticated) {
+        headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
+      }
+      const res = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(data)
       })
+
+      if (!res.ok) {
+        console.error('error signing in with farcaster', res)
+        authWindow && authWindow.close()
+        throw new Error('Failed to sign in with Farcaster')
+      }
+
+      const jsonRes = await res.json()
+      console.log({ jsonRes })
+      localStorage.setItem('authToken', jsonRes.token)
+      headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
+      console.log('listen for successful farcaster auth')
+      await this.fetchUserStatus()
+      console.log({ isFarcaster: this.isFarcaster })
+      if (this.isFarcaster && !this.isFarcaster.client.added) {
+        console.log('adding frame')
+        await sdk.actions.addFrame()
+      } else if (this.isFarcaster) {
+        await fetch(this.backendUrl + '/farcaster/update', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(this.isFarcaster)
+        })
+      }
     },
 
     async connectDiscord() {
@@ -640,7 +678,8 @@ export const useAuthStore = defineStore('auth', {
 
       this.isAuthenticated = true
 
-      // TODO: this seems strange. I think it's trying to confirm whether the discord connection is still valid with discord, meaning we can use the token stored in the database to do things for the user within discord. I don't think this is necessary since we're just using discord to authentiacte the user on our server.
+      // TODO: this seems strange. I think it's trying to confirm whether the discord connection is still valid with discord, meaning we can use the token stored in the database to do things for the user within discord.
+      // // I don't think this is necessary since we're just using discord to authenticate the user on our server.
       // If we have a Discord connection, verify it's still valid
       if (this.user?.linkedAccounts?.discord?.length) {
         try {
@@ -792,7 +831,7 @@ export const useAuthStore = defineStore('auth', {
         if (!response.ok) {
           throw new Error('Failed to disconnect platform instance')
         }
-        console.log('disconnecPlatformInstance')
+        console.log('disconnectPlatformInstance')
         await this.fetchUserStatus()
       } catch (error) {
         console.error('Failed to disconnect platform instance:', error)

@@ -72,9 +72,9 @@ export default {
         DEFAULT: 'currentColor'
       },
       boxShadow: {
-        px: '0 1px 1px var(--thub-shadow-color)',
-        panel: '0 1px 1px var(--thub-shadow-color), inset 0 1px 0 rgba(255, 255, 255, 0.75)',
-        'panel-inset': '0 1px 1px var(--thub-shadow-color) inset, 0 1px 0 rgba(255, 255, 255, 0.75)'
+        px: '0 1px 1px var(--tHub-shadow-color)',
+        panel: '0 1px 1px var(--tHub-shadow-color), inset 0 1px 0 rgba(255, 255, 255, 0.75)',
+        'panel-inset': '0 1px 1px var(--tHub-shadow-color) inset, 0 1px 0 rgba(255, 255, 255, 0.75)'
       },
       borderWidth: { 3: '3px' },
       keyframes: {

@@ -15,7 +15,7 @@
     <div id="trifle-hub__menu-button" class="_fixed _z-10 trifle-hub-position">
       <div
         class="_block _pointer-events-auto _rounded-full _overflow-hidden"
-        style="width: var(--thub-menu-button-size); height: var(--thub-menu-button-size)"
+        style="width: var(--tHub-menu-button-size); height: var(--tHub-menu-button-size)"
       >
         <TrifleBall
           mode="metal"
@@ -26,7 +26,7 @@
       </div>
     </div>
     <!-- (hub panel) -->
-    <transition name="thub-fade-in-scale-up">
+    <transition name="tHub-fade-in-scale-up">
       <aside
         v-if="hubOpen"
         class="_fixed trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[41rem] _max-h-[56rem] _z-10"
@@ -72,9 +72,9 @@
               </div>
             </button>
           </div>
-          <!-- backgroun layer -->
+          <!-- background layer -->
           <div class="_absolute _inset-0">
-            <transition-group name="thub-bg-fade">
+            <transition-group name="tHub-bg-fade">
               <div
                 v-if="hubPage.bgImg"
                 :key="hubPage.bgImg"
@@ -84,7 +84,7 @@
               <div
                 v-else
                 key="default"
-                class="_absolute _top-0 _left-0 _w-full _h-full _bg-metalic-linear _opacity-[0.6]"
+                class="_absolute _top-0 _left-0 _w-full _h-full _bg-metallic-linear _opacity-[0.6]"
               ></div>
             </transition-group>
           </div>
@@ -102,7 +102,7 @@
             >
               <img
                 src="../assets/imgs/gigi-tilt-heads.png"
-                alt="fidget spinner creature, Titl standing on black cat, GiGi's head"
+                alt="fidget spinner creature, Tilt standing on black cat, GiGi's head"
                 class="_h-[5em] sm:_h-[6em] _origin-bottom"
                 :class="{ '_animate-wiggle-sm': props.hubPageKey === 'games' }"
               />
@@ -114,7 +114,7 @@
               :class="{ _underline: props.hubPageKey === 'leaderboard' }"
             >
               <img
-                src="../assets/imgs/trifle-trophyy-sm.png"
+                src="../assets/imgs/trifle-trophy-sm.png"
                 alt="🏆"
                 class="_h-11 sm:_h-13 _origin-bottom"
                 :class="{ '_animate-wiggle': props.hubPageKey === 'leaderboard' }"
@@ -158,7 +158,7 @@
           </nav>
           <!-- pages, scrollable -->
           <div class="_flex-1 _flex _overflow-y-scroll _select-text _relative _no-scrollbar">
-            <transition name="thub-page" mode="out-in">
+            <transition name="tHub-page" mode="out-in">
               <component :is="hubPage.component" />
             </transition>
           </div>
@@ -171,7 +171,7 @@
 <script setup>
 import { computed, inject } from 'vue'
 import hubPages from './pages/config'
-import borderImg from '../assets/imgs/metalbubble-border.png'
+import borderImg from '../assets/imgs/metal-bubble-border.png'
 import TrifleBall from './TrifleBall/TrifleBall.vue'
 
 const hubOpen = defineModel('hubOpen')
@@ -193,13 +193,13 @@ const auth = inject('TrifleHub/store')
       bottom: 0;
       left: 0;
     }
-    & .thub-fade-in-scale-up-enter-active,
-    & .thub-fade-in-scale-up-leave-active {
+    & .tHub-fade-in-scale-up-enter-active,
+    & .tHub-fade-in-scale-up-leave-active {
       transition: all 0.3s ease;
       transform-origin: left 80%;
     }
-    & .thub-fade-in-scale-up-enter-from,
-    & .thub-fade-in-scale-up-leave-to {
+    & .tHub-fade-in-scale-up-enter-from,
+    & .tHub-fade-in-scale-up-leave-to {
       opacity: 0;
       transform: translateY(20%) scale(0) rotate(10deg);
     }
@@ -209,13 +209,13 @@ const auth = inject('TrifleHub/store')
       bottom: 0;
       right: 0;
     }
-    & .thub-fade-in-scale-up-enter-active,
-    & .thub-fade-in-scale-up-leave-active {
+    & .tHub-fade-in-scale-up-enter-active,
+    & .tHub-fade-in-scale-up-leave-active {
       transition: all 0.3s ease;
       transform-origin: right 80%;
     }
-    & .thub-fade-in-scale-up-enter-from,
-    & .thub-fade-in-scale-up-leave-to {
+    & .tHub-fade-in-scale-up-enter-from,
+    & .tHub-fade-in-scale-up-leave-to {
       opacity: 0;
       transform: translateY(20%) scale(0) rotate(10deg);
     }
@@ -225,13 +225,13 @@ const auth = inject('TrifleHub/store')
       top: 0;
       left: 0;
     }
-    & .thub-fade-in-scale-up-enter-active,
-    & .thub-fade-in-scale-up-leave-active {
+    & .tHub-fade-in-scale-up-enter-active,
+    & .tHub-fade-in-scale-up-leave-active {
       transition: all 0.3s ease;
       transform-origin: left -20%;
     }
-    & .thub-fade-in-scale-up-enter-from,
-    & .thub-fade-in-scale-up-leave-to {
+    & .tHub-fade-in-scale-up-enter-from,
+    & .tHub-fade-in-scale-up-leave-to {
       opacity: 0;
       transform: translateY(20%) scale(0) rotate(10deg);
     }
@@ -241,13 +241,13 @@ const auth = inject('TrifleHub/store')
       top: 0;
       right: 0;
     }
-    & .thub-fade-in-scale-up-enter-active,
-    & .thub-fade-in-scale-up-leave-active {
+    & .tHub-fade-in-scale-up-enter-active,
+    & .tHub-fade-in-scale-up-leave-active {
       transition: all 0.3s ease;
       transform-origin: right -20%;
     }
-    & .thub-fade-in-scale-up-enter-from,
-    & .thub-fade-in-scale-up-leave-to {
+    & .tHub-fade-in-scale-up-enter-from,
+    & .tHub-fade-in-scale-up-leave-to {
       opacity: 0;
       transform: translateY(20%) scale(0) rotate(10deg);
     }
@@ -285,28 +285,28 @@ const auth = inject('TrifleHub/store')
   -webkit-mask-image: var(--mask);
 }
 
-.thub-page-enter-active,
-.thub-page-leave-active {
+.tHub-page-enter-active,
+.tHub-page-leave-active {
   transition: all 150ms ease;
 }
 
-.thub-page-enter-from {
+.tHub-page-enter-from {
   opacity: 0;
   transform: translateY(5px);
 }
 
-.thub-page-leave-to {
+.tHub-page-leave-to {
   opacity: 0;
   transform: translateY(-5px);
 }
 
-.thub-bg-fade-enter-active,
-.thub-bg-fade-leave-active {
+.tHub-bg-fade-enter-active,
+.tHub-bg-fade-leave-active {
   transition: all 0.3s ease;
 }
 
-.thub-bg-fade-enter-from,
-.thub-bg-fade-leave-to {
+.tHub-bg-fade-enter-from,
+.tHub-bg-fade-leave-to {
   opacity: 0;
 }
 </style>
