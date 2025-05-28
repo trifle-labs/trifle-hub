@@ -148,12 +148,12 @@
                 :class="{ '_animate-wiggle': props.hubPageKey === 'account' }"
               >
                 <!-- (avatar) -->
-                <img
+                <div
                   v-if="authUserAvatar"
-                  :src="authUserAvatar"
-                  alt="user avatar"
-                  class="_size-[80%] _rounded-full _block"
-                  style="box-shadow: 0 3px 4px 1px rgba(0, 0, 0, 0.4)"
+                  class="_size-[80%] _rounded-full _block _bg-cover _bg-center"
+                  :style="{ backgroundImage: `url(${authUserAvatar})` }"
+                  style="box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.75)"
+                  aria-label="your avatar image"
                 />
                 <!-- (blank face) -->
                 <object
