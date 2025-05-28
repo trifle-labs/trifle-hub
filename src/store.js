@@ -80,7 +80,6 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     handleClick(e) {
-      console.log('handleClick', { isFarcaster: this.isFarcaster })
       const link = e.target.closest('a')
       if (!link) return
       const linkMatchesDomain = link.href.includes(window.location.host)

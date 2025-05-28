@@ -578,6 +578,18 @@ const checkUsername = async (username) => {
     usernameError.value = ''
     return
   }
+
+  const isAlphaNumeric = /^(?!.*--)[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/.test(username)
+  if (!isAlphaNumeric) {
+    usernameError.value = 'Username must be alphanumeric'
+    return
+  }
+
+  if (username.length > 22) {
+    usernameError.value = 'Username must be 22 characters or less'
+    return
+  }
+
   isCheckingUsername.value = true
   try {
     const response = await fetch(
