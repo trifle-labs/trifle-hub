@@ -11,7 +11,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed, watch, defineExpose, defineEmits } from 'vue'
+import {
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  computed,
+  watch,
+  defineExpose,
+  defineEmits,
+  nextTick
+} from 'vue'
 import { BallVisualizer } from './trifle-ball'
 import arcadeTexture from './assets/arcade-edit-blur.jpg'
 import stickerTexture from './assets/trifle-fidget.png'
@@ -29,6 +38,10 @@ const props = defineProps({
   imageSource: {
     type: String,
     default: null
+  },
+  animate: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -92,11 +105,17 @@ watch(
 onMounted(() => {
   initVisualizer()
 
-  observer = new window.IntersectionObserver(([entry]) => {
+  observer = new window.IntersectionObserver(async ([entry]) => {
     isVisible.value = entry.isIntersecting
     if (visualizer.value) {
       if (isVisible.value) {
-        visualizer.value.resume()
+        if (!props.animate) {
+          // wait for ball to render then pause if not supposed to be animating
+          await new Promise((resolve) => setTimeout(resolve, 300))
+          visualizer.value.pause()
+        } else {
+          visualizer.value.resume()
+        }
       } else {
         visualizer.value.pause()
       }
@@ -104,6 +123,16 @@ onMounted(() => {
   })
   if (container.value) observer.observe(container.value)
 })
+
+watch(
+  () => props.animate,
+  (animate) => {
+    if (visualizer.value) {
+      return animate ? visualizer.value.resume() : visualizer.value.pause()
+    }
+  },
+  { immediate: true }
+)
 
 onBeforeUnmount(() => {
   if (visualizer.value) {
