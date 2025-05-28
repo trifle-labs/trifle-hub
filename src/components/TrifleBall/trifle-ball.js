@@ -19,7 +19,8 @@ import {
   LinearFilter,
   // NearestFilter,
   BackSide,
-  SRGBColorSpace
+  SRGBColorSpace,
+  Quaternion
 } from 'three'
 import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture'
 import { DecalGeometry } from 'three/examples/jsm/geometries/DecalGeometry.js'
@@ -578,8 +579,22 @@ export class BallVisualizer {
     }
 
     if (this.ball) {
-      this.ball.rotation.x += this.rotationSpeed.x
-      this.ball.rotation.y += this.rotationSpeed.y
+      // this old method gets inverted when the ball is rotated
+
+      // this.ball.rotation.x += this.rotationSpeed.x
+      // this.ball.rotation.y += this.rotationSpeed.y
+
+      // this new method is more consistent
+      if (this.rotationSpeed.x !== 0 || this.rotationSpeed.y !== 0) {
+        // Create quaternions for world X and Y axes
+        const qx = new Quaternion()
+        const qy = new Quaternion()
+        qx.setFromAxisAngle(new Vector3(1, 0, 0), this.rotationSpeed.x)
+        qy.setFromAxisAngle(new Vector3(0, 1, 0), this.rotationSpeed.y)
+        // Apply Y first, then X (screen-like behavior)
+        this.ball.quaternion.premultiply(qy)
+        this.ball.quaternion.premultiply(qx)
+      }
     }
 
     this.renderer.render(this.scene, this.camera)
