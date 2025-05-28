@@ -32,13 +32,21 @@
       </template>
       <template v-if="isAuthenticated">
         <section
-          class="_px-3 _py-3.5 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-start _flex-wrap _gap-2 _leading-none"
+          class="_px-3 _py-3.5 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none"
         >
           <div class="_flex _items-center _gap-[0.5em] _text-base">
-            <!-- <div class="_size-[1.5em] _bg-zinc-400 _rounded-full"></div> -->
+            <img
+              v-if="auth.user?.avatar"
+              :src="auth.user?.avatar"
+              class="_size-[1.3em] _block _shadow-px _bg-zinc-400 _rounded-full"
+            />
             <div class="_opacity-30">Your Balance</div>
           </div>
-          <div class="_text-3xl _font-bold">{{ totalBalls || '???' }} 🪩</div>
+          <div
+            class="_text-3xl _font-bold _text-right _flex-1 _whitespace-nowrap _min-w-0 _truncate"
+          >
+            {{ totalBalls.toLocaleString() || '???' }} 🪩
+          </div>
         </section>
       </template>
     </header>
@@ -135,8 +143,8 @@
             :class="[
               {
                 'mouse:hover:_scale-[1.006] _duration-100': quest.link,
-                '_opacity-50': quest.completed,
-                '_shadow-panel': !quest.completed
+                '_opacity-50': quest.completed && quest.once,
+                '_shadow-panel': !(quest.completed && quest.once)
               }
             ]"
           >
@@ -149,7 +157,7 @@
                 <!-- title -->
                 <div
                   class="_min-h-[1.7em] _flex _items-center _justify-start _text-left _py-[0.06em] _weight-bold _leading-snug"
-                  :class="{ '_line-through': quest.completed }"
+                  :class="{ '_line-through': quest.completed && quest.once }"
                 >
                   {{ quest.name }}
                 </div>
@@ -177,7 +185,7 @@
                   viewBox="0 0 20 20"
                   fill="black"
                   class="_size-6 _opacity-40"
-                  :class="{ '_invisible _ml-4.5': quest.completed }"
+                  :class="{ '_invisible _ml-4.5': quest.completed && quest.once }"
                 >
                   <path
                     fill-rule="evenodd"
@@ -203,8 +211,8 @@
               </div> -->
           </div>
           <div
-            v-if="quest.completed"
-            class="_absolute _top-0 _right-2 _h-full _flex _items-center _justify-center"
+            v-if="quest.completed && quest.once"
+            class="_absolute _top-0 _right-1 _flex _items-center _justify-center"
           >
             <img src="../../assets/imgs/checkmark-icon-glass.png" class="_size-[2.5em]" />
           </div>
@@ -254,8 +262,8 @@ const filteredQuests = computed(() => {
     // then, sort by completion status (uncompleted quests on top)
     if (a.enabled && b.enabled) {
       // This condition ensures we only sort by completion for enabled quests
-      if (!a.completed && b.completed) return -1
-      if (a.completed && !b.completed) return 1
+      if (!(a.completed && a.once) && b.completed && b.once) return -1
+      if (a.completed && a.once && !(b.completed && b.once)) return 1
     }
 
     return 0 // Keep original order if all criteria are the same

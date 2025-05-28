@@ -14,19 +14,23 @@
     <!-- menu button / labels -->
     <div id="trifle-hub__menu-button" class="_fixed _z-10 trifle-hub-position">
       <div
-        class="_block _pointer-events-auto _rounded-full _overflow-hidden"
+        class="_block _pointer-events-auto _rounded-full _overflow-hidden _relative"
         style="width: var(--tHub-menu-button-size); height: var(--tHub-menu-button-size)"
       >
         <TrifleBall
-          mode="metal"
+          ref="trifleBall"
+          :key="authUserAvatar || 'default'"
+          :mode="authUserAvatar ? 'glass' : 'metal'"
+          :image-source="authUserAvatar"
           :camera-angle="8"
-          @click="hubOpen = !hubOpen"
+          :animate="!hubOpen"
           class="_cursor-pointer"
+          @click="hubOpen = !hubOpen"
         />
       </div>
     </div>
     <!-- (hub panel) -->
-    <transition name="tHub-fade-in-scale-up">
+    <transition name="thub-fade-in-scale-up">
       <aside
         v-if="hubOpen"
         class="_fixed trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[41rem] _max-h-[56rem] _z-10"
@@ -141,20 +145,28 @@
               @click="openHub('account')"
               :class="{ _underline: props.hubPageKey === 'account' }"
             >
-              <img
-                v-if="auth.user && auth.user.avatar"
-                :src="auth.user.avatar"
-                alt="user avatar"
-                class="_size-[3.1em] sm:_size-[3.5em] _-mb-[0.5em] _origin-bottom _rounded-full"
+              <div
+                class="_size-[3.1em] sm:_size-[3.5em] _-mb-[0.5em] _origin-bottom _flex _items-center _justify-center"
                 :class="{ '_animate-wiggle': props.hubPageKey === 'account' }"
-              />
-              <img
-                v-else
-                src="../assets/imgs/smiley-face-dashed-outline.svg"
-                alt="smiley face with dashed outline"
-                class="_size-[3.1em] sm:_size-[3.5em] _-mb-[0.5em] _origin-bottom"
-                :class="{ '_animate-wiggle': props.hubPageKey === 'account' }"
-              />
+              >
+                <!-- (avatar) -->
+                <img
+                  v-if="authUserAvatar"
+                  :src="authUserAvatar"
+                  alt="user avatar"
+                  class="_size-[80%] _rounded-full _block"
+                  style="box-shadow: 0 3px 4px 1px rgba(0, 0, 0, 0.4)"
+                />
+                <!-- (blank face) -->
+                <object
+                  v-else
+                  :data="smileyFaceSvg"
+                  type="image/svg+xml"
+                  alt="smiley face with dashed outline"
+                  class="_w-full _pointer-events-none"
+                  tabindex="-1"
+                ></object>
+              </div>
               account
             </button>
           </nav>
@@ -171,11 +183,12 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, nextTick, ref, watch } from 'vue'
 import hubPages from './pages/config'
 import borderImg from '../assets/imgs/metal-bubble-border.png'
 import TrifleBall from './TrifleBall/TrifleBall.vue'
 import Notifications from './Notifications.vue'
+import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 
 const hubOpen = defineModel('hubOpen')
 const props = defineProps({
@@ -187,6 +200,16 @@ const hubPage = computed(() => hubPages[props.hubPageKey])
 
 const { openHub } = inject('hub')
 const auth = inject('TrifleHub/store')
+
+const authUserAvatar = computed(() => auth.user?.avatar)
+
+const trifleBall = ref(null)
+watch(hubOpen, async (open) => {
+  if (!open) {
+    await nextTick()
+    trifleBall.value.spinFast()
+  }
+})
 </script>
 
 <style>
@@ -196,13 +219,13 @@ const auth = inject('TrifleHub/store')
       bottom: 0;
       left: 0;
     }
-    & .tHub-fade-in-scale-up-enter-active,
-    & .tHub-fade-in-scale-up-leave-active {
+    & .thub-fade-in-scale-up-enter-active,
+    & .thub-fade-in-scale-up-leave-active {
       transition: all 0.3s ease;
       transform-origin: left 80%;
     }
-    & .tHub-fade-in-scale-up-enter-from,
-    & .tHub-fade-in-scale-up-leave-to {
+    & .thub-fade-in-scale-up-enter-from,
+    & .thub-fade-in-scale-up-leave-to {
       opacity: 0;
       transform: translateY(20%) scale(0) rotate(10deg);
     }
@@ -212,13 +235,13 @@ const auth = inject('TrifleHub/store')
       bottom: 0;
       right: 0;
     }
-    & .tHub-fade-in-scale-up-enter-active,
-    & .tHub-fade-in-scale-up-leave-active {
+    & .thub-fade-in-scale-up-enter-active,
+    & .thub-fade-in-scale-up-leave-active {
       transition: all 0.3s ease;
       transform-origin: right 80%;
     }
-    & .tHub-fade-in-scale-up-enter-from,
-    & .tHub-fade-in-scale-up-leave-to {
+    & .thub-fade-in-scale-up-enter-from,
+    & .thub-fade-in-scale-up-leave-to {
       opacity: 0;
       transform: translateY(20%) scale(0) rotate(10deg);
     }
@@ -228,13 +251,13 @@ const auth = inject('TrifleHub/store')
       top: 0;
       left: 0;
     }
-    & .tHub-fade-in-scale-up-enter-active,
-    & .tHub-fade-in-scale-up-leave-active {
+    & .thub-fade-in-scale-up-enter-active,
+    & .thub-fade-in-scale-up-leave-active {
       transition: all 0.3s ease;
       transform-origin: left -20%;
     }
-    & .tHub-fade-in-scale-up-enter-from,
-    & .tHub-fade-in-scale-up-leave-to {
+    & .thub-fade-in-scale-up-enter-from,
+    & .thub-fade-in-scale-up-leave-to {
       opacity: 0;
       transform: translateY(20%) scale(0) rotate(10deg);
     }
@@ -244,13 +267,13 @@ const auth = inject('TrifleHub/store')
       top: 0;
       right: 0;
     }
-    & .tHub-fade-in-scale-up-enter-active,
-    & .tHub-fade-in-scale-up-leave-active {
+    & .thub-fade-in-scale-up-enter-active,
+    & .thub-fade-in-scale-up-leave-active {
       transition: all 0.3s ease;
       transform-origin: right -20%;
     }
-    & .tHub-fade-in-scale-up-enter-from,
-    & .tHub-fade-in-scale-up-leave-to {
+    & .thub-fade-in-scale-up-enter-from,
+    & .thub-fade-in-scale-up-leave-to {
       opacity: 0;
       transform: translateY(20%) scale(0) rotate(10deg);
     }

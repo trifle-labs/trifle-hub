@@ -1,19 +1,21 @@
 <template>
-  <div class="_p-4 _pt-10 _w-full _flex _flex-col _gap-4 _items-center">
-    <header class="_flex _flex-col _gap-3 _items-center _mb-4">
-      <div class="_size-24 _rounded-full _border">
+  <div
+    class="_p-4 _w-full _flex _flex-col _gap-4 _items-center _overflow-y-scroll-masked _no-scrollbar"
+  >
+    <header class="_pt-10 _flex _flex-col _gap-3 _items-center _mb-4">
+      <div class="_size-24 _rounded-full">
         <img
           v-if="auth.user?.avatar"
           :src="`${auth.user?.avatar}`"
           alt="user avatar"
           class="_w-full _block _transform _origin-center _scale-[1.35] sm:_scale-[1.45] _rounded-full"
         />
-        <img
+        <object
           v-else
-          src="../../assets/imgs/smiley-face-dashed-outline.svg"
+          :data="smileyFaceSvg"
           alt="smiley face with dashed outline"
           class="_w-full _block _transform _origin-center _scale-[1.35] sm:_scale-[1.45]"
-        />
+        ></object>
       </div>
       <div
         class="_text-5xl _tracking-wide _w-full _text-center _truncate _min-w-0 _leading-tight _weight-black"
@@ -458,6 +460,7 @@
 <script setup>
 import { computed, ref, inject } from 'vue'
 import { storeToRefs } from 'pinia'
+import smileyFaceSvg from '../../assets/imgs/smiley-face-dashed-outline.svg'
 
 const auth = inject('TrifleHub/store')
 const { isAuthenticated, user, backendUrl } = storeToRefs(auth)
