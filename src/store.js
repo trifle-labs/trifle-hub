@@ -43,7 +43,8 @@ export const useAuthStore = defineStore('auth', {
     },
     isFarcaster: false,
     _appKitInstance: null,
-    _wagmiConfigInstance: null
+    _wagmiConfigInstance: null,
+    notifications: [] // { id, type: 'error'|'success', message }
   }),
 
   getters: {
@@ -105,7 +106,10 @@ export const useAuthStore = defineStore('auth', {
         console.warn('AuthStore: initializeAuth called before appKit/wagmiConfig were set.')
         // Optionally, you could try to wait or re-attempt, or simply return/error.
         // For now, let's prevent execution if not set.
-        this.error = 'Initialization failed: Core dependencies not set in store.'
+        this.addNotification({
+          type: 'error',
+          message: 'Initialization failed: Core dependencies not set in store.'
+        })
         return
       }
       this.loading = true
@@ -153,7 +157,10 @@ export const useAuthStore = defineStore('auth', {
         this.initialized = true
       } catch (error) {
         console.error('Auth initialization failed:', error)
-        this.error = error.message
+        this.addNotification({
+          type: 'error',
+          message: error.message
+        })
       } finally {
         this.loading = false
       }
@@ -209,6 +216,7 @@ export const useAuthStore = defineStore('auth', {
         }
       }).then((res) => res.json())
       let data, authWindow
+      let farcasterTimeout = null
       if (this.isFarcaster) {
         data = await sdk.actions.signIn({
           nonce
@@ -229,29 +237,59 @@ export const useAuthStore = defineStore('auth', {
         if (isMobile()) {
           authWindow = window.open(url, '_top')
         } else {
+          // If a popup is already open, close it before opening a new one
+          if (window.__trifleFarcasterPopup && !window.__trifleFarcasterPopup.closed) {
+            window.__trifleFarcasterPopup.close()
+          }
           authWindow = window.open(url, '_blank', 'width=500,height=800')
+          window.__trifleFarcasterPopup = authWindow
         }
 
         if (!authWindow) {
+          this.addNotification({
+            type: 'error',
+            message:
+              'Could not open Farcaster authentication window. Please check your popup blocker settings.'
+          })
           throw new Error(
             'Could not open Farcaster authentication window. Please check your popup blocker settings.'
           )
         }
+
+        // Timeout for 5 minutes
+        farcasterTimeout = setTimeout(() => {
+          if (authWindow && !authWindow.closed) authWindow.close()
+          window.__trifleFarcasterPopup = null
+          this.addNotification({
+            type: 'error',
+            message: 'Farcaster authentication timed out after 5 minutes.'
+          })
+        }, 300000)
+
         data = await new Promise((resolve, reject) => {
           appClient
             .watchStatus({
               channelToken,
-              timeout: 60_000,
+              timeout: 300_000, // 5 minutes
               interval: 1_000,
               onResponse: async ({ response, data }) => {
                 if (response.status !== 200) return
                 console.log('Response code:', response.status)
                 console.log('Status data:', data)
-                authWindow.close()
+                clearTimeout(farcasterTimeout)
+                if (authWindow && !authWindow.closed) authWindow.close()
+                window.__trifleFarcasterPopup = null
                 resolve(data)
               }
             })
             .catch((err) => {
+              clearTimeout(farcasterTimeout)
+              if (authWindow && !authWindow.closed) authWindow.close()
+              window.__trifleFarcasterPopup = null
+              this.addNotification({
+                type: 'error',
+                message: 'Farcaster authentication failed.'
+              })
               reject(err)
             })
         })
@@ -299,6 +337,18 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true
       this.error = null
 
+      // Always close any previous popup before opening a new one
+      if (window.__trifleDiscordPopup) {
+        try {
+          if (window.__trifleDiscordPopup) {
+            window.__trifleDiscordPopup.close()
+          }
+        } catch (e) {
+          console.warn('Error closing previous Discord popup:', e)
+        }
+        window.__trifleDiscordPopup = null
+      }
+
       try {
         // const hasDiscordAuth = this.user?.linkedAccounts?.discord?.length > 0
         let url = `${this.backendUrl}/auth/discord`
@@ -321,10 +371,10 @@ export const useAuthStore = defineStore('auth', {
         }
 
         // Open Discord auth window
-        const authWindow = window.open(url, '_blank', 'width=500,height=800')
+        window.__trifleDiscordPopup = window.open(url, '_blank', 'width=500,height=800')
 
         // If window failed to open
-        if (!authWindow) {
+        if (!window.__trifleDiscordPopup) {
           throw new Error(
             'Could not open Discord authentication window. Please check your popup blocker settings.'
           )
@@ -333,12 +383,10 @@ export const useAuthStore = defineStore('auth', {
           let checkClosedInterval
           let validResponse = false
           const handleMessage = async (event) => {
-            console.log({ backendUrl: this.backendUrl, event })
             // Only accept messages from our backend
             if (event.origin === this.backendUrl) {
               console.log('event.data', event.data)
               validResponse = true
-              console.log({ validResponse })
               // Clear the interval since we got a valid response
               if (checkClosedInterval) {
                 clearInterval(checkClosedInterval)
@@ -349,6 +397,7 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem('authToken', event.data.token)
                 console.log('listen for successful discord auth')
                 await this.fetchUserStatus()
+                window.__trifleDiscordPopup = null
                 resolve()
                 return
               }
@@ -356,7 +405,8 @@ export const useAuthStore = defineStore('auth', {
               // Handle authentication error
               if (event.data.error) {
                 console.error('Authentication error:', event.data.error)
-                reject(new Error(event.data.error))
+                window.__trifleDiscordPopup = null
+                reject(event.data.error)
                 return
               }
             }
@@ -366,13 +416,15 @@ export const useAuthStore = defineStore('auth', {
 
           // Clean up if window is closed
           checkClosedInterval = setInterval(() => {
-            if (authWindow.closed) {
+            if (window.__trifleDiscordPopup.closed) {
               console.log('manually closing window')
               clearInterval(checkClosedInterval)
               window.removeEventListener('message', handleMessage)
-              console.log({ validResponse })
+              window.__trifleDiscordPopup = null
               if (!validResponse) {
-                reject(new Error('Authentication window closed'))
+                reject(
+                  'Discord window closed before authentication was completed. Please try again.'
+                )
               }
             }
           }, 1000)
@@ -381,8 +433,10 @@ export const useAuthStore = defineStore('auth', {
         await authPromise
       } catch (error) {
         console.error('Discord authentication error:', error)
-        this.error = error.message || 'Failed to connect Discord'
-        throw error
+        this.addNotification({
+          type: 'error',
+          message: error.message || 'Failed to connect Discord'
+        })
       } finally {
         this.loading = false
       }
@@ -552,7 +606,10 @@ export const useAuthStore = defineStore('auth', {
 
         this.saveSession()
       } catch (error) {
-        this.error = error.message || `Failed to connect ${platform}`
+        this.addNotification({
+          type: 'error',
+          message: error.message || `Failed to connect ${platform}`
+        })
         throw error
       } finally {
         this.loading = false
@@ -837,6 +894,17 @@ export const useAuthStore = defineStore('auth', {
         console.error('Failed to disconnect platform instance:', error)
         throw error
       }
+    },
+    addNotification({ type, message }) {
+      const id = Date.now() + Math.random()
+      this.notifications.push({ id, type, message })
+      setTimeout(() => {
+        this.removeNotification(id)
+      }, 5000)
+    },
+    removeNotification(id) {
+      const idx = this.notifications.findIndex((n) => n.id === id)
+      if (idx !== -1) this.notifications.splice(idx, 1)
     }
   }
 })
