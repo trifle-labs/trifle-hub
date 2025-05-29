@@ -214,15 +214,40 @@ export const possiblePoints = [
   // },
   {
     name: 'Follow Trifle on Farcaster',
-    id: 'follow-trifle-farcaster',
+    id: 'trifle-fc-follow',
     icon: farcasterIcon,
-    description: 'Follow Trifle on Farcaster to earn 10 pachinko balls',
+    description: 'Follow Trifle on Farcaster',
     pachinkoBalls: 25,
     kudzuBurn: 0,
     claimed: false,
     once: true,
-    enabled: false,
-    link: 'https://warpcast.com/trifle'
+    enabled: true,
+    link: 'https://farcaster.xyz/trifle'
+  },
+
+  {
+    name: 'Like Trifle casts on Farcaster',
+    id: 'trifle-fc-like',
+    icon: farcasterIcon,
+    // description: 'Like Trifle casts on Farcaster',
+    pachinkoBalls: 1,
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: 'https://farcaster.xyz/trifle'
+  },
+  {
+    name: 'Cast your GM with a gm.trifle.life link',
+    id: 'gm-cast',
+    icon: farcasterIcon,
+    // description: 'Cast your GM with a link to gm.trifle.gg',
+    pachinkoBalls: 1,
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: 'https://farcaster.xyz/miniapps/gBsKvLYGQnEE/gm-game'
   }
   // {
   //   name: 'Massive Multiplayer Online Rock Paper Scissors',

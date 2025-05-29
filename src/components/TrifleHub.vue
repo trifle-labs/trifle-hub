@@ -28,14 +28,70 @@ const route = useRoute()
 const hubOpen = ref(route.query.hub !== undefined)
 const hubPageKey = ref(route.query.hub || sessionStorage.getItem('hubPageKey') || defaultPage)
 
+const watcherCleanup = { stop: null, timeout: null }
+let resolveFunction = null
 provide('hub', {
   hubOpen,
-  openHub: (page) => {
+  openHub: (page, closeAfterLogin = false, { timeoutPeriod = 5 * 60 * 1_000 } = {}) => {
     hubOpen.value = true
+    store.closeHubAfterLogin = closeAfterLogin
+
+    // Clean up any previous watcher/timeout
+    if (watcherCleanup.stop) {
+      watcherCleanup.stop()
+      watcherCleanup.stop = null
+    }
+    if (watcherCleanup.timeout) {
+      clearTimeout(watcherCleanup.timeout)
+      watcherCleanup.timeout = null
+    }
+
+    // Only set up watcher if not already authenticated and closeAfterLogin is true
+    if (closeAfterLogin && !store.isAuthenticated) {
+      const closedPromise = new Promise((resolve) => {
+        resolveFunction = resolve
+        const stop = watch(
+          () => store.isAuthenticated,
+          (val) => {
+            if (val && store.closeHubAfterLogin) {
+              store.closeHubAfterLogin = false
+              if (watcherCleanup.stop) watcherCleanup.stop()
+              if (watcherCleanup.timeout) clearTimeout(watcherCleanup.timeout)
+              watcherCleanup.stop = null
+              watcherCleanup.timeout = null
+              hubOpen.value = false
+
+              resolve()
+            }
+          },
+          { immediate: false }
+        )
+        watcherCleanup.stop = stop
+        watcherCleanup.timeout = setTimeout(() => {
+          if (watcherCleanup.stop) watcherCleanup.stop()
+          watcherCleanup.stop = null
+          watcherCleanup.timeout = null
+        }, timeoutPeriod)
+      })
+      return closedPromise
+    }
     return page && (hubPageKey.value = page)
   },
   closeHub: async () => {
     hubOpen.value = false
+    // Clean up watcher/timeout on close
+    if (watcherCleanup.stop) {
+      watcherCleanup.stop()
+      watcherCleanup.stop = null
+    }
+    if (watcherCleanup.timeout) {
+      clearTimeout(watcherCleanup.timeout)
+      watcherCleanup.timeout = null
+    }
+    if (resolveFunction) {
+      resolveFunction()
+      resolveFunction = null
+    }
   },
   goToPage: (page) => {
     if (!hubPages[page]) {
