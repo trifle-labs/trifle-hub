@@ -82,8 +82,27 @@ export const useAuthStore = defineStore('auth', {
     handleClick(e) {
       const link = e.target.closest('a')
       if (!link) return
-      const linkMatchesDomain = link.href.includes(window.location.host)
-      if (this.isFarcaster && !linkMatchesDomain) {
+      const href = link.href.replace(/\/$/, '')
+      const linkMatchesDomain = href.includes(window.location.host)
+
+      const linkMatchesFarcaster = href.includes('farcaster.xyz/') || href.includes('warpcast.com/')
+
+      const isFarcasterProfile = linkMatchesFarcaster && href.split('/').length == 4
+      const fid = isFarcasterProfile && link.attributes.fid?.value
+
+      const isFarcasterPost = linkMatchesFarcaster && href.split('/').length == 5
+
+      if (this.isFarcaster && isFarcasterProfile && fid) {
+        e.preventDefault()
+        sdk.actions.viewProfile({
+          fid
+        })
+      } else if (this.isFarcaster && isFarcasterPost) {
+        e.preventDefault()
+        sdk.actions.viewCast({
+          hash: href.split('/')[4]
+        })
+      } else if (this.isFarcaster && !linkMatchesDomain) {
         e.preventDefault()
         sdk.actions.openUrl(link.href)
       }
@@ -147,9 +166,9 @@ export const useAuthStore = defineStore('auth', {
         // Initialize Farcaster miniapp if present
         await sdk.actions.ready()
         document.addEventListener('click', this.handleClick)
-
-        const context = await sdk.context
-        if (context?.user) {
+        const isMiniApp = await sdk.isInMiniApp()
+        if (isMiniApp) {
+          const context = await sdk.context
           this.isFarcaster = context
         }
 
