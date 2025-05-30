@@ -1,160 +1,39 @@
 <template>
-  <div
-    class="_p-4 _w-full _flex _flex-col _gap-4 _items-center _overflow-y-scroll-masked _no-scrollbar"
-  >
-    <header class="_pt-10 _flex _flex-col _gap-3 _items-center _mb-4">
-      <div class="_size-24 _rounded-full">
-        <img
-          v-if="auth.user?.avatar || auth.isFarcaster?.user?.avatar"
-          :src="`${auth.user?.avatar || auth.isFarcaster?.user?.avatar}`"
-          alt="user avatar"
-          class="_w-full _block _transform _origin-center _scale-[1.35] sm:_scale-[1.45] _rounded-full"
-        />
-        <object
-          v-else
-          :data="smileyFaceSvg"
-          alt="smiley face with dashed outline"
-          class="_w-full _block _transform _origin-center _scale-[1.35] sm:_scale-[1.45]"
-        ></object>
-      </div>
-      <div
-        class="_text-5xl _tracking-wide _w-full _text-center _truncate _min-w-0 _leading-tight _weight-black"
-      >
-        {{ isAuthenticated ? 'Connections' : 'who r u???' }}
-      </div>
-      <div v-if="!isAuthenticated">
+  <AccountLayout>
+    <template #avatar>
+      <img
+        v-if="auth.user?.avatar || auth.isFarcaster?.user?.avatar"
+        :src="`${auth.user?.avatar || auth.isFarcaster?.user?.avatar}`"
+        alt="user avatar"
+        class="_w-full _block _transform _origin-center _scale-[1.35] sm:_scale-[1.45] _rounded-full"
+      />
+      <object
+        v-else
+        :data="smileyFaceSvg"
+        alt="smiley face with dashed outline"
+        class="_w-full _block _transform _origin-center _scale-[1.35] sm:_scale-[1.45]"
+      ></object>
+    </template>
+    <template #title>
+      {{ isAuthenticated ? 'Connections' : 'who r u???' }}
+    </template>
+    <template #description>
+      <p v-if="!isAuthenticated">
         Link identities &rarr;
         <span class="_ffborder-b _border-current" style="border-style: dashed"> earn BALL$</span>
         🪩
-      </div>
+      </p>
       <p v-else class="_text-gray-600 _text-center">Manage your authenticated platforms.</p>
-    </header>
+    </template>
+
     <section
       v-if="!isAuthenticated"
-      class="_mt-1.5 _w-full _px-1.5 sm:_px-8 _flex _flex-col _gap-4 _items-center"
+      class="_w-full _px-1.5 sm:_px-8 _flex _flex-col _gap-4 _items-center"
     >
       <nav class="_flex _flex-col _gap-1.5 _w-full _leading-none">
-        <button
-          class="_bubble-btn _p-4.5"
-          :disabled="walletAuths.length > 0 && isAuthenticated"
-          @click="handleConnect('wallet')"
-          style="filter: hue-rotate(-236deg) saturate(1.35)"
-        >
-          <div
-            class="_flex _justify-between _items-center _gap-2.5"
-            style="filter: hue-rotate(236deg) saturate(0.75)"
-          >
-            <img
-              src="../assets/imgs/ethereum-logo-white.svg"
-              class="_size-7 _rounded-lg"
-              style="background-color: #f1584d"
-            />
-            <div class="_flex-1 _min-w-0 _truncate _text-center">Login with Wallet</div>
-            <div class="_size-7 _flex _justify-end _items-center">
-              <div
-                class="_whitespace-nowrap _leading-tight _pr-0.5 _pl-1 _bg-[rgba(250,250,255)]/40 _rounded-lg _text-[0.875em]"
-              >
-                +10 🪩
-              </div>
-            </div>
-          </div>
-        </button>
-        <button
-          :disabled="hasDiscordAuth && isAuthenticated"
-          class="_bubble-btn _p-4.5"
-          @click="handleConnect('discord')"
-          style="filter: hue-rotate(-345deg) saturate(2)"
-        >
-          <div
-            class="_flex _justify-between _items-center _gap-2.5"
-            style="filter: hue-rotate(345deg) saturate(0.5)"
-          >
-            <img src="../assets/imgs/discord-logo.svg" class="_size-7 _rounded-lg" />
-            <div class="_flex-1 _min-w-0 _truncate _text-center">Login with Discord</div>
-            <div class="_size-7 _flex _justify-end _items-center">
-              <div
-                class="_whitespace-nowrap _leading-tight _pr-0.5 _pl-1 _bg-[rgba(250,250,255)]/40 _rounded-lg _text-[0.875em]"
-              >
-                +10 🪩
-              </div>
-            </div>
-          </div>
-        </button>
-        <button
-          v-if="false"
-          class="_bubble-btn _p-4.5"
-          :disabled="!telegramEnabled || (hasTelegramAuth && isAuthenticated)"
-          @click="handleConnect('telegram')"
-          :style="{
-            filter: !telegramEnabled ? 'brightness(0.8)' : 'hue-rotate(-20deg) saturate(1.8)'
-          }"
-        >
-          <div
-            class="_flex _justify-between _items-center _gap-2.5"
-            :style="{ filter: !telegramEnabled ? '' : 'hue-rotate(20deg) saturate(0.6)' }"
-          >
-            <img src="../assets/imgs/telegram-logo.svg" class="_size-7 _rounded-lg" />
-            <div class="_flex-1 _min-w-0 _truncate _text-center">Login with Telegram</div>
-            <div class="_size-7 _flex _justify-end _items-center">
-              <div
-                v-if="telegramEnabled"
-                class="_whitespace-nowrap _leading-tight _pr-0.5 _pl-1 _bg-[rgba(250,250,255)]/40 _rounded-lg _text-[0.875em]"
-              >
-                +10 🪩
-              </div>
-              <div v-else class="_text-[0.875em] _pr-0.5 _opacity-70">soon</div>
-            </div>
-          </div>
-        </button>
-        <button
-          v-if="false"
-          class="_bubble-btn _p-4.5"
-          :disabled="!twitterEnabled || (hasTwitterAuth && isAuthenticated)"
-          @click="handleConnect('twitter')"
-          :style="{ filter: !twitterEnabled ? 'brightness(0.8)' : 'brightness(0.93)' }"
-        >
-          <div class="_flex _justify-between _items-center _gap-2.5">
-            <img
-              src="../assets/imgs/twitter-x-logo.svg"
-              class="_size-7 _rounded-lg"
-              :style="{ filter: !twitterEnabled ? 'grayscale(1)' : '' }"
-            />
-            <div class="_flex-1 _min-w-0 _truncate _text-center">Login with TwitterX</div>
-            <div class="_size-7 _flex _justify-end _items-center">
-              <div
-                v-if="twitterEnabled"
-                class="_whitespace-nowrap _leading-tight _pr-0.5 _pl-1 _bg-[rgba(250,250,255)]/40 _rounded-lg _text-[0.875em]"
-              >
-                +10 🪩
-              </div>
-              <div v-else class="_text-[0.875em] _pr-0.5 _opacity-70">soon</div>
-            </div>
-          </div>
-        </button>
-        <button
-          class="_bubble-btn _p-4.5"
-          @click="handleConnect('farcaster')"
-          :style="{
-            filter: !farcasterEnabled ? 'brightness(0.8)' : 'hue-rotate(-335deg) saturate(2)'
-          }"
-        >
-          <div
-            class="_flex _justify-between _items-center _gap-2.5"
-            :style="{ filter: !farcasterEnabled ? '' : 'hue-rotate(335deg) saturate(0.5)' }"
-          >
-            <img src="../assets/imgs/farcaster-logo.svg" class="_size-7 _rounded-lg" />
-            <div class="_flex-1 _min-w-0 _truncate _text-center">Login with Farcaster</div>
-            <div class="_size-7 _flex _justify-end _items-center">
-              <div
-                v-if="farcasterEnabled"
-                class="_whitespace-nowrap _leading-tight _pr-0.5 _pl-1 _bg-[rgba(250,250,255)]/40 _rounded-lg _text-[0.875em]"
-              >
-                +10 🪩
-              </div>
-              <div v-else class="_text-[0.875em] _pr-0.5 _opacity-70">soon</div>
-            </div>
-          </div>
-        </button>
+        <AuthButton platform="wallet" points="+10"> Login with Wallet </AuthButton>
+        <AuthButton platform="discord" points="+10"> Login with Discord </AuthButton>
+        <AuthButton platform="farcaster" points="+10"> Login with Farcaster </AuthButton>
       </nav>
       <!-- TODO: follow up with support request on how to do this
       <div class="_-my-2">or</div>
@@ -289,7 +168,7 @@
             </button>
           </div>
 
-          <button
+          <!-- <button
             v-if="isAuthenticated && auth.accountConnected && auth.currentWalletNeedsAuth"
             @click="() => auth.authenticateWithWallet(auth.accountAddress)"
             class="_bubble-btn _p-3.5 _w-full"
@@ -308,25 +187,22 @@
                 >Authenticate {{ truncateAddress(auth.accountAddress) }}</span
               >
             </div>
-          </button>
-          <button
-            v-else-if="isAuthenticated && !auth.accountConnected"
-            @click="handleConnect('wallet')"
-            class="_bubble-btn _p-3.5 _w-full"
-            style="filter: hue-rotate(-236deg) saturate(1.35)"
+          </button> -->
+          <AuthButton
+            v-if="isAuthenticated && auth.accountConnected && auth.currentWalletNeedsAuth"
+            platform="wallet"
+            class="_w-full"
+            @click="() => auth.authenticateWithWallet(auth.accountAddress)"
+            >Authenticate {{ truncateAddress(auth.accountAddress) }}</AuthButton
           >
-            <div
-              class="_flex _justify-center _items-center _gap-2"
-              style="filter: hue-rotate(236deg) saturate(0.75)"
-            >
-              <img
-                src="../assets/imgs/ethereum-logo-white.svg"
-                class="_size-6 _rounded-lg"
-                style="background-color: #f1584d"
-              />
-              <span class="_text-center">Link Wallet</span>
-            </div>
-          </button>
+          <AuthButton
+            v-if="isAuthenticated && !auth.accountConnected"
+            platform="wallet"
+            points="+10"
+            class="_w-full"
+          >
+            Link Wallet
+          </AuthButton>
         </div>
       </div>
       <div class="_bg-white/70 _rounded-lg _shadow _p-4 sm:_p-6">
@@ -369,22 +245,9 @@
               Remove
             </button>
           </div>
-          <button
-            v-if="!hasDiscordAuth"
-            @click="handleDiscordConnect"
-            class="_bubble-btn _p-3.5 _w-full"
-            style="filter: hue-rotate(-345deg) saturate(2)"
-          >
-            <div
-              class="_flex _justify-center _items-center _gap-2"
-              style="filter: hue-rotate(345deg) saturate(0.5)"
-            >
-              <img src="../assets/imgs/discord-logo.svg" class="_size-6 _rounded-lg" />
-              <span class="_text-center">{{
-                discordAuths.length > 0 ? 'Link Another Discord' : 'Link Discord'
-              }}</span>
-            </div>
-          </button>
+          <AuthButton v-if="!hasDiscordAuth" platform="discord" points="+10" class="_w-full">
+            {{ discordAuths.length > 0 ? 'Link Another Discord' : 'Link Discord' }}
+          </AuthButton>
         </div>
       </div>
       <div class="_bg-white/70 _rounded-lg _shadow _p-4 sm:_p-6">
@@ -427,22 +290,9 @@
               Remove
             </button>
           </div>
-          <button
-            v-if="!hasFarcasterAuth"
-            @click="handleConnect('farcaster')"
-            class="_bubble-btn _p-3.5 _w-full"
-            style="filter: hue-rotate(-335deg) saturate(2)"
-          >
-            <div
-              class="_flex _justify-center _items-center _gap-2"
-              style="filter: hue-rotate(335deg) saturate(0.5)"
-            >
-              <img src="../assets/imgs/farcaster-logo.svg" class="_size-6 _rounded-lg" />
-              <span class="_text-center">{{
-                farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster'
-              }}</span>
-            </div>
-          </button>
+          <AuthButton v-if="!hasFarcasterAuth" platform="farcaster" points="+10" class="_w-full">
+            {{ farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster' }}
+          </AuthButton>
         </div>
       </div>
       <div class="_mt-8 _pt-4 _border-t _border-gray-200/80 _text-center">
@@ -454,13 +304,15 @@
         </button>
       </div>
     </section>
-  </div>
+  </AccountLayout>
 </template>
 
 <script setup>
 import { computed, ref, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
+import AuthButton from '../components/AuthButton.vue'
+import AccountLayout from '../components/AccountLayout.vue'
 
 const auth = inject('TrifleHub/store')
 const { isAuthenticated, user, backendUrl } = storeToRefs(auth)
@@ -556,7 +408,7 @@ const handleDisconnectPlatform = async (platform, instanceId) => {
 
 const truncateAddress = (address) => {
   if (!address) return ''
-  return `${address.slice(0, 6)}...${address.slice(-4)}`
+  return `0x${address.slice(2, 6).toUpperCase()}...${address.slice(-4).toUpperCase()}`
 }
 
 const isEditingUsername = ref(false)
