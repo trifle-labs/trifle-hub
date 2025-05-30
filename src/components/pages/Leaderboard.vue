@@ -45,7 +45,14 @@
             {{ index + 1 }}
           </div>
           <div class="_flex _items-center _gap-2.5 _flex-1 _min-w-0">
-            <div class="_size-[1.625em] _flex-shrink-0 _rounded-full _bg-zinc-400">
+            <div
+              class="_size-[2em] _-my-0.5 _flex-shrink-0 _rounded-full _bg-zinc-400 _bg-cover _bg-center"
+              :style="{ backgroundImage: `url(${entry.avatar})` }"
+              style="
+                box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.75),
+                  inset 0 -1px 2px rgba(255, 255, 255, 0.75);
+              "
+            >
               <!-- Placeholder for avatar, can be replaced with entry.User.avatarUrl if available -->
             </div>
             <div class="_flex-1 _weight-semibold _truncate _min-w-0">

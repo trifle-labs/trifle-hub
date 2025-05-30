@@ -32,20 +32,18 @@
       </template>
       <template v-if="isAuthenticated">
         <section
-          class="_px-3 _py-3.5 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none"
+          class="_px-3 _py-3.5 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none _text-3xl"
         >
-          <div class="_flex _items-center _gap-[0.5em] _text-base">
+          <div class="_flex _items-center">
             <img
               v-if="auth.user?.avatar"
               :src="auth.user?.avatar"
-              class="_size-[1.3em] _block _shadow-px _bg-zinc-400 _rounded-full"
+              class="_size-[1em] _block _rounded-full"
             />
-            <div class="_opacity-30">Your Balance</div>
+            <div class="_opacity-30 _text-base _ml-[0.5em]">Your Balance</div>
           </div>
-          <div
-            class="_text-3xl _font-bold _text-right _flex-1 _whitespace-nowrap _min-w-0 _truncate"
-          >
-            {{ totalBalls.toLocaleString() || '???' }} 🪩
+          <div class="_font-bold _text-right _flex-1 _whitespace-nowrap _min-w-0 _truncate">
+            {{ totalBalls.toLocaleString() || '???' }}🪩
           </div>
         </section>
       </template>

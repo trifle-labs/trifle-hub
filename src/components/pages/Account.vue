@@ -20,7 +20,7 @@
       <div
         class="_text-5xl _tracking-wide _w-full _text-center _truncate _min-w-0 _leading-tight _weight-black"
       >
-        {{ isAuthenticated ? 'Connections' : 'who r u??' }}
+        {{ isAuthenticated ? 'Connections' : 'who r u???' }}
       </div>
       <div v-if="!isAuthenticated">
         Link identities &rarr;
