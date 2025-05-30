@@ -5,8 +5,8 @@
     <header class="_pt-10 _flex _flex-col _gap-3 _items-center _mb-4">
       <div class="_size-24 _rounded-full">
         <img
-          v-if="auth.user?.avatar"
-          :src="`${auth.user?.avatar}`"
+          v-if="auth.user?.avatar || auth.isFarcaster?.user?.avatar"
+          :src="`${auth.user?.avatar || auth.isFarcaster?.user?.avatar}`"
           alt="user avatar"
           class="_w-full _block _transform _origin-center _scale-[1.35] sm:_scale-[1.45] _rounded-full"
         />

@@ -44,7 +44,8 @@ export const useAuthStore = defineStore('auth', {
     isFarcaster: false,
     _appKitInstance: null,
     _wagmiConfigInstance: null,
-    notifications: [] // { id, type: 'error'|'success', message }
+    notifications: [], // { id, type: 'error'|'success', message }
+    closeHubCallback: null
   }),
 
   getters: {
@@ -92,6 +93,18 @@ export const useAuthStore = defineStore('auth', {
 
       const isFarcasterPost = linkMatchesFarcaster && href.split('/').length == 5
 
+      const linkMatchesDomainExactly = href == window.location.href.replace(/\/$/, '')
+
+      const isFarcasterMiniApp = href.includes('farcaster.xyz/miniapps/')
+
+      console.log({ href, link, location: window.location })
+      console.log({
+        isFarcasterProfile,
+        fid,
+        isFarcasterPost,
+        isFarcasterMiniApp,
+        linkMatchesDomain
+      })
       if (this.isFarcaster && isFarcasterProfile && fid) {
         e.preventDefault()
         sdk.actions.viewProfile({
@@ -101,6 +114,15 @@ export const useAuthStore = defineStore('auth', {
         e.preventDefault()
         sdk.actions.viewCast({
           hash: href.split('/')[4]
+        })
+      } else if (linkMatchesDomainExactly) {
+        e.preventDefault()
+        this.closeHub()
+      } else if (this.isFarcaster && isFarcasterMiniApp) {
+        e.preventDefault()
+        sdk.actions.composeCast({
+          text: 'G___ M______',
+          embeds: ['https://gm.trifle.life']
         })
       } else if (this.isFarcaster && !linkMatchesDomain) {
         e.preventDefault()
@@ -170,6 +192,8 @@ export const useAuthStore = defineStore('auth', {
         if (isMiniApp) {
           const context = await sdk.context
           this.isFarcaster = context
+          this.fetchFarcasterUserInfo()
+          console.log({ context })
         }
 
         this.initialized = true
@@ -182,6 +206,15 @@ export const useAuthStore = defineStore('auth', {
       } finally {
         this.loading = false
       }
+    },
+    async fetchFarcasterUserInfo() {
+      if (!this.isFarcaster) return
+      const fid = this.isFarcaster.user.fid
+      const url = `${this.backendUrl}/farcaster/user-info?fid=${fid}`
+      const res = await fetch(url)
+      const json = await res.json()
+      console.log({ json })
+      this.isFarcaster.user = { ...this.isFarcaster.user, ...json.user }
     },
     async handleChainChange(chainId) {
       this.accountChainId = chainId
@@ -923,6 +956,12 @@ export const useAuthStore = defineStore('auth', {
     removeNotification(id) {
       const idx = this.notifications.findIndex((n) => n.id === id)
       if (idx !== -1) this.notifications.splice(idx, 1)
+    },
+    setCloseHubCallback(fn) {
+      this.closeHubCallback = fn
+    },
+    closeHub() {
+      if (this.closeHubCallback) this.closeHubCallback()
     }
   }
 })

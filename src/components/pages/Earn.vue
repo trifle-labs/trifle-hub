@@ -130,6 +130,7 @@
           :is="quest.link ? (typeof quest.link === 'string' ? 'a' : 'button') : 'div'"
           v-for="quest in filteredQuests"
           :key="quest.id"
+          :fid="quest.fid"
           :href="typeof quest.link === 'string' ? quest.link : undefined"
           :target="typeof quest.link === 'string' ? '_blank' : undefined"
           :rel="typeof quest.link === 'string' ? 'noopener noreferrer' : undefined"
@@ -275,12 +276,17 @@ const fetchUserPoints = async () => {
   error.value = null
 
   try {
-    if (isAuthenticated.value) {
+    if (isAuthenticated.value || auth.isFarcaster?.user?.id) {
       // Fetch all points for the user
       const response = await fetch(`${backendUrl.value}/balls/point-categories-with-counts`, {
+        method: 'POST',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`
-        }
+          'Content-Type': 'application/json'
+          // Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        },
+        body: JSON.stringify({
+          userId: auth.user?.id || auth.isFarcaster?.user?.id
+        })
       })
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)

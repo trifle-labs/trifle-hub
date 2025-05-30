@@ -1,4 +1,5 @@
 const discordLink = 'https://discord.gg/aEaEZT9Wr9'
+const gmLink = 'https://gm.trifle.life'
 const anybodyLink = 'https://anybody.gg'
 const kudzuLink = 'https://kudzu.rodeo'
 
@@ -7,6 +8,7 @@ import walletIcon from '../assets/imgs/ethereum-logo-orange-bg.svg'
 import farcasterIcon from '../assets/imgs/farcaster-logo.svg'
 import anybodyIcon from '../assets/imgs/anybody-icon.png'
 import kudzuIcon from '../assets/imgs/kudzu-icon.gif'
+import gmIcon from '../assets/imgs/gm.svg'
 
 export const possiblePoints = [
   {
@@ -93,28 +95,30 @@ export const possiblePoints = [
   //   link: 'https://kudzu.rodeo'
   // },
   {
-    name: 'Play gm-game in Discord',
+    name: 'Play the gm-game',
     id: 'gm',
-    icon: discordIcon,
-    description: 'Every unique "Good Morning" you write in Discord earns +1 pachinko ball',
+    icon: gmIcon,
+    description:
+      'Every unique "Good Morning" you write in Discord, Farcaster, or at gm.trifle.life earns +1',
     pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
     once: false,
     enabled: true,
-    link: discordLink
+    link: gmLink
   },
   {
-    name: "Emoji added to your 'gm'",
+    name: "Someone liked your 'gm'",
     id: 'gm-react',
-    icon: discordIcon,
-    description: 'Every time someone adds an emoji to your "gm" message, you earn +1',
+    icon: gmIcon,
+    description:
+      'Every time someone adds a discord react or disco heart to your "gm" message, you earn +1',
     pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
     once: false,
     enabled: true,
-    link: discordLink
+    link: gmLink
   },
   {
     name: 'Beat Anybody Problem',
@@ -222,6 +226,7 @@ export const possiblePoints = [
     claimed: false,
     once: true,
     enabled: true,
+    fid: 832276,
     link: 'https://farcaster.xyz/trifle'
   },
 
@@ -235,13 +240,14 @@ export const possiblePoints = [
     claimed: false,
     once: false,
     enabled: true,
+    fid: 832276,
     link: 'https://farcaster.xyz/trifle'
   },
   {
-    name: 'Cast your GM with a gm.trifle.life link',
+    name: 'Cast your GM with mini app link',
     id: 'gm-cast',
     icon: farcasterIcon,
-    // description: 'Cast your GM with a link to gm.trifle.gg',
+    description: 'Include "gm.trifle.life" in your "gm" cast for an extra +1',
     pachinkoBalls: 1,
     kudzuBurn: 0,
     claimed: false,
