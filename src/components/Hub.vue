@@ -184,7 +184,7 @@
 
 <script setup>
 import { computed, inject, nextTick, ref, watch } from 'vue'
-import hubPages from './pages/config'
+import hubPages from '../routes'
 import borderImg from '../assets/imgs/metal-bubble-border.png'
 import TrifleBall from './TrifleBall/TrifleBall.vue'
 import Notifications from './Notifications.vue'

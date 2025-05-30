@@ -1,5 +1,5 @@
 import './style/index.css'
-import TrifleHub from './components/TrifleHub.vue'
+import TrifleHub from './TrifleHub.vue'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import { WagmiPlugin } from '@wagmi/vue'
 import { initializeWagmiConfig } from './config/wagmiConfig'

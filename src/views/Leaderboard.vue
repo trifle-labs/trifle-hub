@@ -2,7 +2,7 @@
   <div class="_flex-1 _overflow-y-scroll _px-5 _w-full _flex _flex-col">
     <HubPageHeader>
       <template #icon>
-        <img src="../../assets/imgs/trifle-trophy-sm.png" alt="🏆" class="_h-[1.75em]" />
+        <img src="../assets/imgs/trifle-trophy-sm.png" alt="🏆" class="_h-[1.75em]" />
       </template>
       leaderboard
     </HubPageHeader>
@@ -77,7 +77,7 @@
 <script setup>
 import { ref, onMounted, watch, inject } from 'vue'
 import { storeToRefs } from 'pinia'
-import HubPageHeader from '../../components/HubPageHeader.vue'
+import HubPageHeader from '../components/HubPageHeader.vue'
 
 const selectedTab = ref('monthly') // 'monthly' for This Week, 'allTime' for All Time
 const leaderboardData = ref([])

@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import HubSection from '../HubSection.vue'
+import HubSection from '../components/HubSection.vue'
 </script>
 
 <style></style>

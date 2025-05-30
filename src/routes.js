@@ -1,10 +1,11 @@
-import Welcome from './Welcome.vue'
-import Games from './Games.vue'
-import Leaderboard from './Leaderboard.vue'
-import Earn from './Earn.vue'
-import Account from './Account.vue'
-import Theme from './Theme.vue'
-import bgImg from '../../assets/imgs/metal-gradient-conical.png'
+import Welcome from './views/Welcome.vue'
+import Games from './views/Games.vue'
+import Leaderboard from './views/Leaderboard.vue'
+import Earn from './views/Earn.vue'
+import Account from './views/Account.vue'
+import Theme from './views/Theme.vue'
+import bgImg from './assets/imgs/metal-gradient-conical.png'
+
 export default {
   welcome: { menuItem: false, component: Welcome, bgImg: bgImg },
   games: { menuItem: true, component: Games },

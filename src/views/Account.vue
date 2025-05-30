@@ -45,7 +45,7 @@
             style="filter: hue-rotate(236deg) saturate(0.75)"
           >
             <img
-              src="../../assets/imgs/ethereum-logo-white.svg"
+              src="../assets/imgs/ethereum-logo-white.svg"
               class="_size-7 _rounded-lg"
               style="background-color: #f1584d"
             />
@@ -69,7 +69,7 @@
             class="_flex _justify-between _items-center _gap-2.5"
             style="filter: hue-rotate(345deg) saturate(0.5)"
           >
-            <img src="../../assets/imgs/discord-logo.svg" class="_size-7 _rounded-lg" />
+            <img src="../assets/imgs/discord-logo.svg" class="_size-7 _rounded-lg" />
             <div class="_flex-1 _min-w-0 _truncate _text-center">Login with Discord</div>
             <div class="_size-7 _flex _justify-end _items-center">
               <div
@@ -93,7 +93,7 @@
             class="_flex _justify-between _items-center _gap-2.5"
             :style="{ filter: !telegramEnabled ? '' : 'hue-rotate(20deg) saturate(0.6)' }"
           >
-            <img src="../../assets/imgs/telegram-logo.svg" class="_size-7 _rounded-lg" />
+            <img src="../assets/imgs/telegram-logo.svg" class="_size-7 _rounded-lg" />
             <div class="_flex-1 _min-w-0 _truncate _text-center">Login with Telegram</div>
             <div class="_size-7 _flex _justify-end _items-center">
               <div
@@ -115,7 +115,7 @@
         >
           <div class="_flex _justify-between _items-center _gap-2.5">
             <img
-              src="../../assets/imgs/twitter-x-logo.svg"
+              src="../assets/imgs/twitter-x-logo.svg"
               class="_size-7 _rounded-lg"
               :style="{ filter: !twitterEnabled ? 'grayscale(1)' : '' }"
             />
@@ -142,7 +142,7 @@
             class="_flex _justify-between _items-center _gap-2.5"
             :style="{ filter: !farcasterEnabled ? '' : 'hue-rotate(335deg) saturate(0.5)' }"
           >
-            <img src="../../assets/imgs/farcaster-logo.svg" class="_size-7 _rounded-lg" />
+            <img src="../assets/imgs/farcaster-logo.svg" class="_size-7 _rounded-lg" />
             <div class="_flex-1 _min-w-0 _truncate _text-center">Login with Farcaster</div>
             <div class="_size-7 _flex _justify-end _items-center">
               <div
@@ -162,7 +162,7 @@
         <button class="_bubble-btn _p-4.5">
           <div class="_flex _justify-between _items-center _gap-2.5">
             <img
-              src="../../assets/imgs/ethereum-logo-white.svg"
+              src="../assets/imgs/ethereum-logo-white.svg"
               class="_size-7 _rounded-lg _bg-slate-400"
             />
             <div class="_flex-1 _min-w-0 _truncate _text-center">Create Smart Account</div>
@@ -264,7 +264,7 @@
               </button>
               <img
                 v-else
-                src="../../assets/imgs/ethereum-logo-white.svg"
+                src="../assets/imgs/ethereum-logo-white.svg"
                 class="_size-6 _rounded"
                 style="background-color: #f1584d"
               />
@@ -300,7 +300,7 @@
               style="filter: hue-rotate(200deg) saturate(0.65)"
             >
               <img
-                src="../../assets/imgs/ethereum-logo-white.svg"
+                src="../assets/imgs/ethereum-logo-white.svg"
                 class="_size-6 _rounded-lg"
                 style="background-color: #5ca4e2"
               />
@@ -320,7 +320,7 @@
               style="filter: hue-rotate(236deg) saturate(0.75)"
             >
               <img
-                src="../../assets/imgs/ethereum-logo-white.svg"
+                src="../assets/imgs/ethereum-logo-white.svg"
                 class="_size-6 _rounded-lg"
                 style="background-color: #f1584d"
               />
@@ -359,7 +359,7 @@
                   class="_size-6 _rounded-full"
                 />
               </button>
-              <img v-else src="../../assets/imgs/discord-logo.svg" class="_size-6 _rounded-lg" />
+              <img v-else src="../assets/imgs/discord-logo.svg" class="_size-6 _rounded-lg" />
               <span class="_text-gray-800">{{ discord.username }}</span>
             </div>
             <button
@@ -379,7 +379,7 @@
               class="_flex _justify-center _items-center _gap-2"
               style="filter: hue-rotate(345deg) saturate(0.5)"
             >
-              <img src="../../assets/imgs/discord-logo.svg" class="_size-6 _rounded-lg" />
+              <img src="../assets/imgs/discord-logo.svg" class="_size-6 _rounded-lg" />
               <span class="_text-center">{{
                 discordAuths.length > 0 ? 'Link Another Discord' : 'Link Discord'
               }}</span>
@@ -417,7 +417,7 @@
                   class="_size-6 _rounded-full"
                 />
               </button>
-              <img v-else src="../../assets/imgs/farcaster-logo.svg" class="_size-6 _rounded-lg" />
+              <img v-else src="../assets/imgs/farcaster-logo.svg" class="_size-6 _rounded-lg" />
               <span class="_text-gray-800">{{ farcaster.username }}</span>
             </div>
             <button
@@ -437,7 +437,7 @@
               class="_flex _justify-center _items-center _gap-2"
               style="filter: hue-rotate(335deg) saturate(0.5)"
             >
-              <img src="../../assets/imgs/farcaster-logo.svg" class="_size-6 _rounded-lg" />
+              <img src="../assets/imgs/farcaster-logo.svg" class="_size-6 _rounded-lg" />
               <span class="_text-center">{{
                 farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster'
               }}</span>
@@ -460,7 +460,7 @@
 <script setup>
 import { computed, ref, inject } from 'vue'
 import { storeToRefs } from 'pinia'
-import smileyFaceSvg from '../../assets/imgs/smiley-face-dashed-outline.svg'
+import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 
 const auth = inject('TrifleHub/store')
 const { isAuthenticated, user, backendUrl } = storeToRefs(auth)
@@ -691,7 +691,7 @@ const setAvatar = async (platform, platformId) => {
 <style>
 ._bubble-btn {
   border-radius: 10px;
-  border-image-source: url(../../assets/imgs/bubblegum-recess.png);
+  border-image-source: url(../assets/imgs/bubblegum-recess.png);
   border-image-slice: 82 95 77 92 fill;
   border-image-width: 17px;
   border-image-outset: 0px;

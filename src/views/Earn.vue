@@ -3,7 +3,7 @@
     <header class="_-mt-3.5 _space-y-3.5">
       <HubPageHeader>
         <template #icon>
-          <img src="../../assets/imgs/disco-ball-on-graph.png" alt="📈🪩" class="_h-[1.75em]" />
+          <img src="../assets/imgs/disco-ball-on-graph.png" alt="📈🪩" class="_h-[1.75em]" />
         </template>
         earn
       </HubPageHeader>
@@ -213,7 +213,7 @@
             v-if="quest.completed && quest.once"
             class="_absolute _top-0 _right-1 _flex _items-center _justify-center"
           >
-            <img src="../../assets/imgs/checkmark-icon-glass.png" class="_size-[2.5em]" />
+            <img src="../assets/imgs/checkmark-icon-glass.png" class="_size-[2.5em]" />
           </div>
         </component>
       </div>
@@ -222,11 +222,10 @@
 </template>
 
 <script setup>
-import HubPageHeader from '../../components/HubPageHeader.vue'
+import HubPageHeader from '../components/HubPageHeader.vue'
 import { storeToRefs } from 'pinia'
 import { ref, onMounted, inject, watch, computed } from 'vue'
-import { possiblePoints } from '../../config/pointsConfig'
-import HubSection from '../HubSection.vue'
+import { possiblePoints } from '../config/pointsConfig'
 
 const auth = inject('TrifleHub/store')
 const { openHub } = inject('hub')
