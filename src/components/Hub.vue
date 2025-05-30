@@ -50,6 +50,8 @@
             'box-shadow': '0 12px 16px 0 rgba(0, 0, 0, 0.35)'
           }"
         >
+          <Notifications />
+
           <!-- close -->
           <div class="_absolute _top-0 _right-0 _pt-3 _pr-4 _z-50 sm:_pt-4 sm:_pr-4.5">
             <button
@@ -185,6 +187,7 @@ import { computed, inject, nextTick, ref, watch } from 'vue'
 import hubPages from './pages/config'
 import borderImg from '../assets/imgs/metal-bubble-border.png'
 import TrifleBall from './TrifleBall/TrifleBall.vue'
+import Notifications from './Notifications.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 
 const hubOpen = defineModel('hubOpen')

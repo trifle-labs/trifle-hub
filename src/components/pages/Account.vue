@@ -37,7 +37,7 @@
         <button
           class="_bubble-btn _p-4.5"
           :disabled="walletAuths.length > 0 && isAuthenticated"
-          @click="handleWalletConnect"
+          @click="handleConnect('wallet')"
           style="filter: hue-rotate(-236deg) saturate(1.35)"
         >
           <div
@@ -62,7 +62,7 @@
         <button
           :disabled="hasDiscordAuth && isAuthenticated"
           class="_bubble-btn _p-4.5"
-          @click="handleDiscordConnect"
+          @click="handleConnect('discord')"
           style="filter: hue-rotate(-345deg) saturate(2)"
         >
           <div
@@ -84,7 +84,7 @@
           v-if="false"
           class="_bubble-btn _p-4.5"
           :disabled="!telegramEnabled || (hasTelegramAuth && isAuthenticated)"
-          @click="handleTelegramConnect"
+          @click="handleConnect('telegram')"
           :style="{
             filter: !telegramEnabled ? 'brightness(0.8)' : 'hue-rotate(-20deg) saturate(1.8)'
           }"
@@ -110,7 +110,7 @@
           v-if="false"
           class="_bubble-btn _p-4.5"
           :disabled="!twitterEnabled || (hasTwitterAuth && isAuthenticated)"
-          @click="handleTwitterConnect"
+          @click="handleConnect('twitter')"
           :style="{ filter: !twitterEnabled ? 'brightness(0.8)' : 'brightness(0.93)' }"
         >
           <div class="_flex _justify-between _items-center _gap-2.5">
@@ -133,7 +133,7 @@
         </button>
         <button
           class="_bubble-btn _p-4.5"
-          @click="handleFarcasterConnect"
+          @click="handleConnect('farcaster')"
           :style="{
             filter: !farcasterEnabled ? 'brightness(0.8)' : 'hue-rotate(-335deg) saturate(2)'
           }"
@@ -311,7 +311,7 @@
           </button>
           <button
             v-else-if="isAuthenticated && !auth.accountConnected"
-            @click="handleWalletConnect"
+            @click="handleConnect('wallet')"
             class="_bubble-btn _p-3.5 _w-full"
             style="filter: hue-rotate(-236deg) saturate(1.35)"
           >
@@ -429,7 +429,7 @@
           </div>
           <button
             v-if="!hasFarcasterAuth"
-            @click="handleFarcasterConnect"
+            @click="handleConnect('farcaster')"
             class="_bubble-btn _p-3.5 _w-full"
             style="filter: hue-rotate(-335deg) saturate(2)"
           >
@@ -480,6 +480,28 @@ const hasTelegramAuth = computed(() => telegramAuths.value.length > 0)
 const hasTwitterAuth = computed(() => twitterAuths.value.length > 0)
 const hasFarcasterAuth = computed(() => farcasterAuths.value.length > 0)
 
+let connectDebounce = false
+const handleConnect = async (platform) => {
+  if (connectDebounce) return
+  connectDebounce = true
+  setTimeout(() => {
+    connectDebounce = false
+  }, 1000)
+  switch (platform) {
+    case 'discord':
+      await handleDiscordConnect()
+      break
+    case 'farcaster':
+      await handleFarcasterConnect()
+      break
+    case 'wallet':
+      await handleWalletConnect()
+      break
+    default:
+      throw new Error(`Unsupported platform: ${platform}`)
+  }
+}
+
 const handleFarcasterConnect = async () => {
   console.log('Farcaster connect clicked')
   try {
@@ -502,8 +524,10 @@ const handleDiscordConnect = async () => {
     await auth.connectDiscord()
   } catch (err) {
     if (err.message.includes('Authentication window closed')) {
-      // TODO: @everett we need a message system for this
-      alert('Sorry, can you try that again?')
+      auth.addNotification({
+        type: 'error',
+        message: 'Discord authentication failed, please try again.'
+      })
     }
     console.error('Discord connection failed:', err)
   }
@@ -554,6 +578,18 @@ const checkUsername = async (username) => {
     usernameError.value = ''
     return
   }
+
+  const isAlphaNumeric = /^(?!.*--)[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/.test(username)
+  if (!isAlphaNumeric) {
+    usernameError.value = 'Username must be alphanumeric'
+    return
+  }
+
+  if (username.length > 22) {
+    usernameError.value = 'Username must be 22 characters or less'
+    return
+  }
+
   isCheckingUsername.value = true
   try {
     const response = await fetch(
