@@ -1,9 +1,9 @@
 <template>
   <div
-    class="_px-4 _w-full _flex _flex-col _gap-3 _items-center _overflow-y-scroll-masked _no-scrollbar"
+    class="_p-4 _w-full _flex _flex-col _gap-8 _items-center _overflow-y-scroll-masked _no-scrollbar"
   >
-    <header class="_pt-10 _flex _flex-col _gap-3 _items-center _mb-4">
-      <div class="_size-24 _rounded-full">
+    <header class="_mt-8 _space-y-3">
+      <div class="_size-24 _rounded-full _mx-auto">
         <slot name="avatar" />
       </div>
       <h2
