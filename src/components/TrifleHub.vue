@@ -30,7 +30,7 @@ const hubPageKey = ref(route.query.hub || sessionStorage.getItem('hubPageKey') |
 
 const watcherCleanup = { stop: null, timeout: null }
 let resolveFunction = null
-provide('hub', {
+const hubActions = {
   hubOpen,
   openHub: (page, closeAfterLogin = false, { timeoutPeriod = 5 * 60 * 1_000 } = {}) => {
     hubOpen.value = true
@@ -100,7 +100,9 @@ provide('hub', {
     hubPageKey.value = page
   },
   getAvailablePages: () => Object.keys(hubPages)
-})
+}
+store.setCloseHubCallback(hubActions.closeHub)
+provide('hub', hubActions)
 
 watch(hubPageKey, (val) => {
   if (!Object.keys(hubPages).includes(val)) {

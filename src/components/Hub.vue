@@ -201,7 +201,7 @@ const hubPage = computed(() => hubPages[props.hubPageKey])
 const { openHub } = inject('hub')
 const auth = inject('TrifleHub/store')
 
-const authUserAvatar = computed(() => auth.user?.avatar)
+const authUserAvatar = computed(() => auth.user?.avatar || auth.isFarcaster?.user?.avatar)
 
 const trifleBall = ref(null)
 watch(hubOpen, async (open) => {
