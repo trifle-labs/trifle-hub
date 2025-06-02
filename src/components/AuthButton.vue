@@ -1,6 +1,6 @@
 <template>
   <button
-    class="_platform-login-btn _bubble-btn _p-4.5"
+    class="_platform-login-btn _bubble-btn-full _p-4.5"
     :style="{
       filter: `hue-rotate(${platform.hueRotate}deg) saturate(${platform.saturate}) brightness(${
         platform.brightness || 1

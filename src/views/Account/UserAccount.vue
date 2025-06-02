@@ -1,84 +1,88 @@
 <template>
   <AccountLayout>
     <template #avatar>
-      <img
-        v-if="auth.user?.avatar || auth.isFarcaster?.user?.avatar"
-        :src="`${auth.user?.avatar || auth.isFarcaster?.user?.avatar}`"
-        alt="user avatar"
-        class="_w-full _block _transform _origin-center _scale-[1.35] sm:_scale-[1.45] _rounded-full"
-      />
-      <object
-        v-else
-        :data="smileyFaceSvg"
-        alt="smiley face with dashed outline"
-        class="_w-full _block _transform _origin-center _scale-[1.35] sm:_scale-[1.45]"
-      ></object>
+      <div
+        class="_size-full _flex _items-center _justify-center _rounded-full _duration-150 _delay-50"
+        style="box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.4)"
+        :class="{ '_opacity-0': !doneAnimating }"
+      >
+        <TrifleBall
+          v-if="doneAnimating"
+          :key="auth.user?.avatar || auth.isFarcaster?.user?.avatar || 'smiley-face'"
+          mode="glass-inner-wall"
+          :image-source="auth.user?.avatar || auth.isFarcaster?.user?.avatar || smileyFaceSvg"
+          style="width: 175%; height: 175%"
+          class="_cursor-grab"
+        />
+      </div>
     </template>
     <template #title>
-      {{ auth.user?.username || 'Not set' }}
+      <!-- (username) -->
+      <div
+        v-show="!isEditingUsername"
+        class="_h-12 _flex _items-center _gap-1 _w-full _justify-center _pl-[1em] _border _border-transparent"
+      >
+        <span class="_text-stroke-2xl _min-w-0 _truncate _px-0.5">
+          {{ auth.user?.username || 'Not set' }}
+        </span>
+        <!-- edit username button -->
+        <button
+          class="_p-0.5 _-m-0.5 _leading-none _flex-shrink-0 _block mouse:hover:_scale-[1.2] _duration-150"
+          @click="startEditingUsername"
+        >
+          <div class="_scale-x-[-1] _rotate-[-35deg] _text-stroke-lg _opacity-20">✏</div>
+        </button>
+      </div>
+      <!-- (edit username form) -->
+      <div
+        v-show="isEditingUsername"
+        class="_relative _h-12 _flex _items-stretch _gap-0.5 _px-1 _rounded-lg _shadow-panel-inset _text-center _bg-metallic-linear"
+      >
+        <input
+          ref="usernameInput"
+          v-model="newUsername"
+          type="text"
+          maxlength="22"
+          autocomplete="off"
+          data-1p-ignore
+          class="_flex-1 _text-stroke-2xl _bg-transparent _text-center _w-full _outline-none"
+          :class="{ '_border-red-500': !usernameAvailable && newUsername }"
+          placeholder="Enter new username"
+          @input="handleUsernameInput"
+          @keyup.enter="saveUsername"
+        />
+      </div>
     </template>
     <template #description>
-      <p class="_text-gray-600 _text-center">Manage your authenticated platforms.</p>
+      <!-- <p class="_text-gray-600 _text-center">Manage your authenticated platforms.</p> -->
+      <div v-show="!isEditingUsername" class="_flex _justify-center _gap-1 _h-10 _items-center">
+        <button
+          class="_text-xl _shadow-panel _pl-[0.3em] _pr-[0.5em] _rounded-full _bg-metallic-cone _leading-none _py-[0.25em] _flex _gap-[0.2em]"
+          @click="openHub('earn')"
+        >
+          <span>🪩</span>
+          <!-- TODO: use live points -->
+          <span class="_text-stroke-xl">1,524</span>
+        </button>
+      </div>
+      <div v-show="isEditingUsername" class="_flex _justify-center _gap-1 _h-10 _items-center">
+        <button
+          class="_bubble-btn _h-11 _text-base _min-w-[5em] _weight-semibold"
+          style="filter: hue-rotate(-340deg) saturate(1.8)"
+          @click="saveUsername"
+        >
+          <span style="filter: hue-rotate(340deg) saturate(0.5)">Save</span>
+        </button>
+        <button
+          class="_bubble-btn _h-11 _text-base _min-w-[5em] _weight-semibold"
+          @click="cancelEditingUsername"
+        >
+          <span>Cancel</span>
+        </button>
+      </div>
     </template>
 
     <section class="_w-full _max-w-2xl _mx-auto _flex _flex-col _gap-4">
-      <div class="_bg-white/70 _rounded-lg _shadow _p-4 sm:_p-6">
-        <div class="_flex _items-center _justify-between _mb-3">
-          <h3 class="_text-lg _font-medium _text-gray-900">Username</h3>
-        </div>
-        <div class="_relative group">
-          <div
-            v-if="!isEditingUsername"
-            class="_flex _items-center _justify-between _p-3 _bg-gray-50/80 _rounded-lg group-hover:_bg-gray-100/80"
-          >
-            <span class="_text-gray-900">{{ auth.user?.username || 'Not set' }}</span>
-            <button
-              @click="startEditingUsername"
-              class="focus:_opacity-100 _transition-opacity _text-sm _text-blue-600 hover:_text-blue-800"
-            >
-              Edit
-            </button>
-          </div>
-          <div v-else class="_flex _flex-col sm:_flex-row _items-stretch sm:_items-center _gap-2">
-            <input
-              v-model="newUsername"
-              type="text"
-              maxlength="22"
-              autocomplete="off"
-              data-1p-ignore
-              class="_flex-1 _p-2 _border _rounded focus:_ring-2 focus:_ring-blue-500 focus:_border-blue-500 _outline-none"
-              :class="{ '_border-red-500': !usernameAvailable && newUsername }"
-              placeholder="Enter new username"
-              @input="handleUsernameInput"
-              @keyup.enter="saveUsername"
-            />
-            <div class="_flex _items-center _gap-2 _justify-end">
-              <button
-                @click="saveUsername"
-                class="_px-3 _py-1.5 _text-sm _bg-blue-500 _text-white _rounded hover:_bg-blue-600 _transition-colors disabled:_opacity-50 disabled:_cursor-not-allowed"
-                :disabled="
-                  usernameLoading ||
-                  !usernameAvailable ||
-                  isCheckingUsername ||
-                  newUsername === auth.user?.username
-                "
-              >
-                {{ usernameLoading ? 'Saving...' : isCheckingUsername ? 'Checking...' : 'Save' }}
-              </button>
-              <button
-                @click="cancelEditingUsername"
-                class="_px-3 _py-1.5 _text-sm _bg-gray-200 _text-gray-700 _rounded hover:_bg-gray-300 _transition-colors"
-                :disabled="usernameLoading"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-          <div v-if="usernameError && isEditingUsername" class="_mt-2 _text-sm _text-red-600">
-            {{ usernameError }}
-          </div>
-        </div>
-      </div>
       <div class="_bg-white/70 _rounded-lg _shadow _p-4 sm:_p-6">
         <div class="_flex _items-center _justify-between _mb-3">
           <h3 class="_text-lg _font-medium _text-gray-900">Wallet</h3>
@@ -272,92 +276,33 @@
 </template>
 
 <script setup>
-import { computed, ref, inject } from 'vue'
+import { computed, ref, inject, onMounted, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import smileyFaceSvg from '../../assets/imgs/smiley-face-dashed-outline.svg'
 import AuthButton from '../../components/AuthButton.vue'
 import AccountLayout from '../../components/AccountLayout.vue'
+import TrifleBall from '../../components/TrifleBall/TrifleBall.vue'
 
 const auth = inject('TrifleHub/store')
-const { isAuthenticated, user, backendUrl } = storeToRefs(auth)
+const { isAuthenticated, backendUrl } = storeToRefs(auth)
 
-const telegramEnabled = ref(false)
-const twitterEnabled = ref(false)
-const farcasterEnabled = ref(true)
+const doneAnimating = ref(false)
+onMounted(() => {
+  setTimeout(() => {
+    doneAnimating.value = true
+  }, 300) // need to wait for hub open animation otherwise webgl 0px error
+})
+
+const { openHub } = inject('hub')
+
+const usernameInput = ref(null)
 
 const walletAuths = computed(() => auth.getPlatformData('wallet'))
 const discordAuths = computed(() => auth.getPlatformData('discord'))
-const telegramAuths = computed(() => auth.getPlatformData('telegram'))
-const twitterAuths = computed(() => auth.getPlatformData('twitter'))
 const farcasterAuths = computed(() => auth.getPlatformData('farcaster'))
 
 const hasDiscordAuth = computed(() => discordAuths.value.length > 0)
-const hasTelegramAuth = computed(() => telegramAuths.value.length > 0)
-const hasTwitterAuth = computed(() => twitterAuths.value.length > 0)
 const hasFarcasterAuth = computed(() => farcasterAuths.value.length > 0)
-
-let connectDebounce = false
-const handleConnect = async (platform) => {
-  if (connectDebounce) return
-  connectDebounce = true
-  setTimeout(() => {
-    connectDebounce = false
-  }, 1000)
-  switch (platform) {
-    case 'discord':
-      await handleDiscordConnect()
-      break
-    case 'farcaster':
-      await handleFarcasterConnect()
-      break
-    case 'wallet':
-      await handleWalletConnect()
-      break
-    default:
-      throw new Error(`Unsupported platform: ${platform}`)
-  }
-}
-
-const handleFarcasterConnect = async () => {
-  console.log('Farcaster connect clicked')
-  try {
-    await auth.connectFarcaster()
-  } catch (err) {
-    console.error('Farcaster connection failed:', err)
-  }
-}
-
-const handleWalletConnect = async () => {
-  try {
-    await auth.connectWallet()
-  } catch (err) {
-    console.error('Wallet connection failed:', err)
-  }
-}
-
-const handleDiscordConnect = async () => {
-  try {
-    await auth.connectDiscord()
-  } catch (err) {
-    if (err.message.includes('Authentication window closed')) {
-      auth.addNotification({
-        type: 'error',
-        message: 'Discord authentication failed, please try again.'
-      })
-    }
-    console.error('Discord connection failed:', err)
-  }
-}
-
-const handleTelegramConnect = async () => {
-  if (!telegramEnabled.value) return
-  console.log('Telegram connect clicked (feature not fully implemented yet)')
-}
-
-const handleTwitterConnect = async () => {
-  if (!twitterEnabled.value) return
-  console.log('Twitter connect clicked (feature not fully implemented yet)')
-}
 
 const handleDisconnectPlatform = async (platform, instanceId) => {
   // TODO: @everett we need a message system for this
@@ -435,20 +380,23 @@ const handleUsernameInput = (event) => {
   }
 }
 
-const startEditingUsername = () => {
-  isEditingUsername.value = true
-  newUsername.value = auth.user?.username || ''
+const startEditingUsername = async () => {
   usernameError.value = ''
+  newUsername.value = auth.user?.username || ''
+  isEditingUsername.value = true
   usernameAvailable.value = true
+  await nextTick()
+  usernameInput.value.focus()
+  usernameInput.value.select()
 }
 
 const saveUsername = async () => {
   if (!newUsername.value.trim()) {
-    usernameError.value = 'Username is required'
+    auth.addNotification({ type: 'error', message: "Oops, name can't be empty!" })
     return
   }
   if (!usernameAvailable.value) {
-    usernameError.value = 'This username is already taken'
+    auth.addNotification({ type: 'error', message: 'This name is already taken' })
     return
   }
   if (newUsername.value.trim() === auth.user?.username) {
@@ -460,10 +408,10 @@ const saveUsername = async () => {
   try {
     await auth.updateUsername(newUsername.value.trim())
     isEditingUsername.value = false
-    usernameError.value = ''
+    auth.addNotification({ type: 'success', message: 'Name updated!' })
   } catch (err) {
-    console.error('Failed to update username:', err)
-    usernameError.value = err.message || 'Failed to update username'
+    console.error('Failed to update name:', err)
+    auth.addNotification({ type: 'error', message: 'Hmm, something went wrong' })
   } finally {
     usernameLoading.value = false
   }
@@ -504,39 +452,4 @@ const setAvatar = async (platform, platformId) => {
 }
 </script>
 
-<style>
-._bubble-btn {
-  border-radius: 10px;
-  border-image-source: url(../../assets/imgs/bubblegum-recess.png);
-  border-image-slice: 82 95 77 92 fill;
-  border-image-width: 17px;
-  border-image-outset: 0px;
-  border-image-repeat: stretch;
-  background-color: transparent;
-  user-select: none;
-  margin: -4px -7px -5px -7px;
-  width: calc(100% + 14px);
-  transition: border-image-width 0.1s ease-in-out;
-}
-._bubble-btn:active:not([disabled]) {
-  border-image-width: 15px;
-}
-._bubble-btn:active:not([disabled]) > * {
-  transform: scale(0.995);
-  transform-origin: center;
-}
-@media (hover: hover) {
-  ._bubble-btn:hover:not([disabled]) {
-    border-image-width: 19px;
-  }
-}
-._simple-btn {
-  @apply _px-3 _py-1.5 _text-sm _text-white _rounded _transition-colors;
-}
-._simple-btn-blue {
-  @apply _bg-blue-500 hover:_bg-blue-600;
-}
-._simple-btn-red {
-  @apply _bg-red-500 hover:_bg-red-600;
-}
-</style>
+<style></style>

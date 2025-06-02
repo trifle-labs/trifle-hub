@@ -11,6 +11,6 @@ export default {
   games: { menuItem: true, component: Games },
   leaderboard: { menuItem: true, component: Leaderboard },
   earn: { menuItem: true, component: Earn },
-  account: { menuItem: true, component: Account, bgImg: bgImg },
+  account: { menuItem: true, component: Account },
   theme: { menuItem: false, component: Theme }
 }
