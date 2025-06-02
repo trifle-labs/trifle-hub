@@ -8,10 +8,12 @@
       ></object>
     </template>
     <template #title>
-      {{ 'who r u??' }}
+      <div class="_text-stroke-2xl">
+        {{ 'who r u??' }}
+      </div>
     </template>
     <template #description>
-      <p>
+      <p class="_-mt-2">
         Link identities &rarr;
         <span class="_ffborder-b _border-current" style="border-style: dashed"> earn BALL$</span>
         🪩
