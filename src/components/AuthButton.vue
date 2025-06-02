@@ -2,16 +2,18 @@
   <button
     class="_platform-login-btn _bubble-btn-full _p-4.5"
     :style="{
-      filter: `hue-rotate(${platform.hueRotate}deg) saturate(${platform.saturate}) brightness(${
-        platform.brightness || 1
-      })`
+      filter: `hue-rotate(${platform.bubbleButtonStyle.hueRotate}deg) saturate(${
+        platform.bubbleButtonStyle.saturate
+      }) brightness(${platform.bubbleButtonStyle.brightness || 1})`
     }"
     @click="props.click || handleConnect(props.platform)"
   >
     <div
       class="_flex _justify-between _items-center _gap-2.5"
       :style="{
-        filter: `hue-rotate(${platform.hueRotate * -1}deg) saturate(${1 / platform.saturate})`
+        filter: `hue-rotate(${platform.bubbleButtonStyle.hueRotate * -1}deg) saturate(${
+          1 / platform.bubbleButtonStyle.saturate
+        })`
       }"
     >
       <div class="_size-7 _rounded-lg _overflow-hidden">
@@ -38,12 +40,8 @@
 </template>
 
 <script setup>
-import ethereumLogo from '../assets/imgs/ethereum-logo-white.svg'
-import discordLogo from '../assets/imgs/discord-logo.svg'
-import farcasterLogo from '../assets/imgs/farcaster-logo.svg'
 import { computed, inject } from 'vue'
-// import telegramLogo from '../assets/imgs/telegram-logo.svg'
-// import twitterLogo from '../assets/imgs/twitter-x-logo.svg'
+import { platforms } from '../config/socialsConfig'
 
 const props = defineProps({
   platform: {
@@ -56,37 +54,37 @@ const props = defineProps({
   }
 })
 
-const platforms = {
-  wallet: {
-    icon: ethereumLogo,
-    iconBgColor: '#f1584d',
-    hueRotate: -236,
-    saturate: 1.5
-  },
-  discord: {
-    icon: discordLogo,
-    hueRotate: -345,
-    saturate: 2
-  },
-  farcaster: {
-    icon: farcasterLogo,
-    hueRotate: -335,
-    saturate: 2
-  }
-  // telegram: {
-  //   icon: telegramLogo,
-  //   hueRotate: -20,
-  //   saturate: 1.8,
-  //   connect: handleTelegramConnect
-  // },
-  // twitter: {
-  //   icon: twitterLogo,
-  //   hueRotate: 0,
-  //   saturate: 1,
-  //   brightness: 0.8,
-  //   connect: handleTwitterConnect
-  // }
-}
+// const platforms = {
+//   wallet: {
+//     icon: ethereumLogo,
+//     iconBgColor: '#f1584d',
+//     hueRotate: -236,
+//     saturate: 1.5
+//   },
+//   discord: {
+//     icon: discordLogo,
+//     hueRotate: -345,
+//     saturate: 2
+//   },
+//   farcaster: {
+//     icon: farcasterLogo,
+//     hueRotate: -335,
+//     saturate: 2
+//   }
+//   // telegram: {
+//   //   icon: telegramLogo,
+//   //   hueRotate: -20,
+//   //   saturate: 1.8,
+//   //   connect: handleTelegramConnect
+//   // },
+//   // twitter: {
+//   //   icon: twitterLogo,
+//   //   hueRotate: 0,
+//   //   saturate: 1,
+//   //   brightness: 0.8,
+//   //   connect: handleTwitterConnect
+//   // }
+// }
 
 const platform = computed(() => platforms[props.platform])
 

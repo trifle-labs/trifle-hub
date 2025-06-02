@@ -102,9 +102,9 @@
             class="_order-last _w-full _flex _justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug _pl-3.5 _pr-5 sm:_pl-6 sm:_pr-9 _-mt-12 sm:_-mt-18 _relative _z-10 _text-stroke-md _text-em-md sm:_text-mlg _pointer-events-none"
           >
             <button
-              class="_flex _flex-col _items-center _-mr-6 _pointer-events-auto"
+              class="_flex _flex-col _items-center _-mr-6 _pointer-events-auto _relative"
               @click="openHub('games')"
-              :class="{ _underline: props.hubPageKey === 'games' }"
+              :class="{ '_thub-nav-active': props.hubPageKey === 'games' }"
             >
               <img
                 src="../assets/imgs/gigi-tilt-heads.png"
@@ -115,9 +115,9 @@
               games
             </button>
             <button
-              class="_flex _flex-col _items-center _gap-2 _pointer-events-auto"
+              class="_flex _flex-col _items-center _gap-2 _pointer-events-auto _relative"
               @click="openHub('leaderboard')"
-              :class="{ _underline: props.hubPageKey === 'leaderboard' }"
+              :class="{ '_thub-nav-active': props.hubPageKey === 'leaderboard' }"
             >
               <img
                 src="../assets/imgs/trifle-trophy-sm.png"
@@ -128,9 +128,9 @@
               leaderboard
             </button>
             <button
-              class="_flex _flex-col _items-center _gap-2 _-ml-2 _pointer-events-auto"
+              class="_flex _flex-col _items-center _gap-2 _-ml-2 _pointer-events-auto _relative"
               @click="openHub('earn')"
-              :class="{ _underline: props.hubPageKey === 'earn' }"
+              :class="{ '_thub-nav-active': props.hubPageKey === 'earn' }"
             >
               <img
                 src="../assets/imgs/disco-ball-on-graph.png"
@@ -138,12 +138,12 @@
                 class="_h-11 sm:_h-14 _origin-bottom"
                 :class="{ '_animate-wiggle': props.hubPageKey === 'earn' }"
               />
-              earn
+              BALL$
             </button>
             <button
-              class="_flex _flex-col _items-center _gap-2 _pointer-events-auto"
+              class="_flex _flex-col _items-center _gap-2 _pointer-events-auto _relative"
               @click="openHub('account')"
-              :class="{ _underline: props.hubPageKey === 'account' }"
+              :class="{ '_thub-nav-active': props.hubPageKey === 'account' }"
             >
               <div
                 class="_size-[3.1em] sm:_size-[3.5em] _-mb-[0.5em] _origin-bottom _flex _items-center _justify-center"
@@ -326,6 +326,24 @@ watch(hubOpen, async (open) => {
   transform: translateY(-5px);
 }
 
+/* when using transition-group */
+.tHub-page-group-leave-active {
+  transition: all 150ms ease;
+}
+.tHub-page-group-enter-active {
+  transition: all 150ms 150ms ease;
+}
+
+.tHub-page-group-enter-from {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.tHub-page-group-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
+}
+
 .tHub-bg-fade-enter-active,
 .tHub-bg-fade-leave-active {
   transition: all 0.3s ease;
@@ -334,5 +352,19 @@ watch(hubOpen, async (open) => {
 .tHub-bg-fade-enter-from,
 .tHub-bg-fade-leave-to {
   opacity: 0;
+}
+
+._thub-nav-active {
+  &::after {
+    content: '•';
+    position: absolute;
+    bottom: -0.85rem;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    opacity: 0.2;
+    color: rgb(132, 77, 183);
+  }
 }
 </style>

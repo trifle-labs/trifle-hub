@@ -9,14 +9,14 @@
     <!-- tabs -->
     <nav class="_gap-[0.45rem] _mt-4 _grid _grid-cols-2 _text-stroke-md _tracking-wide">
       <button
-        class="_bubble-btn _p-4.5"
+        class="_bubble-btn _px-4.5 _h-16"
         @click="selectedTab = 'monthly'"
         :style="selectedTab === 'monthly' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
       >
         This Week
       </button>
       <button
-        class="_bubble-btn _p-4.5"
+        class="_bubble-btn _px-4.5 _h-16"
         @click="selectedTab = 'allTime'"
         :style="selectedTab === 'allTime' ? 'filter: hue-rotate(103deg) saturate(2)' : ''"
       >

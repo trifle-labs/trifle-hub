@@ -5,7 +5,7 @@
         <template #icon>
           <img src="../assets/imgs/disco-ball-on-graph.png" alt="📈🪩" class="_h-[1.75em]" />
         </template>
-        earn
+        BALL$
       </HubPageHeader>
       <template v-if="!isAuthenticated">
         <section
@@ -35,189 +35,213 @@
           class="_px-3 _py-3.5 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none _text-3xl"
         >
           <div class="_flex _items-center">
-            <img
+            <div
               v-if="auth.user?.avatar"
-              :src="auth.user?.avatar"
-              class="_size-[1em] _block _rounded-full"
+              class="_size-[1em] _block _rounded-full _shadow-panel-inset _bg-cover _bg-center"
+              :style="{ backgroundImage: `url(${auth.user?.avatar})` }"
             />
             <div class="_opacity-30 _text-base _ml-[0.5em]">Your Balance</div>
           </div>
-          <div class="_font-bold _text-right _flex-1 _whitespace-nowrap _min-w-0 _truncate">
-            {{ totalBalls.toLocaleString() || '???' }}🪩
+          <div class="_text-right _flex-1 _whitespace-nowrap _min-w-0 _truncate">
+            <span class="_text-stroke-xl"> {{ totalBalls.toLocaleString() || '???' }} </span>🪩
           </div>
         </section>
       </template>
     </header>
-    <nav class="_flex _justify-between _items-center _mt-5 _mb-2">
-      <h3 class="_h5 _weight-bold _flex _items-center _gap-[0.1em] _leading-none">
-        <span class="_text-[1.1em]"> 🛡️ </span>
-        <span class="_opacity-30">Quests</span>
-      </h3>
-      <!-- TODO: filter dropdown -->
-      <!-- <button
-          v-if="isAuthenticated"
-          class="_bubble-btn _px-5 _py-2 _text-em-xs"
-          style="filter: hue-rotate(-340deg) saturate(1.8)"
-        >
-          <span style="filter: hue-rotate(340deg) saturate(0.5)">all ⌄</span>
-        </button> -->
+    <nav class="_gap-[0.45rem] _mt-6 _grid _grid-cols-2 _text-stroke-md _tracking-wide _mb-3">
+      <button
+        class="_bubble-btn _px-4.5 _h-16"
+        @click="selectedTab = 'earn'"
+        :style="selectedTab === 'earn' ? 'filter: hue-rotate(-70deg) saturate(2.1)' : ''"
+      >
+        Earn
+      </button>
+      <button
+        class="_bubble-btn _px-4.5 _h-16"
+        @click="selectedTab = 'spend'"
+        :style="selectedTab === 'spend' ? 'filter: hue-rotate(70deg) saturate(2)' : ''"
+      >
+        Spend
+      </button>
     </nav>
-    <div class="_space-y-4">
-      <!-- Loading State -->
-      <div v-if="loading" class="_space-y-2">
-        <div
-          v-for="i in 3"
-          :key="`loader-${i}`"
-          class="_flex _items-center _gap-3 _p-3 _bg-zinc-200 _rounded-lg animate-pulse"
-        >
-          <div class="_size-8 _rounded-full _bg-zinc-400"></div>
-          <div class="_flex-1 _space-y-2">
-            <div class="_h-4 _bg-zinc-400 _rounded w-3/4"></div>
-            <div class="_h-3 _bg-zinc-400 _rounded w-1/2"></div>
+
+    <transition-group name="tHub-page-group">
+      <!-- (earn) -->
+      <div class="_space-y-4" v-if="selectedTab === 'earn'">
+        <!-- Loading State -->
+        <div v-if="loading" class="_space-y-2">
+          <div
+            v-for="i in 3"
+            :key="`loader-${i}`"
+            class="_flex _items-center _gap-3 _p-3 _bg-zinc-200 _rounded-lg animate-pulse"
+          >
+            <div class="_size-8 _rounded-full _bg-zinc-400"></div>
+            <div class="_flex-1 _space-y-2">
+              <div class="_h-4 _bg-zinc-400 _rounded w-3/4"></div>
+              <div class="_h-3 _bg-zinc-400 _rounded w-1/2"></div>
+            </div>
+            <div class="_h-6 _w-12 _bg-zinc-400 _rounded"></div>
           </div>
-          <div class="_h-6 _w-12 _bg-zinc-400 _rounded"></div>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="_p-4 _bg-red-100 _text-red-700 _rounded-lg">
+          {{ error }}
+        </div>
+
+        <!-- Quest List -->
+        <div v-else class="_space-y-3">
+          <!-- <div class="_flex _justify-center _gap-2 _mb-4">
+              <button
+                @click="filter = 'all'"
+                class="_px-4 _py-2 _rounded-lg _transition-colors"
+                :class="
+                  filter === 'all'
+                    ? '_bg-blue-600 _text-white'
+                    : '_bg-zinc-200 _text-black hover:_bg-zinc-300'
+                "
+              >
+                All
+              </button>
+  
+              <button
+                @click="filter = 'ongoing'"
+                class="_px-4 _py-2 _rounded-lg _transition-colors"
+                :class="
+                  filter === 'ongoing'
+                    ? '_bg-blue-600 _text-white'
+                    : '_bg-zinc-200 _text-black hover:_bg-zinc-300'
+                "
+              >
+                Ongoing
+              </button>
+              <button
+                @click="filter = 'once'"
+                class="_px-4 _py-2 _rounded-lg _transition-colors"
+                :class="
+                  filter === 'once'
+                    ? '_bg-blue-600 _text-white'
+                    : '_bg-zinc-200 _text-black hover:_bg-zinc-300'
+                "
+              >
+                One-time
+              </button>
+            </div> -->
+
+          <!-- quests... -->
+          <component
+            :is="quest.link ? (typeof quest.link === 'string' ? 'a' : 'button') : 'div'"
+            v-for="quest in filteredQuests"
+            :key="quest.id"
+            :fid="quest.fid"
+            :href="typeof quest.link === 'string' ? quest.link : undefined"
+            :target="typeof quest.link === 'string' ? '_blank' : undefined"
+            :rel="typeof quest.link === 'string' ? 'noopener noreferrer' : undefined"
+            @click="quest.link?.to && openHub(quest.link.to)"
+            class="_w-full _block _relative"
+            :class="{ '_pointer-events-none': quest.completed && quest.link?.to }"
+          >
+            <!-- main body, faded if completed -->
+            <div
+              class="_bg-metallic-linear _w-full _flex _flex-col _gap-0.5 _p-2.5 _min-h-14 _rounded-lg _transition-colors _text-mlg _relative _justify-center"
+              :class="[
+                {
+                  'mouse:hover:_scale-[1.006] _duration-100': quest.link,
+                  '_opacity-50': quest.completed && quest.once,
+                  '_shadow-panel': !(quest.completed && quest.once)
+                }
+              ]"
+            >
+              <header class="_flex _w-full _gap-2.5">
+                <!-- icon -->
+                <div class="_size-[1.7em]">
+                  <img :src="quest.icon" class="_w-full _h-full _rounded-lg _block" />
+                </div>
+                <div class="_flex-1">
+                  <!-- title -->
+                  <div
+                    class="_min-h-[1.7em] _flex _items-center _justify-start _text-left _py-[0.06em] _weight-bold _leading-snug"
+                    :class="{ '_line-through': quest.completed && quest.once }"
+                  >
+                    {{ quest.name }}
+                  </div>
+                </div>
+                <!-- right group -->
+                <div class="_flex _items-center _h-[1.7em] _gap-0.5 _relative _text-em-sm">
+                  <div
+                    v-if="!quest.enabled"
+                    class="_rounded-full _bg-metallic-cone _shadow-panel _px-[0.5em]"
+                  >
+                    soon
+                  </div>
+                  <div
+                    v-else
+                    class="_rounded-full _bg-metallic-cone _shadow-panel _pr-[0.5em] _pl-[0.25em] _flex _gap-[0.1em]"
+                  >
+                    <div>🪩</div>
+                    <span v-if="typeof quest.pachinkoBalls === 'string'">
+                      {{ quest.pachinkoBalls }}
+                    </span>
+                    <span v-else>{{ quest.pachinkoBalls }} </span>
+                  </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="black"
+                    class="_size-6 _opacity-40"
+                    :class="{ '_invisible _ml-4.5': quest.completed && quest.once }"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </header>
+              <!-- (description) -->
+              <div v-if="quest.description" class="_flex _items-start _gap-3 _pr-3">
+                <div class="_w-[1.7em] _flex-shrink-0"></div>
+                <p
+                  class="_flex-1 _text-sm _text-gray-600 _text-left"
+                  v-html="quest.description"
+                ></p>
+              </div>
+              <!-- (progress) -->
+              <!-- <div v-if="quest.progress" class="_mt-2">
+                  <div class="_bg-zinc-300 _rounded-full _h-2">
+                    <div
+                      class="_bg-blue-600 _rounded-full _h-2"
+                      :style="{ width: `${quest.progress}%` }"
+                    ></div>
+                  </div>
+                </div> -->
+            </div>
+            <div
+              v-if="quest.completed && quest.once"
+              class="_absolute _top-0 _right-1 _flex _items-center _justify-center"
+            >
+              <img src="../assets/imgs/checkmark-icon-glass.png" class="_size-[2.5em]" />
+            </div>
+          </component>
         </div>
       </div>
 
-      <!-- Error State -->
-      <div v-else-if="error" class="_p-4 _bg-red-100 _text-red-700 _rounded-lg">
-        {{ error }}
-      </div>
-
-      <!-- Quest List -->
-      <div v-else class="_space-y-2.5">
-        <!-- <div class="_flex _justify-center _gap-2 _mb-4">
-            <button
-              @click="filter = 'all'"
-              class="_px-4 _py-2 _rounded-lg _transition-colors"
-              :class="
-                filter === 'all'
-                  ? '_bg-blue-600 _text-white'
-                  : '_bg-zinc-200 _text-black hover:_bg-zinc-300'
-              "
-            >
-              All
-            </button>
-
-            <button
-              @click="filter = 'ongoing'"
-              class="_px-4 _py-2 _rounded-lg _transition-colors"
-              :class="
-                filter === 'ongoing'
-                  ? '_bg-blue-600 _text-white'
-                  : '_bg-zinc-200 _text-black hover:_bg-zinc-300'
-              "
-            >
-              Ongoing
-            </button>
-            <button
-              @click="filter = 'once'"
-              class="_px-4 _py-2 _rounded-lg _transition-colors"
-              :class="
-                filter === 'once'
-                  ? '_bg-blue-600 _text-white'
-                  : '_bg-zinc-200 _text-black hover:_bg-zinc-300'
-              "
-            >
-              One-time
-            </button>
-          </div> -->
-
-        <!-- quests... -->
-        <component
-          :is="quest.link ? (typeof quest.link === 'string' ? 'a' : 'button') : 'div'"
-          v-for="quest in filteredQuests"
-          :key="quest.id"
-          :fid="quest.fid"
-          :href="typeof quest.link === 'string' ? quest.link : undefined"
-          :target="typeof quest.link === 'string' ? '_blank' : undefined"
-          :rel="typeof quest.link === 'string' ? 'noopener noreferrer' : undefined"
-          @click="quest.link?.to && openHub(quest.link.to)"
-          class="_w-full _block _relative"
-          :class="{ '_pointer-events-none': quest.completed && quest.link?.to }"
+      <!-- (spend) -->
+      <div v-if="selectedTab === 'spend'" class="_space-y-3">
+        <section
+          class="_bg-metallic-linear _p-5 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-5 _py-5"
         >
-          <!-- main body, faded if completed -->
-          <div
-            class="_bg-metallic-linear _w-full _flex _flex-col _gap-0.5 _p-2 _rounded-lg _transition-colors _text-mlg _relative"
-            :class="[
-              {
-                'mouse:hover:_scale-[1.006] _duration-100': quest.link,
-                '_opacity-50': quest.completed && quest.once,
-                '_shadow-panel': !(quest.completed && quest.once)
-              }
-            ]"
-          >
-            <header class="_flex _w-full _gap-2.5">
-              <!-- icon -->
-              <div class="_size-[1.7em]">
-                <img :src="quest.icon" class="_w-full _h-full _rounded-lg _block" />
-              </div>
-              <div class="_flex-1">
-                <!-- title -->
-                <div
-                  class="_min-h-[1.7em] _flex _items-center _justify-start _text-left _py-[0.06em] _weight-bold _leading-snug"
-                  :class="{ '_line-through': quest.completed && quest.once }"
-                >
-                  {{ quest.name }}
-                </div>
-              </div>
-              <!-- right group -->
-              <div class="_flex _items-center _h-[1.7em] _gap-0.5 _relative _text-em-sm">
-                <div
-                  v-if="!quest.enabled"
-                  class="_rounded-full _bg-metallic-cone _shadow-panel _px-[0.5em]"
-                >
-                  soon
-                </div>
-                <div
-                  v-else
-                  class="_rounded-full _bg-metallic-cone _shadow-panel _pr-[0.5em] _pl-[0.25em] _flex _gap-[0.1em]"
-                >
-                  <div>🪩</div>
-                  <span v-if="typeof quest.pachinkoBalls === 'string'">
-                    {{ quest.pachinkoBalls }}
-                  </span>
-                  <span v-else>{{ quest.pachinkoBalls }} </span>
-                </div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="black"
-                  class="_size-6 _opacity-40"
-                  :class="{ '_invisible _ml-4.5': quest.completed && quest.once }"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-            </header>
-            <!-- (description) -->
-            <div v-if="quest.description" class="_flex _items-start _gap-3 _pr-3">
-              <div class="_w-[1.7em] _flex-shrink-0"></div>
-              <p class="_flex-1 _text-sm _text-gray-600 _text-left" v-html="quest.description"></p>
-            </div>
-            <!-- (progress) -->
-            <!-- <div v-if="quest.progress" class="_mt-2">
-                <div class="_bg-zinc-300 _rounded-full _h-2">
-                  <div
-                    class="_bg-blue-600 _rounded-full _h-2"
-                    :style="{ width: `${quest.progress}%` }"
-                  ></div>
-                </div>
-              </div> -->
+          <div class="_flex _justify-center _leading-none _items-center _text-mlg">
+            <div class="_text-stroke-xl _animate-pulse-deepff">coming soon...</div>
           </div>
-          <div
-            v-if="quest.completed && quest.once"
-            class="_absolute _top-0 _right-1 _flex _items-center _justify-center"
-          >
-            <img src="../assets/imgs/checkmark-icon-glass.png" class="_size-[2.5em]" />
+          <div class="_grid _grid-cols-2 _gap-2">
+            <SocialsButtons />
           </div>
-        </component>
+          <div class="_text-em-2xs _opacity-50">follow for updates</div>
+        </section>
       </div>
-    </div>
+    </transition-group>
   </div>
 </template>
 
@@ -226,6 +250,7 @@ import HubPageHeader from '../components/HubPageHeader.vue'
 import { storeToRefs } from 'pinia'
 import { ref, onMounted, inject, watch, computed } from 'vue'
 import { possiblePoints } from '../config/pointsConfig'
+import SocialsButtons from '../components/SocialsButtons.vue'
 
 const auth = inject('TrifleHub/store')
 const { openHub } = inject('hub')
@@ -234,6 +259,7 @@ const loading = ref(true)
 const error = ref(null)
 const totalBalls = ref(0)
 const filter = ref('all') // 'all', 'once', 'ongoing'
+const selectedTab = ref('earn')
 
 const { backendUrl, isAuthenticated } = storeToRefs(auth)
 
