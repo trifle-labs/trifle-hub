@@ -21,14 +21,14 @@
           :style="{ backgroundColor: platform.iconBgColor }"
         />
       </div>
-      <div class="_flex-1 _min-w-0 _truncate _text-center">
+      <div class="_flex-1 _min-w-0 _truncate _text-center _text-stroke-md _leading-snug">
         <slot />
       </div>
       <div class="_size-7 _flex _justify-end _items-center">
         <!-- (points) -->
         <div
           v-if="props.points"
-          class="_whitespace-nowrap _leading-tight _pr-0.5 _pl-1 _bg-[rgba(250,250,255)]/40 _rounded-lg _text-[0.875em]"
+          class="_whitespace-nowrap _leading-snug _pr-[0.25em] _pl-[0.4em] _shadow-panel-inset _rounded-full _text-[0.875em] _tracking-tight"
         >
           {{ props.points }} 🪩
         </div>
@@ -120,6 +120,10 @@ const handleFarcasterConnect = async () => {
     await auth.connectFarcaster()
   } catch (err) {
     console.error('Farcaster connection failed:', err)
+    auth.addNotification({
+      type: 'error',
+      message: 'Farcaster login failed. Try again?'
+    })
   }
 }
 
@@ -128,6 +132,10 @@ const handleWalletConnect = async () => {
     await auth.connectWallet()
   } catch (err) {
     console.error('Wallet connection failed:', err)
+    auth.addNotification({
+      type: 'error',
+      message: 'Wallet login failed. Try again?'
+    })
   }
 }
 
@@ -138,7 +146,7 @@ const handleDiscordConnect = async () => {
     if (err.message.includes('Authentication window closed')) {
       auth.addNotification({
         type: 'error',
-        message: 'Discord authentication failed, please try again.'
+        message: 'Discord login failed. Try again?'
       })
     }
     console.error('Discord connection failed:', err)

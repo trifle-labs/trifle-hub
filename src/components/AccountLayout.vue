@@ -6,7 +6,7 @@
       <div class="_size-24 _rounded-full _mx-auto">
         <slot name="avatar" />
       </div>
-      <div class="_mt-5 _space-y-3 _w-full">
+      <div class="_mt-5 _flex _flex-col _gap-3 _w-full">
         <h2 class="_text-5xl _tracking-wide _w-full _text-center _min-w-0">
           <slot name="title" />
         </h2>
@@ -14,7 +14,7 @@
       </div>
     </header>
 
-    <section class="_w-full _flex-1 _space-y-4">
+    <section class="_w-full _flex-1 _flex _flex-col _gap-3">
       <slot />
     </section>
   </div>

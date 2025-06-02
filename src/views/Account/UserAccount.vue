@@ -88,8 +88,13 @@
 
     <!-- wallets -->
     <section class="_bg-metallic-linear _shadow-panel _p-4 _pb-5 _space-y-2 _rounded-lg">
-      <div class="_flex _items-center _justify-between">
-        <h3 class="_h4">👛 wallet{{ walletAuths.length > 1 ? 's' : '' }}</h3>
+      <div class="_flex _items-center _gap-2.5 _-mt-1.5">
+        <!-- <img
+          src="../../assets/imgs/ethereum-logo-white.svg"
+          class="_size-6 _rounded"
+          style="background-color: #f1584d; filter: grayscale(1)"
+        /> -->
+        <h3 class="_text-xl _weight-bold">wallet{{ walletAuths.length > 1 ? 's' : '' }}</h3>
       </div>
       <ul class="_space-y-2">
         <!-- wallets... -->
@@ -138,6 +143,7 @@
                 class="_flex-1 _min-w-0 _truncate _text-em-lg"
                 :class="{
                   '_text-stroke-xl _tracking-wide':
+                    walletAuths.length > 1 &&
                     auth.accountConnected &&
                     wallet.id.toLowerCase() === auth.accountAddress?.toLowerCase()
                 }"
@@ -187,98 +193,154 @@
 
     <!-- discord -->
     <section class="_bg-metallic-linear _shadow-panel _p-4 _pb-5 _space-y-2 _rounded-lg">
-      <div class="_flex _items-center _justify-between">
-        <h3 class="_h4">discord</h3>
+      <div v-if="discordAuths.length" class="_flex _items-center _gap-2.5 _-mt-1.5">
+        <!-- <img
+          src="../../assets/imgs/discord-logo.svg"
+          class="_size-6 _rounded"
+          style="background-color: #5865f2"
+        /> -->
+        <h3 class="_text-xl _weight-bold">discord</h3>
       </div>
-      <div class="_mt-2 _space-y-3">
-        <div
+      <ul class="_space-y-2">
+        <!-- discords... -->
+        <li
           v-for="discord in discordAuths"
           :key="discord.id"
-          class="_flex _items-center _justify-between _p-3 _bg-metallic-linear _shadow-panel _rounded-lg"
+          class="_flex _items-center _p-2 _pr-3.5 _justify-between _bg-metallic-linear _shadow-panel _rounded-lg"
         >
           <div class="_flex _items-center _gap-2">
             <button
-              v-if="discord.avatar"
-              @click="() => setAvatar('discord', discord.id)"
+              class="_size-11 _flex _items-stretch _p-1.5 _group _overflow-hidden"
               :class="[
-                '_p-0 _rounded-full _focus:_ring-2 _focus:_ring-blue-300 _transition-shadow _cursor-pointer',
-                discord.avatar === auth.user?.avatar
-                  ? '_border-4 _border-blue-500 shadow-[0_0_0_2px_rgba(34,197,94,0.3)]'
-                  : '_border-2 _border-blue-400 hover:_border-blue-600'
+                {
+                  '_rounded-lg _shadow-panel': discord.avatar,
+                  '_shadow-panel-inset _bg-metallic-cone _cursor-default':
+                    discord.avatar === auth.user?.avatar
+                }
               ]"
-              style="background: none"
-              type="button"
-              title="Set as profile avatar"
+              :disabled="!discord.avatar"
             >
-              <img
-                :src="`${discord.avatar}`"
-                :alt="discord.username"
-                class="_size-6 _rounded-full"
-              />
+              <div
+                v-if="discord.avatar"
+                @click="() => setAvatar('discord', discord.id)"
+                style="background: none"
+                type="button"
+                title="Set as profile avatar"
+              >
+                <img
+                  :src="`${discord.avatar}`"
+                  class="_size-full _rounded-full _duration-150"
+                  :class="{
+                    'group-hover:_scale-[1.8]': discord.avatar !== auth.user?.avatar
+                  }"
+                />
+              </div>
+              <div v-else class="_w-full _flex _items-center _justify-center">
+                <img
+                  src="../../assets/imgs/discord-logo.svg"
+                  class="_size-6 _rounded"
+                  style="background-color: #5865f2"
+                />
+              </div>
             </button>
-            <img v-else src="../../assets/imgs/discord-logo.svg" class="_size-6 _rounded-lg" />
-            <span class="_text-gray-800">{{ discord.username }}</span>
+            <div class="_flex-1 _min-w-0 _leading-tight">
+              <div class="_flex-1 _min-w-0 _truncate _text-em-lg">
+                {{ discord.username }}
+              </div>
+            </div>
           </div>
+          <!-- (disconnect discord button) -->
           <button
+            class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
             @click="() => handleDisconnectPlatform('discord', discord.id)"
-            class="_text-sm _text-red-600 hover:_text-red-800 _font-medium"
+            styleff="filter: hue-rotate(130deg) saturate(2)"
+            aria-label="Remove"
           >
-            Remove
+            <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
           </button>
-        </div>
+        </li>
         <AuthButton v-if="!hasDiscordAuth" platform="discord" points="+10" class="_w-full">
           {{ discordAuths.length > 0 ? 'Link Another Discord' : 'Link Discord' }}
         </AuthButton>
-      </div>
+      </ul>
     </section>
 
     <!-- farcaster -->
     <section class="_bg-metallic-linear _shadow-panel _p-4 _pb-5 _space-y-2 _rounded-lg">
-      <div class="_flex _items-center _justify-between">
-        <h3 class="_h4">farcaster</h3>
+      <div v-if="farcasterAuths.length" class="_flex _items-center _gap-2.5 _-mt-1.5">
+        <!-- <img
+          src="../../assets/imgs/farcaster-logo.svg"
+          class="_size-6 _rounded"
+          style="background-color: #000"
+        /> -->
+        <h3 class="_text-xl _weight-bold">farcaster</h3>
       </div>
-      <div class="_mt-2 _space-y-3">
-        <div
+      <ul class="_space-y-2">
+        <!-- farcasters... -->
+        <li
           v-for="farcaster in farcasterAuths"
           :key="farcaster.id"
-          class="_flex _items-center _justify-between _p-3 _bg-metallic-linear _shadow-panel _rounded-lg"
+          class="_flex _items-center _p-2 _pr-3.5 _justify-between _bg-metallic-linear _shadow-panel _rounded-lg"
         >
           <div class="_flex _items-center _gap-2">
             <button
-              v-if="farcaster.avatar"
-              @click="() => setAvatar('farcaster', farcaster.id)"
+              class="_size-11 _flex _items-stretch _p-1.5 _group _overflow-hidden"
               :class="[
-                '_p-0 _rounded-full _focus:_ring-2 _focus:_ring-blue-300 _transition-shadow _cursor-pointer',
-                farcaster.avatar === auth.user?.avatar
-                  ? '_border-4 _border-blue-500 shadow-[0_0_0_2px_rgba(34,197,94,0.3)]'
-                  : '_border-2 _border-blue-400 hover:_border-blue-600'
+                {
+                  '_rounded-lg _shadow-panel': farcaster.avatar,
+                  '_shadow-panel-inset _bg-metallic-cone _cursor-default':
+                    farcaster.avatar === auth.user?.avatar
+                }
               ]"
-              style="background: none"
-              type="button"
-              title="Set as profile avatar"
+              :disabled="!farcaster.avatar"
             >
-              <img
-                :src="`${farcaster.avatar}`"
-                :alt="farcaster.username"
-                class="_size-6 _rounded-full"
-              />
+              <div
+                v-if="farcaster.avatar"
+                @click="() => setAvatar('farcaster', farcaster.id)"
+                style="background: none"
+                type="button"
+                title="Set as profile avatar"
+              >
+                <img
+                  :src="`${farcaster.avatar}`"
+                  class="_size-full _rounded-full _duration-150"
+                  :class="{
+                    'group-hover:_scale-[1.8]': farcaster.avatar !== auth.user?.avatar
+                  }"
+                />
+              </div>
+              <div v-else class="_w-full _flex _items-center _justify-center">
+                <img
+                  src="../../assets/imgs/farcaster-logo.svg"
+                  class="_size-6 _rounded"
+                  style="background-color: #000"
+                />
+              </div>
             </button>
-            <img v-else src="../../assets/imgs/farcaster-logo.svg" class="_size-6 _rounded-lg" />
-            <span class="_text-gray-800">{{ farcaster.username }}</span>
+            <div class="_flex-1 _min-w-0 _leading-tight">
+              <div class="_flex-1 _min-w-0 _truncate _text-em-lg">
+                {{ farcaster.username }}
+              </div>
+            </div>
           </div>
+          <!-- (disconnect farcaster button) -->
           <button
+            class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
             @click="() => handleDisconnectPlatform('farcaster', farcaster.id)"
-            class="_text-sm _text-red-600 hover:_text-red-800 _font-medium"
+            styleff="filter: hue-rotate(130deg) saturate(2)"
+            aria-label="Remove"
           >
-            Remove
+            <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
           </button>
-        </div>
+        </li>
         <AuthButton v-if="!hasFarcasterAuth" platform="farcaster" points="+10" class="_w-full">
           {{ farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster' }}
         </AuthButton>
-      </div>
+      </ul>
     </section>
-    <footer class="_bg-metallic-cone _p-4 _rounded-lg _shadow-panel">
+    <footer
+      class="_bg-metallic-cone _p-4 _rounded-lg _shadow-panel _flex _items-center _justify-center"
+    >
       <button @click="handleLogout" class="_bubble-btn-full _h-16 _text-lg _bold">
         <span>logout 💤</span>
       </button>
