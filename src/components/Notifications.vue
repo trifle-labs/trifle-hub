@@ -1,23 +1,36 @@
 <template>
   <div
-    class="fixed top-4 left-1/2 z-50 flex flex-col items-center w-full pointer-events-none"
+    class="_absolute _top-0 _left-0 _p-5 _z-50 _flex _flex-col _gap-1 _items-start _w-full _pointer-events-auto _pr-16 _overflow-y-auto _no-scrollbar _fineprint"
     style="transform: translateX(0%)"
   >
-    <transition-group name="fade" tag="div">
+    <transition-group name="notif">
       <div
         v-for="n in notifications"
         :key="n.id"
-        class="pointer-events-auto mb-2 px-4 py-2 rounded shadow-lg min-w-[220px] max-w-[90vw] text-center cursor-pointer select-none _finePrint"
-        :class="[
-          n.type === 'error' ? 'bg-red-100 text-red-800 border border-red-300' : '',
-          n.type === 'success' ? 'bg-green-100 text-green-800 border border-green-300' : '',
-          '_text-stroke-xs'
-        ]"
+        class="_pointer-events-auto _rounded-lg"
+        style="box-shadow: 0 3px 6px 2px rgba(0, 0, 0, 0.1)"
         @click="remove(n.id)"
       >
-        <span v-if="n.type === 'error'">❌</span>
-        <span v-else-if="n.type === 'success'">✅</span>
-        <span class="ml-1">{{ n.message }}</span>
+        <div
+          class="_p-3 _bg-metallic-linear _shadow-panel _rounded-lg _flex _gap-[0.75em] _weight-bold _leading-tight"
+        >
+          <div class="_w-[1em] _flex _items-start _justify-center _flex-shrink-0">
+            <img src="../assets/imgs/tilt-head-sm.png" class="_w-full _scale-[1.75]" />
+          </div>
+          <div>{{ n.message }}</div>
+          <div v-if="n.type" class="_w-[1em] _flex _items-center _justify-center">
+            <img
+              v-if="n.type === 'error'"
+              src="../assets/imgs/red-x-glass.png"
+              class="_w-full _scale-[1.5]"
+            />
+            <img
+              v-else-if="n.type === 'success'"
+              src="../assets/imgs/checkmark-icon-glass.png"
+              class="_w-full _scale-[1.5]"
+            />
+          </div>
+        </div>
       </div>
     </transition-group>
   </div>
@@ -31,12 +44,11 @@ const remove = store.removeNotification
 </script>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s;
+.notif-enter-active {
+  transition: all 150ms;
 }
-.fade-enter-from,
-.fade-leave-to {
+.notif-enter-from {
   opacity: 0;
+  transform: translateY(20px);
 }
 </style>

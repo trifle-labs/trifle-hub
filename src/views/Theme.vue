@@ -31,7 +31,7 @@ import { ref } from 'vue'
 import TypographyDemo from './TypographyDemo.vue'
 import ComponentsDemo from './ComponentsDemo.vue'
 import { watch } from 'vue'
-import HubPageHeader from '../HubPageHeader.vue'
+import HubPageHeader from '../components/HubPageHeader.vue'
 const activeTab = ref('typography')
 
 const pages = {

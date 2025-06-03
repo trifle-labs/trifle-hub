@@ -118,7 +118,7 @@
 #trifle-hub *:focus {
   @apply _outline-none;
 }
-#trifle-hub *:focus-visible {
+#trifle-hub *:not(input):focus-visible {
   @apply _ring-2 _ring-offset-2 _ring-[var(--tHub-color-primary-75)] _ring-offset-transparent;
 }
 
@@ -131,30 +131,6 @@
 ._no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
-}
-
-._bubble-btn {
-  border-radius: 10px;
-  border-image-source: url(../assets/imgs/bubblegum-recess.png);
-  border-image-slice: 82 95 77 92 fill;
-  border-image-width: 17px;
-  border-image-outset: 0px;
-  border-image-repeat: stretch;
-  background-color: transparent;
-  user-select: none;
-  margin: -4px -8px -5px -8px;
-}
-._bubble-btn:active:not([disabled]) {
-  border-image-width: 15px;
-}
-._bubble-btn:active:not([disabled]) > * {
-  transform: scale(0.995);
-  transform-origin: center;
-}
-@media (hover: hover) {
-  ._bubble-btn:hover {
-    border-image-width: 19px;
-  }
 }
 
 ._bg-metallic-cone {
@@ -209,4 +185,33 @@
   background: rgba(255, 255, 255, 0.5);
   @apply _rounded-lg;
   @apply _shadow-panel;
+}
+
+._bubble-btn {
+  border-radius: 10px;
+  border-image-source: url(../assets/imgs/bubblegum-recess.png);
+  border-image-slice: 82 95 77 92 fill;
+  border-image-width: 17px;
+  border-image-outset: 0px;
+  border-image-repeat: stretch;
+  background-color: transparent;
+  user-select: none;
+  margin: -4px -7px -5px -7px;
+  transition: border-image-width 0.1s ease-in-out;
+}
+._bubble-btn:active:not([disabled]) {
+  border-image-width: 15px;
+}
+._bubble-btn:active:not([disabled]) > * {
+  transform: scale(0.995);
+  transform-origin: center;
+}
+._bubble-btn-full {
+  @apply _bubble-btn;
+  width: calc(100% + 14px);
+}
+@media (hover: hover) {
+  ._bubble-btn:hover:not([disabled]) {
+    border-image-width: 19px;
+  }
 }

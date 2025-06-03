@@ -6,8 +6,8 @@
 <script setup>
 import { provide, ref, watch, inject, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import hubPages from './pages/config'
-import Hub from './Hub.vue'
+import hubPages from './routes'
+import Hub from './components/Hub.vue'
 const store = inject('TrifleHub/store')
 
 const props = defineProps({

@@ -1,14 +1,14 @@
-const discordLink = 'https://discord.gg/aEaEZT9Wr9'
-const gmLink = 'https://gm.trifle.life'
-const anybodyLink = 'https://anybody.gg'
-const kudzuLink = 'https://kudzu.rodeo'
-
 import discordIcon from '../assets/imgs/discord-logo-90.png'
 import walletIcon from '../assets/imgs/ethereum-logo-orange-bg.svg'
 import farcasterIcon from '../assets/imgs/farcaster-logo.svg'
 import anybodyIcon from '../assets/imgs/anybody-icon.png'
 import kudzuIcon from '../assets/imgs/kudzu-icon.gif'
 import gmIcon from '../assets/imgs/gm.svg'
+import { discordLink } from './socialsConfig'
+
+const gmLink = 'https://gm.trifle.life'
+const anybodyLink = 'https://anybody.gg'
+const kudzuLink = 'https://kudzu.rodeo'
 
 export const possiblePoints = [
   {

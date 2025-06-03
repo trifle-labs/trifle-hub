@@ -4,7 +4,7 @@
       <HubPageHeader>
         <template #icon>
           <img
-            src="../../assets/imgs/tilt.png"
+            src="../assets/imgs/tilt.png"
             alt="🎮"
             class="_h-[105%] _block _transform _translate-y-[5%]"
           />
@@ -80,8 +80,8 @@
 </template>
 
 <script setup>
-import HubPageHeader from '../../components/HubPageHeader.vue'
-import anybodyTitleImg from '../../assets/imgs/anybody-title.png'
+import HubPageHeader from '../components/HubPageHeader.vue'
+import anybodyTitleImg from '../assets/imgs/anybody-title.png'
 
 // use cloudinary for videos so they're cached across domains for users
 const games = [

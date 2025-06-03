@@ -111,7 +111,7 @@ onMounted(() => {
       if (isVisible.value) {
         if (!props.animate) {
           // wait for ball to render then pause if not supposed to be animating
-          await new Promise((resolve) => setTimeout(resolve, 300))
+          await new Promise((resolve) => setTimeout(resolve, 400))
           visualizer.value.pause()
         } else {
           visualizer.value.resume()
