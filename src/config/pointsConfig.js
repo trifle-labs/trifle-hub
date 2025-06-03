@@ -122,14 +122,14 @@ export const possiblePoints = [
   },
   {
     name: 'Beat Anybody Problem',
-    id: 'solve-anybody',
+    id: 'anybody-daily',
     description: 'A new problem every day on <u>anybody.gg</u>',
     icon: anybodyIcon,
     pachinkoBalls: '10/day',
     kudzuBurn: 0,
     claimed: false,
     once: false,
-    enabled: false,
+    enabled: true,
     link: anybodyLink
   },
   {
