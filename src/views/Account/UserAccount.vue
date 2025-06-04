@@ -65,8 +65,7 @@
           @click="openHub('earn')"
         >
           <span>🪩</span>
-          <!-- TODO: use live points -->
-          <span class="_text-stroke-xl">1,524</span>
+          <span class="_text-stroke-xl">{{ auth.user?.totalBalls }}</span>
         </button>
       </div>
       <div v-show="isEditingUsername" class="_flex _justify-center _gap-1 _h-10 _items-center">
@@ -140,12 +139,18 @@
             </button>
             <div class="_flex-1 _min-w-0 _leading-tight">
               <div
+                @click="
+                  () =>
+                    wallet.id.toLowerCase() == auth.accountAddress?.toLowerCase() &&
+                    openAccountModal()
+                "
                 class="_flex-1 _min-w-0 _truncate _text-em-lg"
                 :class="{
                   '_text-stroke-xl _tracking-wide':
                     walletAuths.length > 1 &&
                     auth.accountConnected &&
-                    wallet.id.toLowerCase() === auth.accountAddress?.toLowerCase()
+                    wallet.id.toLowerCase() === auth.accountAddress?.toLowerCase(),
+                  'cursor-pointer': wallet.id.toLowerCase() == auth.accountAddress?.toLowerCase()
                 }"
               >
                 {{ wallet.username == wallet.id ? truncateAddress(wallet.id) : wallet.username }}
@@ -162,22 +167,24 @@
             </div>
           </div>
           <!-- (disconnect wallet button) -->
-          <button
-            class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
-            @click="() => handleDisconnectPlatform('wallet', wallet.id)"
-            styleff="filter: hue-rotate(130deg) saturate(2)"
-            aria-label="Remove"
-          >
-            <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
-          </button>
+          <template v-if="totalAccountConnections > 1">
+            <button
+              class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
+              @click="() => handleDisconnectPlatform('wallet', wallet.id)"
+              styleff="filter: hue-rotate(130deg) saturate(2)"
+              aria-label="Remove"
+            >
+              <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
+            </button>
+          </template>
         </li>
         <!-- (authenticate wallet button) -->
-        <AuthButton
+        <SplitWalletButton
           v-if="isAuthenticated && auth.accountConnected && auth.currentWalletNeedsAuth"
-          platform="wallet"
-          class="_w-full"
-          @click="() => auth.authenticateWithWallet(auth.accountAddress)"
-          >Authenticate {{ truncateAddress(auth.accountAddress) }}</AuthButton
+          :wallet-address="auth.accountAddress"
+          :wallet-avatar="currentWallet?.avatar"
+          :display-name="currentWallet?.username || accountAddress"
+          >Authenticate {{ truncateAddress(auth.accountAddress) }}</SplitWalletButton
         >
         <!-- (link wallet button) -->
         <AuthButton
@@ -250,14 +257,16 @@
             </div>
           </div>
           <!-- (disconnect discord button) -->
-          <button
-            class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
-            @click="() => handleDisconnectPlatform('discord', discord.id)"
-            styleff="filter: hue-rotate(130deg) saturate(2)"
-            aria-label="Remove"
-          >
-            <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
-          </button>
+          <template v-if="totalAccountConnections > 1">
+            <button
+              class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
+              @click="() => handleDisconnectPlatform('discord', discord.id)"
+              styleff="filter: hue-rotate(130deg) saturate(2)"
+              aria-label="Remove"
+            >
+              <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
+            </button>
+          </template>
         </li>
         <AuthButton v-if="!hasDiscordAuth" platform="discord" points="+10" class="_w-full">
           {{ discordAuths.length > 0 ? 'Link Another Discord' : 'Link Discord' }}
@@ -324,14 +333,16 @@
             </div>
           </div>
           <!-- (disconnect farcaster button) -->
-          <button
-            class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
-            @click="() => handleDisconnectPlatform('farcaster', farcaster.id)"
-            styleff="filter: hue-rotate(130deg) saturate(2)"
-            aria-label="Remove"
-          >
-            <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
-          </button>
+          <template v-if="totalAccountConnections > 1">
+            <button
+              class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
+              @click="() => handleDisconnectPlatform('farcaster', farcaster.id)"
+              styleff="filter: hue-rotate(130deg) saturate(2)"
+              aria-label="Remove"
+            >
+              <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
+            </button>
+          </template>
         </li>
         <AuthButton v-if="!hasFarcasterAuth" platform="farcaster" points="+10" class="_w-full">
           {{ farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster' }}
@@ -355,6 +366,7 @@ import smileyFaceSvg from '../../assets/imgs/smiley-face-dashed-outline.svg'
 import AuthButton from '../../components/AuthButton.vue'
 import AccountLayout from '../../components/AccountLayout.vue'
 import TrifleBall from '../../components/TrifleBall/TrifleBall.vue'
+import SplitWalletButton from '../../components/SplitWalletButton.vue'
 
 const auth = inject('TrifleHub/store')
 const { isAuthenticated, backendUrl } = storeToRefs(auth)
@@ -376,6 +388,10 @@ const farcasterAuths = computed(() => auth.getPlatformData('farcaster'))
 
 const hasDiscordAuth = computed(() => discordAuths.value.length > 0)
 const hasFarcasterAuth = computed(() => farcasterAuths.value.length > 0)
+
+const totalAccountConnections = computed(
+  () => walletAuths.value.length + discordAuths.value.length + farcasterAuths.value.length
+)
 
 const handleDisconnectPlatform = async (platform, instanceId) => {
   // TODO: @everett we need a message system for this
@@ -522,6 +538,22 @@ const setAvatar = async (platform, platformId) => {
   } catch (err) {
     auth.addNotification({ type: 'error', message: "Oops, couldn't set avatar. Try again?" })
     console.error('Failed to set avatar:', err)
+  }
+}
+
+const accountConnected = computed(() => auth.accountConnected)
+const currentWalletNeedsAuth = computed(() => auth.currentWalletNeedsAuth)
+const accountAddress = computed(() => auth.accountAddress)
+const isWalletAuthenticated = computed(() => auth.isWalletAuthenticated(accountAddress.value))
+const currentWallet = computed(() => {
+  if (!accountAddress.value) return null
+  return walletAuths.value.find((w) => w.id?.toLowerCase() === accountAddress.value?.toLowerCase())
+})
+const openAccountModal = async () => {
+  try {
+    await auth.openAccountModal()
+  } catch (e) {
+    auth.addNotification({ type: 'error', message: "Couldn't open wallet modal" })
   }
 }
 </script>

@@ -22,7 +22,16 @@
 
     <section class="_w-full _px-1.5 sm:_px-8 _flex _flex-col _gap-4 _items-center">
       <nav class="_flex _flex-col _gap-1.5 _w-full _leading-none">
-        <AuthButton platform="wallet" points="+10"> Login with Wallet </AuthButton>
+        <template v-if="accountConnected && currentWalletNeedsAuth">
+          <SplitWalletButton
+            :wallet-address="accountAddress"
+            :wallet-avatar="currentWallet?.avatar"
+            :display-name="currentWallet?.username || accountAddress"
+          />
+        </template>
+        <template v-else>
+          <AuthButton platform="wallet" points="+10"> Login with Wallet </AuthButton>
+        </template>
         <AuthButton platform="discord" points="+10"> Login with Discord </AuthButton>
         <AuthButton platform="farcaster" points="+10"> Login with Farcaster </AuthButton>
       </nav>
@@ -55,4 +64,17 @@
 import smileyFaceSvg from '../../assets/imgs/smiley-face-dashed-outline.svg'
 import AuthButton from '../../components/AuthButton.vue'
 import AccountLayout from '../../components/AccountLayout.vue'
+import SplitWalletButton from '../../components/SplitWalletButton.vue'
+import { inject, computed } from 'vue'
+
+const auth = inject('TrifleHub/store')
+const walletAuths = computed(() => auth.getPlatformData('wallet'))
+const accountConnected = computed(() => auth.accountConnected)
+const currentWalletNeedsAuth = computed(() => auth.currentWalletNeedsAuth)
+const accountAddress = computed(() => auth.accountAddress)
+
+const currentWallet = computed(() => {
+  if (!accountAddress.value) return null
+  return walletAuths.value.find((w) => w.id?.toLowerCase() === accountAddress.value?.toLowerCase())
+})
 </script>

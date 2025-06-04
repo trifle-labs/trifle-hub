@@ -11,7 +11,7 @@ const queryClient = new QueryClient()
 
 const TrifleHubVuePlugin = {
   install: async (app, options = {}) => {
-    console.log('install 2')
+    console.log('install TrifleHubVuePlugin')
     if (!options.reownConfig) {
       throw new Error('reownConfig is required when installing TrifleHub')
     }

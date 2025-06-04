@@ -113,7 +113,7 @@ watch(hubPageKey, (val) => {
   sessionStorage.setItem('hubPageKey', val)
 })
 
-// TODO: delete everything below here once backwards compatibility is no longer needed
+// TODO: delete everything below here once backwards compatibility is no longer needed (after installed in anybody and kudzu)
 const emit = defineEmits(['connected', 'disconnected'])
 const address = computed(() => store?.accountAddress)
 const chainId = computed(() => store?.accountChainId)

@@ -1,6 +1,6 @@
 import { createAppKit } from '@reown/appkit/vue'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
-import { mainnet } from '@reown/appkit/networks'
+import { mainnet, base } from '@reown/appkit/networks'
 import { farcasterFrame as miniAppConnector } from '@farcaster/frame-wagmi-connector'
 import { sdk } from '@farcaster/frame-sdk'
 // Default configuration
@@ -12,7 +12,8 @@ const defaultConfig = {
     url: typeof window !== 'undefined' ? window.location.origin : '',
     icons: []
   },
-  networks: [mainnet],
+  networks: [mainnet, base],
+  enableNetworkSwitch: false,
   features: {
     analytics: true,
     email: true,
@@ -38,11 +39,16 @@ export function initializeWagmiConfig(config) {
       ...defaultConfig.metadata,
       ...(config.metadata || {})
     },
+    networks: [...defaultConfig.networks, ...(config.networks || [])],
     features: {
       ...defaultConfig.features,
       ...(config.features || {})
     },
-    featuredWalletIds: [...defaultConfig.featuredWalletIds, ...(config.featuredWalletIds || [])]
+    featuredWalletIds: [...defaultConfig.featuredWalletIds, ...(config.featuredWalletIds || [])],
+    themeVariables: {
+      ...defaultConfig.themeVariables,
+      ...(config.themeVariables || {})
+    }
   }
   // const context = await sdk.context
   const connectors = [] //[miniAppConnector()]

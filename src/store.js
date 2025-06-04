@@ -260,6 +260,17 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async connectFarcaster() {
+      // Always close any previous popup before opening a new one
+      if (window.__trifleFarcasterPopup) {
+        try {
+          if (window.__trifleFarcasterPopup) {
+            window.__trifleFarcasterPopup.close()
+          }
+        } catch (e) {
+          console.warn('Error closing previous Farcaster popup:', e)
+        }
+        window.__trifleFarcasterPopup = null
+      }
       const { nonce } = await fetch(this.backendUrl + '/farcaster/signin', {
         method: 'POST',
         headers: {
@@ -844,6 +855,7 @@ export const useAuthStore = defineStore('auth', {
             id: user.id,
             avatar: user.avatar,
             username: user.username,
+            totalBalls: user.totalBalls,
             linkedAccounts: {}
           }
 

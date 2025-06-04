@@ -130,8 +130,8 @@
 
           <!-- quests... -->
           <component
-            :is="quest.link ? (typeof quest.link === 'string' ? 'a' : 'button') : 'div'"
             v-for="quest in filteredQuests"
+            :is="quest.link ? (typeof quest.link === 'string' ? 'a' : 'button') : 'div'"
             :key="quest.id"
             :fid="quest.fid"
             :href="typeof quest.link === 'string' ? quest.link : undefined"
@@ -139,7 +139,7 @@
             :rel="typeof quest.link === 'string' ? 'noopener noreferrer' : undefined"
             @click="quest.link?.to && openHub(quest.link.to)"
             class="_w-full _block _relative"
-            :class="{ '_pointer-events-none': quest.completed && quest.link?.to }"
+            :class="{ '_pointer-events-none': quest.completed && quest.once }"
           >
             <!-- main body, faded if completed -->
             <div
@@ -147,8 +147,9 @@
               :class="[
                 {
                   'mouse:hover:_scale-[1.006] _duration-100': quest.link,
-                  '_opacity-50': quest.completed && quest.once,
-                  '_shadow-panel': !(quest.completed && quest.once)
+                  '_opacity-30': quest.completed && quest.once,
+                  '_opacity-60': quest.completed && !quest.once,
+                  '_shadow-panel': !quest.completed
                 }
               ]"
             >
@@ -159,10 +160,17 @@
                 </div>
                 <div class="_flex-1">
                   <!-- title -->
+
                   <div
                     class="_min-h-[1.7em] _flex _items-center _justify-start _text-left _py-[0.06em] _weight-bold _leading-snug"
                     :class="{ '_line-through': quest.completed && quest.once }"
                   >
+                    <template v-if="quest.completed && quest.once">
+                      <img src="../assets/imgs/checkmark-icon-glass.png" class="_size-[2.5em]" />
+                    </template>
+                    <template v-else-if="quest.completed && !quest.once">
+                      <span class="_text-4xl"> ♻️&nbsp;</span>
+                    </template>
                     {{ quest.name }}
                   </div>
                 </div>
@@ -217,12 +225,6 @@
                   </div>
                 </div> -->
             </div>
-            <div
-              v-if="quest.completed && quest.once"
-              class="_absolute _top-0 _right-1 _flex _items-center _justify-center"
-            >
-              <img src="../assets/imgs/checkmark-icon-glass.png" class="_size-[2.5em]" />
-            </div>
           </component>
         </div>
       </div>
@@ -235,10 +237,15 @@
           <div class="_flex _justify-center _leading-none _items-center _text-mlg">
             <div class="_text-stroke-xl _animate-pulse-deepff">coming soon...</div>
           </div>
+        </section>
+        <section
+          class="_bg-metallic-linear _p-5 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-5 _py-5"
+        >
+          <div class="_text-em-2xs _opacity-50">follow for updates</div>
+
           <div class="_grid _grid-cols-2 _gap-2">
             <SocialsButtons />
           </div>
-          <div class="_text-em-2xs _opacity-50">follow for updates</div>
         </section>
       </div>
     </transition-group>
@@ -285,6 +292,8 @@ const filteredQuests = computed(() => {
     // or if both are disabled (their order amongst themselves doesn't matter by completion)
     // then, sort by completion status (uncompleted quests on top)
     if (a.enabled && b.enabled) {
+      if (a.completed && !b.completed) return 1
+      if (!a.completed && b.completed) return -1
       // This condition ensures we only sort by completion for enabled quests
       if (!(a.completed && a.once) && b.completed && b.once) return -1
       if (a.completed && a.once && !(b.completed && b.once)) return 1

@@ -108,7 +108,7 @@ export const possiblePoints = [
     link: gmLink
   },
   {
-    name: "Someone liked your 'gm'",
+    name: "'gm' reactions",
     id: 'gm-react',
     icon: gmIcon,
     description:
