@@ -260,104 +260,112 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async connectFarcaster() {
-      // Always close any previous popup before opening a new one
-      if (window.__trifleFarcasterPopup) {
-        try {
-          if (window.__trifleFarcasterPopup) {
-            window.__trifleFarcasterPopup.close()
-          }
-        } catch (e) {
-          console.warn('Error closing previous Farcaster popup:', e)
-        }
-        window.__trifleFarcasterPopup = null
-      }
-      const { nonce } = await fetch(this.backendUrl + '/farcaster/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then((res) => res.json())
-      let data, authWindow
-      let farcasterTimeout = null
+      let url, data, authWindow
       if (this.isFarcaster) {
-        data = await sdk.actions.signIn({
-          nonce
-        })
+        data = await sdk.experimental.quickAuth()
+        console.log({ data })
+        url = `${this.backendUrl}/farcaster/${
+          this.isAuthenticated ? 'add-quick-auth' : 'quick-auth'
+        }`
       } else {
-        const appClient = createAppClient({
-          relay: 'https://relay.farcaster.xyz',
-          ethereum: viemConnector({ rpcUrl: 'https://eth.drpc.org' })
-        })
-        const currentURL = window.location.href
-        const channel = await appClient.createChannel({
-          siweUri: currentURL,
-          domain: currentURL.split('/')[2],
-          nonce
-        })
-        const channelToken = channel.data?.channelToken
-        const url = channel.data?.url.replace('warpcast.com', 'farcaster.xyz')
-        if (isMobile()) {
-          authWindow = window.open(url, '_top')
-        } else {
-          // If a popup is already open, close it before opening a new one
-          if (window.__trifleFarcasterPopup && !window.__trifleFarcasterPopup.closed) {
-            window.__trifleFarcasterPopup.close()
+        // Always close any previous popup before opening a new one
+        if (window.__trifleFarcasterPopup) {
+          try {
+            if (window.__trifleFarcasterPopup) {
+              window.__trifleFarcasterPopup.close()
+            }
+          } catch (e) {
+            console.warn('Error closing previous Farcaster popup:', e)
           }
-          authWindow = window.open(url, '_blank', 'width=500,height=800')
-          window.__trifleFarcasterPopup = authWindow
-        }
-
-        if (!authWindow) {
-          this.addNotification({
-            type: 'error',
-            message:
-              'Could not open Farcaster authentication window. Please check your popup blocker settings.'
-          })
-          throw new Error(
-            'Could not open Farcaster authentication window. Please check your popup blocker settings.'
-          )
-        }
-
-        // Timeout for 5 minutes
-        farcasterTimeout = setTimeout(() => {
-          if (authWindow && !authWindow.closed) authWindow.close()
           window.__trifleFarcasterPopup = null
-          this.addNotification({
-            type: 'error',
-            message: 'Farcaster authentication timed out after 5 minutes.'
+        }
+        const { nonce } = await fetch(this.backendUrl + '/farcaster/signin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).then((res) => res.json())
+        let farcasterTimeout = null
+        if (this.isFarcaster) {
+          data = await sdk.actions.signIn({
+            nonce
           })
-        }, 300000)
+        } else {
+          const appClient = createAppClient({
+            relay: 'https://relay.farcaster.xyz',
+            ethereum: viemConnector({ rpcUrl: 'https://eth.drpc.org' })
+          })
+          const currentURL = window.location.href
+          const channel = await appClient.createChannel({
+            siweUri: currentURL,
+            domain: currentURL.split('/')[2],
+            nonce
+          })
+          const channelToken = channel.data?.channelToken
+          const url = channel.data?.url.replace('warpcast.com', 'farcaster.xyz')
+          if (isMobile()) {
+            authWindow = window.open(url, '_top')
+          } else {
+            // If a popup is already open, close it before opening a new one
+            if (window.__trifleFarcasterPopup && !window.__trifleFarcasterPopup.closed) {
+              window.__trifleFarcasterPopup.close()
+            }
+            authWindow = window.open(url, '_blank', 'width=500,height=800')
+            window.__trifleFarcasterPopup = authWindow
+          }
 
-        data = await new Promise((resolve, reject) => {
-          appClient
-            .watchStatus({
-              channelToken,
-              timeout: 300_000, // 5 minutes
-              interval: 1_000,
-              onResponse: async ({ response, data }) => {
-                if (response.status !== 200) return
-                console.log('Response code:', response.status)
-                console.log('Status data:', data)
+          if (!authWindow) {
+            this.addNotification({
+              type: 'error',
+              message:
+                'Could not open Farcaster authentication window. Please check your popup blocker settings.'
+            })
+            throw new Error(
+              'Could not open Farcaster authentication window. Please check your popup blocker settings.'
+            )
+          }
+
+          // Timeout for 5 minutes
+          farcasterTimeout = setTimeout(() => {
+            if (authWindow && !authWindow.closed) authWindow.close()
+            window.__trifleFarcasterPopup = null
+            this.addNotification({
+              type: 'error',
+              message: 'Farcaster authentication timed out after 5 minutes.'
+            })
+          }, 300000)
+
+          data = await new Promise((resolve, reject) => {
+            appClient
+              .watchStatus({
+                channelToken,
+                timeout: 300_000, // 5 minutes
+                interval: 1_000,
+                onResponse: async ({ response, data }) => {
+                  if (response.status !== 200) return
+                  console.log('Response code:', response.status)
+                  console.log('Status data:', data)
+                  clearTimeout(farcasterTimeout)
+                  if (authWindow && !authWindow.closed) authWindow.close()
+                  window.__trifleFarcasterPopup = null
+                  resolve(data)
+                }
+              })
+              .catch((err) => {
                 clearTimeout(farcasterTimeout)
                 if (authWindow && !authWindow.closed) authWindow.close()
                 window.__trifleFarcasterPopup = null
-                resolve(data)
-              }
-            })
-            .catch((err) => {
-              clearTimeout(farcasterTimeout)
-              if (authWindow && !authWindow.closed) authWindow.close()
-              window.__trifleFarcasterPopup = null
-              this.addNotification({
-                type: 'error',
-                message: 'Farcaster authentication failed.'
+                this.addNotification({
+                  type: 'error',
+                  message: 'Farcaster authentication failed.'
+                })
+                reject(err)
               })
-              reject(err)
-            })
-        })
-      }
+          })
+        }
 
-      const url = `${this.backendUrl}/farcaster/${this.isAuthenticated ? 'add-signin' : 'signin'}`
+        url = `${this.backendUrl}/farcaster/${this.isAuthenticated ? 'add-signin' : 'signin'}`
+      }
       const headers = {
         'Content-Type': 'application/json'
       }
@@ -377,21 +385,21 @@ export const useAuthStore = defineStore('auth', {
       }
 
       const jsonRes = await res.json()
-      console.log({ jsonRes })
       localStorage.setItem('authToken', jsonRes.token)
       headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
-      console.log('listen for successful farcaster auth')
       await this.fetchUserStatus()
-      console.log({ isFarcaster: this.isFarcaster })
-      if (this.isFarcaster && !this.isFarcaster.client.added) {
-        console.log('adding frame')
-        await sdk.actions.addFrame()
-      } else if (this.isFarcaster) {
-        await fetch(this.backendUrl + '/farcaster/update', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(this.isFarcaster)
-        })
+      try {
+        if (this.isFarcaster && !this.isFarcaster.client.added) {
+          await sdk.actions.addFrame()
+        } else if (this.isFarcaster) {
+          await fetch(this.backendUrl + '/farcaster/update', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(this.isFarcaster)
+          })
+        }
+      } catch (e) {
+        console.warn('non-fatal error adding frame', e)
       }
     },
 
@@ -457,7 +465,6 @@ export const useAuthStore = defineStore('auth', {
               // Handle successful authentication
               if (event.data.token) {
                 localStorage.setItem('authToken', event.data.token)
-                console.log('listen for successful discord auth')
                 await this.fetchUserStatus()
                 window.__trifleDiscordPopup = null
                 resolve()
