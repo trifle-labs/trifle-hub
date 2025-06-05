@@ -263,7 +263,6 @@ export const useAuthStore = defineStore('auth', {
       let url, data, authWindow
       if (this.isFarcaster) {
         data = await sdk.experimental.quickAuth()
-        console.log({ data })
         url = `${this.backendUrl}/farcaster/${
           this.isAuthenticated ? 'add-quick-auth' : 'quick-auth'
         }`
@@ -388,6 +387,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('authToken', jsonRes.token)
       headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
       await this.fetchUserStatus()
+      console.log({ isFarcaster: this.isFarcaster })
       try {
         if (this.isFarcaster && !this.isFarcaster.client.added) {
           await sdk.actions.addFrame()
