@@ -61,6 +61,18 @@ export const possiblePoints = [
     enabled: true,
     link: discordLink
   },
+  {
+    name: 'Add to Farcaster',
+    id: 'gm-fc-notifications',
+    icon: farcasterIcon,
+    description: 'Add the GM Mini App to your Farcaster with notifications enabled',
+    pachinkoBalls: 25,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: 'https://farcaster.xyz/miniapps/gBsKvLYGQnEE/gm-game'
+  },
   // {
   //   name: 'Link Email via Discord',
   //   id: 'auth-email',
@@ -121,7 +133,7 @@ export const possiblePoints = [
     link: gmLink
   },
   {
-    name: 'Beat Anybody Problem',
+    name: 'Solve Daily Anybody Problem',
     id: 'anybody-daily',
     description: 'A new problem every day on <u>anybody.gg</u>',
     icon: anybodyIcon,
@@ -192,18 +204,18 @@ export const possiblePoints = [
   //   enabled: false,
   //   link: discordLink
   // },
-  {
-    name: "Play '/laughcry' in Discord",
-    id: 'flip',
-    icon: discordIcon,
-    description: 'Ride a wave of double or nothing coin flips',
-    pachinkoBalls: '2ˣ',
-    kudzuBurn: 0,
-    claimed: false,
-    once: false,
-    enabled: true,
-    link: discordLink
-  },
+  // {
+  //   name: "Play '/laughcry' in Discord",
+  //   id: 'flip',
+  //   icon: discordIcon,
+  //   description: 'Ride a wave of double or nothing coin flips',
+  //   pachinkoBalls: '2ˣ',
+  //   kudzuBurn: 0,
+  //   claimed: false,
+  //   once: false,
+  //   enabled: true,
+  //   link: discordLink
+  // },
   // {
   //   name: 'Bump Discord Game',
   //   id: 'bump',
