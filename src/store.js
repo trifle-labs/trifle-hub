@@ -192,7 +192,7 @@ export const useAuthStore = defineStore('auth', {
         if (isMiniApp) {
           const context = await sdk.context
           this.isFarcaster = context
-          this.connectFarcaster()
+          await this.connectFarcaster()
           console.log({ context })
         }
 
@@ -205,6 +205,15 @@ export const useAuthStore = defineStore('auth', {
         })
       } finally {
         this.loading = false
+      }
+
+      if (this.isFarcaster) {
+        if (this.farcasterInterval) {
+          clearInterval(this.farcasterInterval)
+        }
+        this.farcasterInterval = setInterval(async () => {
+          this.isFarcaster = await sdk.context
+        }, 5_000)
       }
     },
     async fetchFarcasterUserInfo() {
@@ -388,15 +397,13 @@ export const useAuthStore = defineStore('auth', {
       headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
       await this.fetchUserStatus()
       console.log({ isFarcaster: this.isFarcaster })
+    },
+
+    async addFrame() {
       try {
         if (this.isFarcaster && !this.isFarcaster.client.added) {
           await sdk.actions.addFrame()
-        } else if (this.isFarcaster) {
-          await fetch(this.backendUrl + '/farcaster/update', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(this.isFarcaster)
-          })
+          this.isFarcaster = await sdk.context
         }
       } catch (e) {
         console.warn('non-fatal error adding frame', e)
@@ -821,13 +828,16 @@ export const useAuthStore = defineStore('auth', {
     },
 
     waitForConnection() {
+      if (this.checkingConnection) {
+        clearInterval(this.checkingConnection)
+      }
       console.log('waitForConnection')
       return new Promise((resolve) => {
-        const check = setInterval(() => {
+        this.checkingConnection = setInterval(() => {
           const connected = this._appKitInstance.getIsConnectedState()
           if (connected) {
             this.accountConnected = true
-            clearInterval(check)
+            clearInterval(this.checkingConnection)
             resolve()
           } else {
             this.accountConnected = false
