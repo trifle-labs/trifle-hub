@@ -192,7 +192,7 @@ export const useAuthStore = defineStore('auth', {
         if (isMiniApp) {
           const context = await sdk.context
           this.isFarcaster = context
-          this.fetchFarcasterUserInfo()
+          this.connectFarcaster()
           console.log({ context })
         }
 
