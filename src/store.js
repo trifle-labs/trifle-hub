@@ -206,6 +206,15 @@ export const useAuthStore = defineStore('auth', {
       } finally {
         this.loading = false
       }
+
+      if (this.isFarcaster) {
+        if (this.farcasterInterval) {
+          clearInterval(this.farcasterInterval)
+        }
+        this.farcasterInterval = setInterval(async () => {
+          this.isFarcaster = await sdk.context
+        }, 5_000)
+      }
     },
     async fetchFarcasterUserInfo() {
       if (!this.isFarcaster) return
@@ -394,6 +403,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         if (this.isFarcaster && !this.isFarcaster.client.added) {
           await sdk.actions.addFrame()
+          this.isFarcaster = await sdk.context
         }
       } catch (e) {
         console.warn('non-fatal error adding frame', e)
@@ -818,13 +828,16 @@ export const useAuthStore = defineStore('auth', {
     },
 
     waitForConnection() {
+      if (this.checkingConnection) {
+        clearInterval(this.checkingConnection)
+      }
       console.log('waitForConnection')
       return new Promise((resolve) => {
-        const check = setInterval(() => {
+        this.checkingConnection = setInterval(() => {
           const connected = this._appKitInstance.getIsConnectedState()
           if (connected) {
             this.accountConnected = true
-            clearInterval(check)
+            clearInterval(this.checkingConnection)
             resolve()
           } else {
             this.accountConnected = false
