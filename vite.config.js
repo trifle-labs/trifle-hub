@@ -1,4 +1,4 @@
-// /Users/billy/GitHub/trifle-labs/trifle-hub/vite.config.js
+// /Users/billy/Github/trifle-labs/trifle-hub/vite.config.js
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'node:path'

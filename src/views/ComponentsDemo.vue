@@ -10,7 +10,7 @@
   <div class="_h3">Sections</div>
   <HubSection>
     <template #title>
-      <span>.tHub-section-inset</span>
+      <span>.thub-section-inset</span>
     </template>
     <template #description> makes inset with blur bg </template>
     <template #right>

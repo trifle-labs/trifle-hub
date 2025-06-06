@@ -65,7 +65,7 @@
       </button>
     </nav>
 
-    <transition-group name="tHub-page-group">
+    <transition-group name="thub-page-group">
       <!-- (earn) -->
       <div class="_space-y-4" v-if="selectedTab === 'earn'">
         <!-- Loading State -->

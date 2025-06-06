@@ -3,7 +3,7 @@
     id="trifle-hub"
     class="trifle-hub-ui _relative _pointer-events-none _select-none _font-trifle _text-base _text-stroke-xs"
     :data-position="props.position"
-    style="z-index: var(--tHub-z-index)"
+    style="z-index: var(--thub-z-index)"
   >
     <!-- (tap bg to close) -->
     <button
@@ -16,7 +16,7 @@
     <div
       id="trifle-hub__menu-button"
       class="_fixed _z-10 trifle-hub-position focus-visible:_ring-4 _rounded-full"
-      style="width: var(--tHub-menu-button-size); height: var(--tHub-menu-button-size)"
+      style="width: var(--thub-menu-button-size); height: var(--thub-menu-button-size)"
       tabindex="0"
       @keydown.space="hubOpen = !hubOpen"
       @keydown.enter="hubOpen = !hubOpen"
@@ -85,7 +85,7 @@
           </div>
           <!-- background layer -->
           <div class="_absolute _inset-0">
-            <transition-group name="tHub-bg-fade">
+            <transition-group name="thub-bg-fade">
               <div
                 v-if="hubPage.bgImg"
                 :key="hubPage.bgImg"
@@ -109,7 +109,7 @@
             <button
               class="_flex _flex-col _items-center _-mr-6 _pointer-events-auto _relative"
               @click="openHub('games')"
-              :class="{ '_thub-nav-active': props.hubPageKey === 'games' }"
+              :class="{ 'thub-nav-active': props.hubPageKey === 'games' }"
             >
               <img
                 src="../assets/imgs/gigi-tilt-heads.png"
@@ -122,7 +122,7 @@
             <button
               class="_flex _flex-col _items-center _gap-2 _pointer-events-auto _relative"
               @click="openHub('leaderboard')"
-              :class="{ '_thub-nav-active': props.hubPageKey === 'leaderboard' }"
+              :class="{ 'thub-nav-active': props.hubPageKey === 'leaderboard' }"
             >
               <img
                 src="../assets/imgs/trifle-trophy-sm.png"
@@ -135,7 +135,7 @@
             <button
               class="_flex _flex-col _items-center _gap-2 _-ml-2 _pointer-events-auto _relative"
               @click="openHub('earn')"
-              :class="{ '_thub-nav-active': props.hubPageKey === 'earn' }"
+              :class="{ 'thub-nav-active': props.hubPageKey === 'earn' }"
             >
               <img
                 src="../assets/imgs/disco-ball-on-graph.png"
@@ -148,7 +148,7 @@
             <button
               class="_flex _flex-col _items-center _gap-2 _pointer-events-auto _relative"
               @click="openHub('account')"
-              :class="{ '_thub-nav-active': props.hubPageKey === 'account' }"
+              :class="{ 'thub-nav-active': props.hubPageKey === 'account' }"
             >
               <div
                 class="_size-[3.1em] sm:_size-[3.5em] _-mb-[0.5em] _origin-bottom _flex _items-center _justify-center"
@@ -177,7 +177,7 @@
           </nav>
           <!-- pages, scrollable -->
           <div class="_flex-1 _flex _overflow-y-scroll _select-text _relative _no-scrollbar">
-            <transition name="tHub-page" mode="out-in">
+            <transition name="thub-page" mode="out-in">
               <component :is="hubPage.component" />
             </transition>
           </div>
@@ -318,50 +318,50 @@ watch(hubOpen, async (open) => {
   -webkit-mask-image: var(--mask);
 }
 
-.tHub-page-enter-active,
-.tHub-page-leave-active {
+.thub-page-enter-active,
+.thub-page-leave-active {
   transition: all 150ms ease;
 }
 
-.tHub-page-enter-from {
+.thub-page-enter-from {
   opacity: 0;
   transform: translateY(5px);
 }
 
-.tHub-page-leave-to {
+.thub-page-leave-to {
   opacity: 0;
   transform: translateY(-5px);
 }
 
 /* when using transition-group */
-.tHub-page-group-leave-active {
+.thub-page-group-leave-active {
   transition: all 150ms ease;
 }
-.tHub-page-group-enter-active {
+.thub-page-group-enter-active {
   transition: all 150ms 150ms ease;
 }
 
-.tHub-page-group-enter-from {
+.thub-page-group-enter-from {
   opacity: 0;
   transform: translateY(5px);
 }
 
-.tHub-page-group-leave-to {
+.thub-page-group-leave-to {
   opacity: 0;
   transform: translateY(-5px);
 }
 
-.tHub-bg-fade-enter-active,
-.tHub-bg-fade-leave-active {
+.thub-bg-fade-enter-active,
+.thub-bg-fade-leave-active {
   transition: all 0.3s ease;
 }
 
-.tHub-bg-fade-enter-from,
-.tHub-bg-fade-leave-to {
+.thub-bg-fade-enter-from,
+.thub-bg-fade-leave-to {
   opacity: 0;
 }
 
-._thub-nav-active {
+.thub-nav-active {
   &::after {
     content: '•';
     position: absolute;

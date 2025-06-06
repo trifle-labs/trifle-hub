@@ -6,19 +6,19 @@
 @tailwind utilities;
 
 :root {
-  --tHub-color-blue: #4100ff;
+  --thub-color-blue: #4100ff;
 
-  --tHub-color-primary: var(--tHub-color-blue);
-  --tHub-color-primary-75: color-mix(in srgb, var(--tHub-color-primary) 75%, transparent);
+  --thub-color-primary: var(--thub-color-blue);
+  --thub-color-primary-75: color-mix(in srgb, var(--thub-color-primary) 75%, transparent);
 
-  --tHub-metallic-light: rgb(227, 230, 244);
-  /* --tHub-metallic-light: rgb(240, 240, 245, 0.5); */
-  --tHub-metallic-dark: #a3abca;
+  --thub-metallic-light: rgb(227, 230, 244);
+  /* --thub-metallic-light: rgb(240, 240, 245, 0.5); */
+  --thub-metallic-dark: #a3abca;
 
-  --tHub-shadow-color: rgba(0, 0, 0, 0.5);
+  --thub-shadow-color: rgba(0, 0, 0, 0.5);
 
-  --tHub-menu-button-size: 7rem;
-  --tHub-z-index: 900;
+  --thub-menu-button-size: 7rem;
+  --thub-z-index: 900;
 }
 
 .trifle-hub-ui {
@@ -120,7 +120,7 @@
   @apply _outline-none;
 }
 #trifle-hub *:not(input):focus-visible {
-  @apply _ring-2 _ring-offset-2 _ring-[var(--tHub-color-primary-75)] _ring-offset-transparent;
+  @apply _ring-2 _ring-offset-2 _ring-[var(--thub-color-primary-75)] _ring-offset-transparent;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -135,8 +135,8 @@
 }
 
 ._bg-metallic-cone {
-  --light-color: var(--tHub-metallic-light);
-  --dark-color: var(--tHub-metallic-dark); /* or currentColor ?? */
+  --light-color: var(--thub-metallic-light);
+  --dark-color: var(--thub-metallic-dark); /* or currentColor ?? */
   background: repeating-conic-gradient(
     from 50deg at 60% 65%,
     var(--light-color) 0%,
@@ -165,8 +165,8 @@
 }
 
 ._bg-metallic-linear {
-  --light-color: var(--tHub-metallic-light);
-  --dark-color: var(--tHub-metallic-dark);
+  --light-color: var(--thub-metallic-light);
+  --dark-color: var(--thub-metallic-dark);
   background: linear-gradient(
     -45deg,
     var(--light-color) 0%,
