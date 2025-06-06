@@ -286,63 +286,68 @@
       </div>
       <ul class="_space-y-2">
         <!-- farcasters... -->
-        <li
-          v-for="farcaster in farcasterAuths"
-          :key="farcaster.id"
-          class="_flex _items-center _p-2 _pr-3.5 _justify-between _bg-metallic-linear _shadow-panel _rounded-lg"
-        >
-          <div class="_flex _items-center _gap-2">
-            <button
-              class="_size-11 _flex _items-stretch _p-1.5 _group _overflow-hidden"
-              :class="[
-                {
-                  '_rounded-lg _shadow-panel': farcaster.avatar,
-                  '_shadow-panel-inset _bg-metallic-cone _cursor-default':
-                    farcaster.avatar === auth.user?.avatar
-                }
-              ]"
-              :disabled="!farcaster.avatar"
-            >
-              <div
-                v-if="farcaster.avatar"
-                @click="() => setAvatar('farcaster', farcaster.id)"
-                style="background: none"
-                type="button"
-                title="Set as profile avatar"
+        <li v-for="farcaster in farcasterAuths" :key="farcaster.id">
+          <div
+            class="_flex _items-center _p-2 _pr-3.5 _justify-between _bg-metallic-linear _shadow-panel _rounded-lg"
+          >
+            <div class="_flex _items-center _gap-2">
+              <button
+                class="_size-11 _flex _items-stretch _p-1.5 _group _overflow-hidden"
+                :class="[
+                  {
+                    '_rounded-lg _shadow-panel': farcaster.avatar,
+                    '_shadow-panel-inset _bg-metallic-cone _cursor-default':
+                      farcaster.avatar === auth.user?.avatar
+                  }
+                ]"
+                :disabled="!farcaster.avatar"
               >
-                <img
-                  :src="`${farcaster.avatar}`"
-                  class="_size-full _rounded-full _duration-150"
-                  :class="{
-                    'group-hover:_scale-[1.8]': farcaster.avatar !== auth.user?.avatar
-                  }"
-                />
-              </div>
-              <div v-else class="_w-full _flex _items-center _justify-center">
-                <img
-                  src="../../assets/imgs/farcaster-logo.svg"
-                  class="_size-6 _rounded"
-                  style="background-color: #000"
-                />
-              </div>
-            </button>
-            <div class="_flex-1 _min-w-0 _leading-tight">
-              <div class="_flex-1 _min-w-0 _truncate _text-em-lg">
-                {{ farcaster.username }}
+                <div
+                  v-if="farcaster.avatar"
+                  @click="() => setAvatar('farcaster', farcaster.id)"
+                  style="background: none"
+                  type="button"
+                  title="Set as profile avatar"
+                >
+                  <img
+                    :src="`${farcaster.avatar}`"
+                    class="_size-full _rounded-full _duration-150"
+                    :class="{
+                      'group-hover:_scale-[1.8]': farcaster.avatar !== auth.user?.avatar
+                    }"
+                  />
+                </div>
+                <div v-else class="_w-full _flex _items-center _justify-center">
+                  <img
+                    src="../../assets/imgs/farcaster-logo.svg"
+                    class="_size-6 _rounded"
+                    style="background-color: #000"
+                  />
+                </div>
+              </button>
+              <div class="_flex-1 _min-w-0 _leading-tight">
+                <div class="_flex-1 _min-w-0 _truncate _text-em-lg">
+                  {{ farcaster.username }}
+                </div>
               </div>
             </div>
+            <!-- (disconnect farcaster button) -->
+            <template v-if="totalAccountConnections > 1">
+              <button
+                class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
+                @click="() => handleDisconnectPlatform('farcaster', farcaster.id)"
+                styleff="filter: hue-rotate(130deg) saturate(2)"
+                aria-label="Remove"
+              >
+                <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
+              </button>
+            </template>
           </div>
-          <!-- (disconnect farcaster button) -->
-          <template v-if="totalAccountConnections > 1">
-            <button
-              class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
-              @click="() => handleDisconnectPlatform('farcaster', farcaster.id)"
-              styleff="filter: hue-rotate(130deg) saturate(2)"
-              aria-label="Remove"
-            >
-              <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
+          <div v-if="isFarcaster && !isFarcaster.client.added">
+            <button class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]" @click="addFrame">
+              add app
             </button>
-          </template>
+          </div>
         </li>
         <AuthButton v-if="!hasFarcasterAuth" platform="farcaster" points="+10" class="_w-full">
           {{ farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster' }}
@@ -370,6 +375,12 @@ import SplitWalletButton from '../../components/SplitWalletButton.vue'
 
 const auth = inject('TrifleHub/store')
 const { isAuthenticated, backendUrl } = storeToRefs(auth)
+
+const isFarcaster = computed(() => auth.isFarcaster)
+
+const addFrame = async () => {
+  await auth.addFrame()
+}
 
 const doneAnimating = ref(false)
 onMounted(() => {

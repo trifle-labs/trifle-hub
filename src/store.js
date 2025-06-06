@@ -192,7 +192,7 @@ export const useAuthStore = defineStore('auth', {
         if (isMiniApp) {
           const context = await sdk.context
           this.isFarcaster = context
-          this.connectFarcaster()
+          await this.connectFarcaster()
           console.log({ context })
         }
 
@@ -388,15 +388,12 @@ export const useAuthStore = defineStore('auth', {
       headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
       await this.fetchUserStatus()
       console.log({ isFarcaster: this.isFarcaster })
+    },
+
+    async addFrame() {
       try {
         if (this.isFarcaster && !this.isFarcaster.client.added) {
           await sdk.actions.addFrame()
-        } else if (this.isFarcaster) {
-          await fetch(this.backendUrl + '/farcaster/update', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(this.isFarcaster)
-          })
         }
       } catch (e) {
         console.warn('non-fatal error adding frame', e)
