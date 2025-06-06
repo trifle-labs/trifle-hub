@@ -637,12 +637,14 @@ export class BallVisualizer {
     if (this.animationFrameId) {
       cancelAnimationFrame(this.animationFrameId)
       this.animationFrameId = null
+      console.log('PAUSED trifle ball animation')
     }
   }
 
   resume() {
     if (!this.animationFrameId) {
       this.animate()
+      console.log('RESUMED trifle ball animation')
     }
   }
 }

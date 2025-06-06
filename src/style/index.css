@@ -18,6 +18,7 @@
   --tHub-shadow-color: rgba(0, 0, 0, 0.5);
 
   --tHub-menu-button-size: 7rem;
+  --tHub-z-index: 900;
 }
 
 .trifle-hub-ui {

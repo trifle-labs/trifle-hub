@@ -3,37 +3,42 @@
     id="trifle-hub"
     class="trifle-hub-ui _relative _pointer-events-none _select-none _font-trifle _text-base _text-stroke-xs"
     :data-position="props.position"
-    style="z-index: 900"
+    style="z-index: var(--tHub-z-index)"
   >
     <!-- (tap bg to close) -->
     <button
       v-show="hubOpen"
       class="_fixed _top-0 _left-0 _w-full _h-full _pointer-events-auto"
       @click="hubOpen = false"
+      aria-label="close hub"
     ></button>
     <!-- menu button / labels -->
-    <div id="trifle-hub__menu-button" class="_fixed _z-10 trifle-hub-position">
-      <div
-        class="_block _pointer-events-auto _rounded-full _overflow-hidden _relative"
-        style="width: var(--tHub-menu-button-size); height: var(--tHub-menu-button-size)"
-      >
-        <TrifleBall
-          ref="trifleBall"
-          :key="authUserAvatar || 'default'"
-          :mode="authUserAvatar ? 'glass' : 'metal'"
-          :image-source="authUserAvatar"
-          :camera-angle="8"
-          :animate="!hubOpen"
-          class="_cursor-pointer"
-          @click="hubOpen = !hubOpen"
-        />
-      </div>
+    <div
+      id="trifle-hub__menu-button"
+      class="_fixed _z-10 trifle-hub-position focus-visible:_ring-4 _rounded-full"
+      style="width: var(--tHub-menu-button-size); height: var(--tHub-menu-button-size)"
+      tabindex="0"
+      @keydown.space="hubOpen = !hubOpen"
+      @keydown.enter="hubOpen = !hubOpen"
+      :aria-label="hubOpen ? 'close trifle hub' : 'open trifle hub'"
+    >
+      <TrifleBall
+        ref="trifleBall"
+        :key="authUserAvatar || 'default'"
+        :mode="authUserAvatar ? 'glass' : 'metal'"
+        :image-source="authUserAvatar"
+        :camera-angle="8"
+        :animate="!hubOpen"
+        class="_cursor-pointer _pointer-events-auto"
+        @click="hubOpen = !hubOpen"
+        tabindex="-1"
+      />
     </div>
     <!-- (hub panel) -->
     <transition name="thub-fade-in-scale-up">
       <aside
         v-if="hubOpen"
-        class="_fixed trifle-hub-position _w-full _h-full _px-1 _pb-1 _pt-3 sm:_pt-10 _flex sm:_pb-12 sm:_px-24 _max-w-[41rem] _max-h-[56rem] _z-10"
+        class="_fixed trifle-hub-position _w-full _h-full _px-1 _py-2 sm:_pt-10 _flex sm:_pb-12 sm:_mx-24 _max-w-[30rem] _max-h-[56rem] _z-10"
       >
         <!-- panel rendered -->
         <div
@@ -191,6 +196,8 @@ import Notifications from './Notifications.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 
 const hubOpen = defineModel('hubOpen')
+const hubButtonHidden = defineModel('hubButtonHidden')
+
 const props = defineProps({
   hubPageKey: { type: String, required: true },
   position: { type: String, default: 'bottom-left', required: true }
@@ -367,4 +374,16 @@ watch(hubOpen, async (open) => {
     color: rgb(132, 77, 183);
   }
 }
+
+/* .thub-menu-button-enter-active,
+.thub-menu-button-leave-active {
+  transition: all 200ms ease;
+}
+
+.thub-menu-button-enter-from,
+.thub-menu-button-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+  filter: blur(10px);
+} */
 </style>

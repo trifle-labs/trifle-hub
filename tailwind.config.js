@@ -11,7 +11,7 @@ export default {
     extend: {
       spacing: { 4.5: '1.125rem', 5.5: '1.375rem', 13: '3.25rem', 18: '4.5rem' },
       screens: {
-        sm: '440px', // (typically 600px)
+        xs: '440px', // for mobile landscape ?
         mouse: { raw: '(hover:hover)' },
         touch: { raw: '(hover:none)' }
       },
