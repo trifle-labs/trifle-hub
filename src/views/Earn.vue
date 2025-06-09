@@ -226,6 +226,15 @@
             </div>
           </component>
         </div>
+        <section
+          class="_bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
+        >
+          <div class="_text-em-xs _opacity-50">follow for updates</div>
+
+          <div class="_grid _grid-cols-2 _gap-2">
+            <SocialsButtons />
+          </div>
+        </section>
       </div>
 
       <!-- (spend) -->

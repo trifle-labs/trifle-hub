@@ -28,7 +28,9 @@
       <div class="_size-8 _rounded-lg _overflow-hidden">
         <img :src="social.icon" class="_w-full" />
       </div>
-      <div class="_flex-1 _min-w-0 _truncate _text-left _text-stroke-md _leading-snug">
+      <div
+        class="_flex-1 _min-w-0 _truncate _text-center _text-stroke-md _leading-snug _pr-[0.55em]"
+      >
         {{ social.name }}
       </div>
     </div>
