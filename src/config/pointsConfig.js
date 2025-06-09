@@ -111,7 +111,7 @@ export const possiblePoints = [
     id: 'gm',
     icon: gmIcon,
     description:
-      'Every unique "Good Morning" you write in Discord, Farcaster, or at gm.trifle.life earns +1',
+      'Every unique "Good Morning" you write in Discord, Farcaster, or <u>gm.trifle.life</u> earns +1🪩',
     pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
@@ -120,11 +120,10 @@ export const possiblePoints = [
     link: gmLink
   },
   {
-    name: "'gm' reactions",
+    name: "Someone likes your 'gm'",
     id: 'gm-react',
     icon: gmIcon,
-    description:
-      'Every time someone adds a discord react or disco heart to your "gm" message, you earn +1',
+    description: 'Every time someone likes "gm", you earn +1🪩',
     pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
@@ -232,7 +231,7 @@ export const possiblePoints = [
     name: 'Follow Trifle on Farcaster',
     id: 'trifle-fc-follow',
     icon: farcasterIcon,
-    description: 'Follow Trifle on Farcaster',
+    // description: 'Follow Trifle on Farcaster',
     pachinkoBalls: 25,
     kudzuBurn: 0,
     claimed: false,
@@ -243,11 +242,11 @@ export const possiblePoints = [
   },
 
   {
-    name: 'Like Trifle casts on Farcaster',
+    name: "Boost Trifle's casts on Farcaster",
     id: 'trifle-fc-like',
     icon: farcasterIcon,
-    // description: 'Like Trifle casts on Farcaster',
-    pachinkoBalls: 1,
+    description: "Earn 1🪩 for every like and re-cast of Trifle's casts",
+    pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
     once: false,
@@ -259,8 +258,8 @@ export const possiblePoints = [
     name: 'Cast your GM with mini app link',
     id: 'gm-cast',
     icon: farcasterIcon,
-    description: 'Include "gm.trifle.life" in your "gm" cast for an extra +1',
-    pachinkoBalls: 1,
+    description: 'Include "gm.trifle.life" when you cast a "gm" for a bonus 1🪩',
+    pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
     once: false,

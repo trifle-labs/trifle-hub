@@ -147,9 +147,8 @@
               :class="[
                 {
                   'mouse:hover:_scale-[1.006] _duration-100': quest.link,
-                  '_opacity-30': quest.completed && quest.once,
-                  '_opacity-60': quest.completed && !quest.once,
-                  '_shadow-panel': !quest.completed
+                  '_opacity-40': quest.completed && quest.once,
+                  '_shadow-panel': !(quest.completed && quest.conce)
                 }
               ]"
             >
@@ -165,12 +164,6 @@
                     class="_min-h-[1.7em] _flex _items-center _justify-start _text-left _py-[0.06em] _weight-bold _leading-snug"
                     :class="{ '_line-through': quest.completed && quest.once }"
                   >
-                    <template v-if="quest.completed && quest.once">
-                      <img src="../assets/imgs/checkmark-icon-glass.png" class="_size-[2.5em]" />
-                    </template>
-                    <template v-else-if="quest.completed && !quest.once">
-                      <span class="_text-4xl"> ♻️&nbsp;</span>
-                    </template>
                     {{ quest.name }}
                   </div>
                 </div>
@@ -196,7 +189,7 @@
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="black"
-                    class="_size-6 _opacity-40"
+                    class="_size-6 sm:_size-7 _opacity-50 sm:_ml-0.5"
                     :class="{ '_invisible _ml-4.5': quest.completed && quest.once }"
                   >
                     <path
@@ -225,6 +218,12 @@
                   </div>
                 </div> -->
             </div>
+            <div
+              v-if="quest.completed && quest.once"
+              class="_absolute _top-0 _right-1 _flex _items-center _justify-center"
+            >
+              <img src="../assets/imgs/checkmark-icon-glass.png" class="_size-[2.5em]" />
+            </div>
           </component>
         </div>
       </div>
@@ -234,14 +233,14 @@
         <section
           class="_bg-metallic-linear _p-5 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-5 _py-5"
         >
-          <div class="_flex _justify-center _leading-none _items-center _text-mlg">
-            <div class="_text-stroke-xl _animate-pulse-deepff">coming soon...</div>
+          <div class="_flex _justify-center _leading-none _items-center _text-lg">
+            <div class="_text-stroke-xl _animate-pulse-deep">coming soon...</div>
           </div>
         </section>
         <section
-          class="_bg-metallic-linear _p-5 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-5 _py-5"
+          class="_bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
         >
-          <div class="_text-em-2xs _opacity-50">follow for updates</div>
+          <div class="_text-em-xs _opacity-50">follow for updates</div>
 
           <div class="_grid _grid-cols-2 _gap-2">
             <SocialsButtons />
