@@ -355,14 +355,12 @@
                 </button>
               </template>
             </div>
-            <div v-if="isFarcaster && !isFarcaster.client.added">
-              <button
-                class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
-                @click="addFrame"
+            <!-- (add mini-app to farcaster button) -->
+            <template v-if="isFarcaster && !isFarcaster.client.added">
+              <AuthButton platform="farcaster" points="+10" class="_w-full" @click="addFrame"
+                >Add to your Mini Apps</AuthButton
               >
-                add app
-              </button>
-            </div>
+            </template>
           </li>
           <AuthButton v-if="!hasFarcasterAuth" platform="farcaster" points="+10" class="_w-full">
             {{ farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster' }}
