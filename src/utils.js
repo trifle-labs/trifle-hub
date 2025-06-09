@@ -21,3 +21,7 @@ export function isIOS() {
 export function isMobile() {
   return isAndroid() || isIOS()
 }
+
+// export function addrShort(address) {
+//   return `0x${address.slice(2, 6).toUpperCase()}...${address.slice(-4).toUpperCase()}`
+// }
