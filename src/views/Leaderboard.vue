@@ -39,15 +39,19 @@
         <div
           v-for="(entry, index) in leaderboardData"
           :key="entry.UserId || index"
-          class="_flex _items-center _gap-2.5 _p-3 _rounded-lg _bg-metallic-linear _shadow-panel _text-mlg _max-w-full _min-w-0"
+          @click="openProfile(entry.User?.username || entry.username)"
+          class="_flex _items-center _gap-2.5 _p-3 _rounded-lg _bg-metallic-linear _shadow-panel _text-mlg _max-w-full _min-w-0 _cursor-pointer"
         >
           <div class="_min-w-4 _text-right _text-em-xs _opacity-25 _flex-shrink-0">
             {{ index + 1 }}
           </div>
           <div class="_flex _items-center _gap-2.5 _flex-1 _min-w-0">
             <div
+              v-if="entry.avatar"
               class="_size-[2em] _-my-0.5 _flex-shrink-0 _rounded-full _bg-zinc-400 _bg-cover _bg-center"
-              :style="{ backgroundImage: `url(${entry.avatar})` }"
+              :style="{
+                backgroundImage: `url(${entry.avatar})`
+              }"
               style="
                 box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.75),
                   inset 0 -1px 2px rgba(255, 255, 255, 0.75);
@@ -55,6 +59,19 @@
             >
               <!-- Placeholder for avatar, can be replaced with entry.User.avatarUrl if available -->
             </div>
+            <!-- (blank face) -->
+            <object
+              v-else
+              :data="smileyFaceSvg"
+              type="image/svg+xml"
+              alt="smiley face with dashed outline"
+              class="_size-[2em] _-my-0.5 _flex-shrink-0 _rounded-full _bg-zinc-400 _bg-cover _bg-center"
+              tabindex="-1"
+              style="
+                box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.75),
+                  inset 0 -1px 2px rgba(255, 255, 255, 0.75);
+              "
+            ></object>
             <div class="_flex-1 _weight-semibold _truncate _min-w-0">
               {{ entry.User?.displayName || entry.username || 'N/A' }}
             </div>
@@ -78,6 +95,7 @@
 import { ref, onMounted, watch, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 import HubPageHeader from '../components/HubPageHeader.vue'
+import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 
 const selectedTab = ref('monthly') // 'monthly' for This Week, 'allTime' for All Time
 const leaderboardData = ref([])
@@ -86,6 +104,12 @@ const error = ref(null)
 
 const auth = inject('TrifleHub/store')
 const { backendUrl } = storeToRefs(auth)
+const hub = inject('hub')
+
+const openProfile = (username) => {
+  auth.setProfileUsername(username)
+  hub.openHub('profile')
+}
 
 const fetchLeaderboardData = async () => {
   loading.value = true

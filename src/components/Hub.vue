@@ -224,6 +224,11 @@ watch(hubOpen, async (open) => {
 </script>
 
 <style>
+#trifle-hub,
+#trifle-hub * {
+  overscroll-behavior: contain;
+}
+
 #trifle-hub {
   &[data-position='bottom-left'] {
     & .trifle-hub-position {

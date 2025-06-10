@@ -65,7 +65,7 @@
       <div v-show="!isEditingUsername" class="_flex _justify-center _gap-1 _h-10 _items-center">
         <button
           class="_text-xl _shadow-panel _pl-[0.3em] _pr-[0.5em] _rounded-full _bg-metallic-cone _leading-none _py-[0.25em] _flex _gap-[0.2em] mouse:hover:_scale-[1.05] _duration-150"
-          @click="openHub('earn')"
+          @click="openProfile"
         >
           <span>🪩</span>
           <span class="_text-stroke-xl">{{ auth.user?.totalBalls?.toLocaleString() }}</span>
@@ -394,6 +394,11 @@ const isFarcaster = computed(() => auth.isFarcaster)
 
 const addFrame = async () => {
   await auth.addFrame()
+}
+
+const openProfile = () => {
+  auth.setProfileUsername(auth.user?.username)
+  openHub('profile')
 }
 
 const doneAnimating = ref(false)
