@@ -131,6 +131,59 @@ export const possiblePoints = [
     enabled: true,
     link: gmLink
   },
+
+  {
+    name: 'Follow Trifle on Farcaster',
+    id: 'trifle-fc-follow',
+    icon: farcasterIcon,
+    // description: 'Follow Trifle on Farcaster',
+    pachinkoBalls: 25,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    fid: 832276,
+    link: 'https://farcaster.xyz/trifle'
+  },
+
+  {
+    name: "Like Trifle's casts on Farcaster",
+    id: 'trifle-fc-like',
+    icon: farcasterIcon,
+    description: "Earn 1🪩 for every like of Trifle's casts",
+    pachinkoBalls: '1+',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    fid: 832276,
+    link: 'https://farcaster.xyz/trifle'
+  },
+  {
+    name: "Re-cast Trifle's casts on Farcaster",
+    id: 'trifle-fc-recast',
+    icon: farcasterIcon,
+    description: "Earn 1🪩 for every re-cast of Trifle's casts",
+    pachinkoBalls: '1+',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    fid: 832276,
+    link: 'https://farcaster.xyz/trifle'
+  },
+  {
+    name: 'Cast your GM with mini app link',
+    id: 'gm-cast',
+    icon: farcasterIcon,
+    description: 'Include "gm.trifle.life" when you cast a "gm" for a bonus 1🪩',
+    pachinkoBalls: '1+',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: 'https://farcaster.xyz/miniapps/gBsKvLYGQnEE/gm-game'
+  },
   {
     name: 'Solve Daily Anybody Problem',
     id: 'anybody-daily',
@@ -190,7 +243,7 @@ export const possiblePoints = [
     once: true,
     enabled: false,
     link: kudzuLink + '/nuke'
-  },
+  }
   // {
   //   name: 'Blind Run Discord Game',
   //   id: 'blind-run',
@@ -227,45 +280,6 @@ export const possiblePoints = [
   //   enabled: true,
   //   link: discordLink
   // },
-  {
-    name: 'Follow Trifle on Farcaster',
-    id: 'trifle-fc-follow',
-    icon: farcasterIcon,
-    // description: 'Follow Trifle on Farcaster',
-    pachinkoBalls: 25,
-    kudzuBurn: 0,
-    claimed: false,
-    once: true,
-    enabled: true,
-    fid: 832276,
-    link: 'https://farcaster.xyz/trifle'
-  },
-
-  {
-    name: "Boost Trifle's casts on Farcaster",
-    id: 'trifle-fc-like',
-    icon: farcasterIcon,
-    description: "Earn 1🪩 for every like and re-cast of Trifle's casts",
-    pachinkoBalls: '1+',
-    kudzuBurn: 0,
-    claimed: false,
-    once: false,
-    enabled: true,
-    fid: 832276,
-    link: 'https://farcaster.xyz/trifle'
-  },
-  {
-    name: 'Cast your GM with mini app link',
-    id: 'gm-cast',
-    icon: farcasterIcon,
-    description: 'Include "gm.trifle.life" when you cast a "gm" for a bonus 1🪩',
-    pachinkoBalls: '1+',
-    kudzuBurn: 0,
-    claimed: false,
-    once: false,
-    enabled: true,
-    link: 'https://farcaster.xyz/miniapps/gBsKvLYGQnEE/gm-game'
-  }
   // {
   //   name: 'Massive Multiplayer Online Rock Paper Scissors',
   //   id: 'rps',

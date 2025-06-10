@@ -172,6 +172,15 @@
                   class="_text-em-2xs _text-gray-500 _leading-none"
                 >
                   connected
+                  <template v-if="wallet.metadata?.origin">
+                    via {{ wallet.metadata.origin }}
+                  </template>
+                </div>
+                <div
+                  class="_text-em-2xs _text-gray-500 _leading-none"
+                  v-else-if="wallet.metadata?.origin"
+                >
+                  via {{ wallet.metadata.origin }}
                 </div>
               </div>
             </div>
@@ -179,11 +188,20 @@
             <template v-if="totalAccountConnections > 1">
               <button
                 class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
-                @click="() => handleDisconnectPlatform('wallet', wallet.id)"
+                @click="(e) => handleDisconnectPlatform('wallet', wallet.id, e)"
                 styleff="filter: hue-rotate(130deg) saturate(2)"
                 aria-label="Remove"
               >
-                <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
+                <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">
+                  <template
+                    v-if="
+                      aboutToDisconnect.platform == 'wallet' && aboutToDisconnect.id == wallet.id
+                    "
+                  >
+                    Confirm?
+                  </template>
+                  <template v-else> ⛌ </template>
+                </span>
               </button>
             </template>
           </li>
@@ -269,11 +287,20 @@
             <template v-if="totalAccountConnections > 1">
               <button
                 class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
-                @click="() => handleDisconnectPlatform('discord', discord.id)"
+                @click="(e) => handleDisconnectPlatform('discord', discord.id, e)"
                 styleff="filter: hue-rotate(130deg) saturate(2)"
                 aria-label="Remove"
               >
-                <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
+                <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">
+                  <template
+                    v-if="
+                      aboutToDisconnect.platform == 'discord' && aboutToDisconnect.id == discord.id
+                    "
+                  >
+                    Confirm?
+                  </template>
+                  <template v-else> ⛌ </template>
+                </span>
               </button>
             </template>
           </li>
@@ -347,11 +374,21 @@
               <template v-if="totalAccountConnections > 1">
                 <button
                   class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
-                  @click="() => handleDisconnectPlatform('farcaster', farcaster.id)"
+                  @click="(e) => handleDisconnectPlatform('farcaster', farcaster.id, e)"
                   styleff="filter: hue-rotate(130deg) saturate(2)"
                   aria-label="Remove"
                 >
-                  <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">⛌</span>
+                  <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">
+                    <template
+                      v-if="
+                        aboutToDisconnect.platform == 'farcaster' &&
+                        aboutToDisconnect.id == farcaster.id
+                      "
+                    >
+                      Confirm?
+                    </template>
+                    <template v-else> ⛌ </template>
+                  </span>
                 </button>
               </template>
             </div>
@@ -379,7 +416,7 @@
 </template>
 
 <script setup>
-import { computed, ref, inject, onMounted, nextTick } from 'vue'
+import { computed, ref, inject, onMounted, nextTick, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import smileyFaceSvg from '../../assets/imgs/smiley-face-dashed-outline.svg'
 import AuthButton from '../../components/AuthButton.vue'
@@ -423,16 +460,35 @@ const totalAccountConnections = computed(
   () => walletAuths.value.length + discordAuths.value.length + farcasterAuths.value.length
 )
 
-const handleDisconnectPlatform = async (platform, instanceId) => {
-  // TODO: @everett we need a message system for this
-  // if (!confirm('Are you sure you want to disconnect this account?')) return
-  console.log(`disconnecting ${platform} instance ${instanceId}`)
-  try {
-    await auth.disconnectPlatformInstance(platform, instanceId)
-  } catch (err) {
-    console.error(`Failed to disconnect ${platform} instance:`, err)
+const aboutToDisconnect = ref({ platform: null, id: null })
+
+const handleDisconnectPlatform = async (platform, instanceId, event) => {
+  event.stopPropagation() // Prevent the window listener from firing immediately
+  if (aboutToDisconnect.value.platform === platform && aboutToDisconnect.value.id === instanceId) {
+    try {
+      await auth.disconnectPlatformInstance(platform, instanceId)
+    } catch (err) {
+      console.error(`Failed to disconnect ${platform} instance:`, err)
+    }
+    aboutToDisconnect.value = { platform: null, id: null }
+    return
   }
+  aboutToDisconnect.value = { platform, id: instanceId }
 }
+
+const cancelDisconnect = () => {
+  aboutToDisconnect.value = { platform: null, id: null }
+}
+
+watch(aboutToDisconnect, (newValue) => {
+  if (newValue.platform) {
+    // If we've entered the "confirm disconnect" state, listen for a click away.
+    window.addEventListener('click', cancelDisconnect, { once: true })
+  } else {
+    // If we've left the state, ensure the listener is removed.
+    window.removeEventListener('click', cancelDisconnect)
+  }
+})
 
 const truncateAddress = (address) => {
   if (!address) return ''

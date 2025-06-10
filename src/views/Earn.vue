@@ -62,7 +62,7 @@
         @click="selectedTab = 'spend'"
         :style="selectedTab === 'spend' ? 'filter: hue-rotate(70deg) saturate(2)' : ''"
       >
-        Spend
+        Redeem
       </button>
     </nav>
 

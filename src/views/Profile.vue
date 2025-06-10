@@ -39,7 +39,7 @@
       </div>
     </template>
     <section class="_w-full _max-w-2xl _mt-6">
-      <h3 class="_text-xl _weight-bold _mb-2">Points History</h3>
+      <h3 class="_text-xl _weight-bold _mb-2">Pachinko Ball History</h3>
       <div class="_flex _gap-2 _mb-4 _flex-wrap">
         <button
           v-for="cat in categories"
