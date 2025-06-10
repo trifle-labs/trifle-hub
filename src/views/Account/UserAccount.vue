@@ -392,16 +392,16 @@
                 </button>
               </template>
             </div>
-            <!-- (add mini-app to farcaster button) -->
-            <template v-if="isFarcaster && !isFarcaster.client.added">
-              <AuthButton platform="farcaster" points="+10" class="_w-full" @click="addFrame"
-                >Add to your Mini Apps</AuthButton
-              >
-            </template>
           </li>
           <AuthButton v-if="!hasFarcasterAuth" platform="farcaster" points="+10" class="_w-full">
             {{ farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster' }}
           </AuthButton>
+          <!-- (add mini-app to farcaster button) -->
+          <template v-if="isFarcaster && !isFarcaster.client.added">
+            <AuthButton platform="farcaster" points="+10" class="_w-full" @click="addFrame"
+              >Add this Mini App</AuthButton
+            >
+          </template>
         </ul>
       </section>
     </section>
