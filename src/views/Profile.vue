@@ -3,18 +3,16 @@
     <template #avatar>
       <div
         class="_size-full _flex _items-center _justify-center _rounded-full _duration-150 _delay-50"
+        style="box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.4)"
+        :class="{ '_opacity-0': !doneAnimating }"
       >
-        <img
-          v-if="user && user.avatar"
-          :src="user.avatar"
-          class="_size-full _rounded-full _shadow-panel"
-        />
-        <object
-          v-else
-          :data="smileyFaceSvg"
-          type="image/svg+xml"
-          alt="smiley face with dashed outline"
-          class="_size-full _rounded-full _bg-gray-200"
+        <TrifleBall
+          v-if="doneAnimating"
+          :key="(user && user?.avatar) || 'smiley-face'"
+          mode="glass-inner-wall"
+          :image-source="(user && user?.avatar) || smileyFaceSvg"
+          style="width: 175%; height: 175%"
+          class="_cursor-grab"
         />
       </div>
     </template>
@@ -38,8 +36,9 @@
         </span>
       </div>
     </template>
-    <section class="_w-full _max-w-2xl _mt-6">
-      <h3 class="_text-xl _weight-bold _mb-2">Pachinko Ball History</h3>
+    <section class="_w-full _max-w-2xl _mt-6ff">
+      <h3 class="_weight-boldff _text-xs _opacity-30 _text-left _ml-2 _-mt-6 _mb-1">activity</h3>
+      <!-- <h3 class="_text-xl _weight-bold _mb-2">Pachinko Ball History</h3>
       <div class="_flex _gap-2 _mb-4 _flex-wrap">
         <button
           v-for="cat in categories"
@@ -50,44 +49,50 @@
         >
           {{ cat }}
         </button>
-      </div>
+      </div> -->
+      <!--  -->
       <div v-if="loading" class="_text-center _py-10">Loading profile...</div>
       <div v-else-if="error" class="_p-4 _bg-red-100 _text-red-700 _rounded-lg _mt-4">
         {{ error }}
       </div>
-      <div v-else>
+      <section v-else class="_flex _flex-col _gap-4">
         <div v-if="pointsLoading" class="_text-center _py-6">Loading points...</div>
         <div v-else-if="pointsError" class="_p-2 _bg-red-100 _text-red-700 _rounded-lg">
           {{ pointsError }}
         </div>
-        <div v-else>
+        <template v-else>
           <ul class="_space-y-2">
-            <PointCard v-for="point in points" :key="point.id" :point="point" />
+            <!-- point rows... -->
+            <li v-for="point in points" :key="point.id">
+              <PointCard :point="point" />
+            </li>
           </ul>
-          <div class="_flex _justify-between _items-center _mt-4">
-            <button class="_bubble-btn _px-4.5" @click="prevPage" :disabled="page === 1">
-              Prev
-            </button>
-            <span
-              >Page {{ page
-              }}<span v-if="totalCount">
-                / {{ Math.max(1, Math.ceil(totalCount / pageSize)) }}</span
-              ></span
-            >
-            <button class="_bubble-btn _px-4.5" @click="nextPage" :disabled="!hasMore">Next</button>
-          </div>
-        </div>
-      </div>
+          <template v-if="totalPages > 1">
+            <nav class="_grid _grid-cols-2 _gap-1">
+              <button class="_flex-1 _bubble-btn _p-4.5" @click="prevPage" :disabled="page === 1">
+                <span :class="{ '_opacity-30': page === 1 }">Prev</span>
+              </button>
+              <button class="_flex-1 _bubble-btn _p-4.5" @click="nextPage" :disabled="!hasMore">
+                Next
+              </button>
+            </nav>
+            <div class="_text-center _text-xs _opacity-50 _-mt-2">
+              Page {{ page }}<span v-if="totalCount"> of {{ totalPages }}</span>
+            </div>
+          </template>
+        </template>
+      </section>
     </section>
   </AccountLayout>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, inject } from 'vue'
+import { ref, onMounted, watch, inject, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import AccountLayout from '../components/AccountLayout.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 import PointCard from '../components/PointCard.vue'
+import TrifleBall from '../components/TrifleBall/TrifleBall.vue'
 const hub = inject('hub')
 const auth = inject('TrifleHub/store')
 const { currentProfileUsername, backendUrl } = storeToRefs(auth)
@@ -99,7 +104,7 @@ const points = ref([])
 const pointsLoading = ref(false)
 const pointsError = ref(null)
 const page = ref(1)
-const pageSize = 20
+const pageSize = 10
 const hasMore = ref(false)
 const totalCount = ref(0)
 const categories = ref([])
@@ -108,6 +113,8 @@ const openEarn = () => {
   auth.setProfileUsername(null)
   hub.openHub('earn')
 }
+
+const totalPages = computed(() => Math.max(1, Math.ceil(totalCount.value / pageSize)))
 
 const formatPoints = (points) => {
   points = Number(points)
@@ -212,6 +219,14 @@ onMounted(async () => {
   await fetchPoints()
 })
 watch(page, fetchPoints)
+
+// TODO: retrieve from global or provided from parent hub <transition>
+const doneAnimating = ref(false)
+onMounted(() => {
+  setTimeout(() => {
+    doneAnimating.value = true
+  }, 350) // need to wait for hub open animation otherwise webgl 0px error
+})
 </script>
 
 <style scoped></style>
