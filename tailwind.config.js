@@ -40,7 +40,8 @@ export default {
         'blink-deep': 'blink-deep 1000ms linear infinite',
         'blink-red-fast': 'blink-red 100ms linear infinite',
         wiggle: 'wiggle 0.8s ease-in-out infinite',
-        'wiggle-sm': 'wiggle-sm 0.8s ease-in-out infinite'
+        'wiggle-sm': 'wiggle-sm 0.8s ease-in-out infinite',
+        float: 'float 4s ease-in-out infinite'
       },
       fontFamily: { trifle: ['APL333', 'sans-serif'] },
       fontSize: {
@@ -94,6 +95,10 @@ export default {
           '0%, 100%': { transform: 'rotate(0deg)' },
           '25%': { transform: 'rotate(-5deg)' },
           '75%': { transform: 'rotate(5deg)' }
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-4px)' }
         }
       }
     }

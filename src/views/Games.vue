@@ -21,17 +21,17 @@
         Game {{ i }}
       </div>
     </div> -->
-    <div class="_mt-6 _-space-y-5">
+    <div class="_mt-4 _-space-y-3">
       <template v-for="game in games" :key="game.name">
-        <section>
+        <section class="_relative _group">
           <a
             :href="game.link"
             target="_blank"
-            class="_block _pointer-events-auto _cursor-pointer mouse:hover:_scale-[1.05] _duration-500"
+            class="_block _pointer-events-auto _cursor-pointer _scale-[1.05] mouse:hover:_scale-[1.1] _duration-500"
           >
             <figure
               class="masked-oval _relative _flex _items-center _justify-center _pointer-events-none"
-              style="aspect-ratio: 14/9"
+              style="aspect-ratio: 14.5/9"
             >
               <video
                 v-if="game.bgVideo"
@@ -56,21 +56,41 @@
               <img v-if="game.titleImg" :src="game.titleImg" class="_relative _z-10 _w-[75%]" />
             </figure>
           </a>
-          <div class="_px-2 _mx-6 _flex _justify-center _-mt-5 _relative _p-2">
+          <div class="_px-2.5 _mx-6 _flex _justify-center _-mt-5 _relative _p-2">
             <div
               class="_bg-metallic-linearff _shadow-panel-insetff _rounded-lg _flex _items-center _w-fullff _justify-between _flex-col _gap-1 _shadow-panel-insetff _rounded-full _w-full _pb-5"
             >
               <a
                 :href="game.link"
                 target="_blank"
-                class="_-mt-7 _relative _bg-metallic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _tracking-[0.2em] _text-em-2xl mouse:hover:_scale-[1.05] _duration-150"
+                class="_-mt-8 _relative _z-10 _bg-metallic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _tracking-[0.2em] _text-em-2xl sm:_text-em-3xl mouse:hover:_scale-[1.05] _duration-150"
+                :class="{
+                  '_animate-rainbow-wiggle': game.isNewUntil > today
+                }"
               >
-                PLAY
+                <template v-if="game.isNewUntil > today">
+                  <span class="mouse:group-hover:_hidden">NEW</span>
+                  <span class="mouse:group-hover:_inline _hidden">PLAY</span>
+                </template>
+                <template v-else> PLAY </template>
               </a>
-              <p
-                class="_px-5 _leading-none _py-4.5 _-mt-3.5 _italic _text-em-sm _opacity-50ff _whitespace-nowrap _text-stroke-lg ff_bg-metallic-linear _shadow-panel-inset _rounded-md"
-                v-html="game.description"
-              ></p>
+              <div v-if="game.description" class="_relative _-mt-3 _shadow-panel-inset _rounded-md">
+                <p
+                  class="_px-4.5 _leading-none _py-4.5 _italic _opacity-50ff _whitespace-nowrap _text-stroke-lg"
+                  v-html="game.description"
+                ></p>
+                <!-- (new badge) -->
+                <!-- <div
+                  v-if="game.isNewUntil > today"
+                  class="_absolute _bottom-0 _right-0 _translate-x-[55%] _translate-y-[40%]"
+                >
+                  <div
+                    class="_bg-metallic-cone _shadow-panel _rounded-full _text-em-lg _weight-semibold _tracking-wide _px-[0.75em] _leading-none _pt-[0.2em] _pb-[0.27em] _animate-rainbow-wiggle"
+                  >
+                    new
+                  </div>
+                </div> -->
+              </div>
             </div>
           </div>
         </section>
@@ -83,11 +103,22 @@
 import HubPageHeader from '../components/HubPageHeader.vue'
 import anybodyTitleImg from '../assets/imgs/anybody-title.png'
 
+const today = new Date()
+
 // use cloudinary for videos so they're cached across domains for users
 const games = [
   {
+    name: 'gm-game',
+    link: 'https://gm.trifle.life',
+    description: 'a Proof-of-GM word game',
+    bgVideo:
+      'https://res.cloudinary.com/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
+    bgBlur: 0,
+    isNewUntil: new Date('July 15, 2025')
+  },
+  {
     name: 'anybody',
-    description: 'a daily puzzle-shooter with ETH prizes',
+    description: 'a daily puzzle-shooter – fully onchain',
     link: 'https://anybody.gg',
     bgVideo:
       'https://res.cloudinary.com/dsiwc6udm/video/upload/c_scale,f_auto,q_auto:eco,w_400/v1748287290/anybody-gameplay-clip-2_cf6p3x.mov',
@@ -97,7 +128,7 @@ const games = [
   {
     name: 'kudzu',
     link: 'https://kudzu.rodeo',
-    description: 'burn the most Kudzu NFTs → win TIA',
+    description: 'burn the most NFTs → win TIA',
     bgVideo:
       'https://res.cloudinary.com/dsiwc6udm/video/upload/ac_none,c_scale,q_auto:best,w_600/v1748286440/fdckedgxrgrfkmlb4ech.webm',
     bgBlur: 0
@@ -121,5 +152,24 @@ const games = [
   mask-image: var(--oval-mask);
   mask-repeat: no-repeat;
   mask-size: 100% 100%;
+}
+
+._animate-rainbow-wiggle {
+  animation: rainbow-wiggle 1s ease-in-out infinite;
+}
+
+@keyframes rainbow-wiggle {
+  0% {
+    filter: hue-rotate(0deg) brightness(1) contrast(1) saturate(3);
+    transform: rotate(-8deg);
+  }
+  50% {
+    filter: hue-rotate(180deg) brightness(1) contrast(1) saturate(3);
+    transform: rotate(8deg);
+  }
+  100% {
+    filter: hue-rotate(360deg) brightness(1) contrast(1) saturate(3);
+    transform: rotate(-8deg);
+  }
 }
 </style>

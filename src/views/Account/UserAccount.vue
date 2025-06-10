@@ -68,7 +68,7 @@
           @click="openProfile"
         >
           <span>🪩</span>
-          <span class="_text-stroke-xl">{{ auth.user?.totalBalls }}</span>
+          <span class="_text-stroke-xl">{{ auth.user?.totalBalls?.toLocaleString() }}</span>
         </button>
       </div>
       <div v-show="isEditingUsername" class="_flex _justify-center _gap-1 _h-10 _items-center">
