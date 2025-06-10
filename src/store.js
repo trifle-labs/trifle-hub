@@ -599,7 +599,7 @@ export const useAuthStore = defineStore('auth', {
         const message = createSiweMessage({
           domain: window.location.host,
           address: normalizedAddress,
-          statement: 'Sign in with Ethereum to the app.',
+          statement: 'Sign this message to prove you own this wallet (at no cost to you).',
           uri: window.location.origin,
           version: '1',
           chainId: this.accountChainId,

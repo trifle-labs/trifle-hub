@@ -27,13 +27,16 @@
             :wallet-address="accountAddress"
             :wallet-avatar="currentWallet?.avatar"
             :display-name="currentWallet?.username || accountAddress"
+            class="_mb-1"
           />
         </template>
         <template v-else>
           <AuthButton platform="wallet" points="+10"> Login with Wallet </AuthButton>
         </template>
         <AuthButton platform="discord" points="+10"> Login with Discord </AuthButton>
-        <AuthButton platform="farcaster" points="+10"> Login with Farcaster </AuthButton>
+        <AuthButton platform="farcaster" points="+10" :class="{ '_order-first': auth.isFarcaster }">
+          Login with Farcaster
+        </AuthButton>
       </nav>
       <!-- TODO: follow up with support request on how to do this
       <div class="_-my-2">or</div>
@@ -64,7 +67,7 @@
 import smileyFaceSvg from '../../assets/imgs/smiley-face-dashed-outline.svg'
 import AuthButton from '../../components/AuthButton.vue'
 import AccountLayout from '../../components/AccountLayout.vue'
-import SplitWalletButton from '../../components/SplitWalletButton.vue'
+import SplitWalletButton from '../../components/AuthenticateWalletSection.vue'
 import { inject, computed } from 'vue'
 
 const auth = inject('TrifleHub/store')

@@ -18,6 +18,7 @@
   --thub-shadow-color: rgba(0, 0, 0, 0.5);
 
   --thub-menu-button-size: 7rem;
+  --thub-menu-button-margin: 0;
   --thub-z-index: 900;
 }
 

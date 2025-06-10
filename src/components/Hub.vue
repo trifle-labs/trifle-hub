@@ -16,7 +16,11 @@
     <div
       id="trifle-hub__menu-button"
       class="_fixed _z-10 trifle-hub-position focus-visible:_ring-4 _rounded-full"
-      style="width: var(--thub-menu-button-size); height: var(--thub-menu-button-size)"
+      style="
+        width: var(--thub-menu-button-size);
+        height: var(--thub-menu-button-size);
+        margin: var(--thub-menu-button-margin);
+      "
       tabindex="0"
       @keydown.space="hubOpen = !hubOpen"
       @keydown.enter="hubOpen = !hubOpen"
