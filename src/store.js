@@ -45,7 +45,8 @@ export const useAuthStore = defineStore('auth', {
     _appKitInstance: null,
     _wagmiConfigInstance: null,
     notifications: [], // { id, type: 'error'|'success', message }
-    closeHubCallback: null
+    closeHubCallback: null,
+    currentProfileUsername: null
   }),
 
   getters: {
@@ -460,6 +461,7 @@ export const useAuthStore = defineStore('auth', {
           let checkClosedInterval
           let validResponse = false
           const handleMessage = async (event) => {
+            console.log('handleMessage', event)
             // Only accept messages from our backend
             if (event.origin === this.backendUrl) {
               console.log('event.data', event.data)
@@ -485,6 +487,8 @@ export const useAuthStore = defineStore('auth', {
                 reject(event.data.error)
                 return
               }
+            } else {
+              console.warn(`message from ${event.origin} not from ${this.backendUrl}`)
             }
           }
 
@@ -991,6 +995,9 @@ export const useAuthStore = defineStore('auth', {
     },
     closeHub() {
       if (this.closeHubCallback) this.closeHubCallback()
+    },
+    setProfileUsername(username) {
+      this.currentProfileUsername = username
     }
   }
 })

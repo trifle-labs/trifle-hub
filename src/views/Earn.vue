@@ -32,7 +32,8 @@
       </template>
       <template v-if="isAuthenticated">
         <section
-          class="_px-3 _py-3.5 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none _text-3xl"
+          @click="openProfile"
+          class="_px-3 _py-3.5 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none _text-3xl _cursor-pointer"
         >
           <div class="_flex _items-center">
             <div
@@ -43,7 +44,7 @@
             <div class="_opacity-30 _text-base _ml-[0.5em]">Your Balance</div>
           </div>
           <div class="_text-right _flex-1 _whitespace-nowrap _min-w-0 _truncate">
-            <span class="_text-stroke-xl"> {{ totalBalls.toLocaleString() || '???' }} </span>🪩
+            <span class="_text-stroke-xl"> {{ totalBalls?.toLocaleString() || '???' }} </span>🪩
           </div>
         </section>
       </template>
@@ -269,6 +270,11 @@ const filter = ref('all') // 'all', 'once', 'ongoing'
 const selectedTab = ref('earn')
 
 const { backendUrl, isAuthenticated } = storeToRefs(auth)
+
+const openProfile = () => {
+  auth.setProfileUsername(auth.user?.username)
+  openHub('profile')
+}
 
 // Compute filtered quests based on the selected filter
 const filteredQuests = computed(() => {

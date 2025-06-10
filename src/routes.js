@@ -5,6 +5,7 @@ import Earn from './views/Earn.vue'
 import Account from './views/Account/AccountIndex.vue'
 import Theme from './views/Theme.vue'
 import bgImg from './assets/imgs/metal-gradient-conical.png'
+import Profile from './views/Profile.vue'
 
 export default {
   welcome: { menuItem: false, component: Welcome, bgImg: bgImg },
@@ -12,5 +13,6 @@ export default {
   leaderboard: { menuItem: true, component: Leaderboard },
   earn: { menuItem: true, component: Earn },
   account: { menuItem: true, component: Account },
-  theme: { menuItem: false, component: Theme }
+  theme: { menuItem: false, component: Theme },
+  profile: { menuItem: false, component: Profile }
 }
