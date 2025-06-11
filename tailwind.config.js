@@ -39,8 +39,8 @@ export default {
         blink: 'blink 400ms linear infinite',
         'blink-deep': 'blink-deep 1000ms linear infinite',
         'blink-red-fast': 'blink-red 100ms linear infinite',
-        wiggle: 'wiggle 0.8s ease-in-out infinite',
-        'wiggle-sm': 'wiggle-sm 0.8s ease-in-out infinite',
+        wiggle: 'wiggle 0.8s linear infinite',
+        'wiggle-sm': 'wiggle-sm 0.8s linear infinite',
         float: 'float 4s ease-in-out infinite'
       },
       fontFamily: { trifle: ['APL333', 'sans-serif'] },

@@ -76,7 +76,7 @@
               </a>
               <div v-if="game.description" class="_relative _-mt-3 _shadow-panel-inset _rounded-md">
                 <p
-                  class="_px-4.5 _leading-none _py-4.5 _italic _opacity-50ff _whitespace-nowrap _text-stroke-lg"
+                  class="_px-4.5 _leading-none _py-4.5 _italic _opacity-50ff _whitespace-nowrap _text-stroke-lg _tracking-[0.01em]"
                   v-html="game.description"
                 ></p>
                 <!-- (new badge) -->
@@ -95,6 +95,15 @@
           </div>
         </section>
       </template>
+
+      <section class="_mx-8 _text-center _flex _flex-col _gap-3.5 _pb-5">
+        <div class="_mt-8"></div>
+
+        <div class="_opacity-50 _animate-wiggle _mb-0.5">come chat</div>
+        <div class="_grid _grid-cols-2 _gap-2">
+          <SocialsButtons />
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -102,6 +111,7 @@
 <script setup>
 import HubPageHeader from '../components/HubPageHeader.vue'
 import anybodyTitleImg from '../assets/imgs/anybody-title.png'
+import SocialsButtons from '../components/SocialsButtons.vue'
 
 const today = new Date()
 
@@ -110,7 +120,7 @@ const games = [
   {
     name: 'gm-game',
     link: 'https://gm.trifle.life',
-    description: 'a Proof-of-GM word game',
+    description: 'find a new gm → win <span class="_not-italic">🪩</span>BALL$',
     bgVideo:
       'https://res.cloudinary.com/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
     bgBlur: 0,
@@ -118,7 +128,7 @@ const games = [
   },
   {
     name: 'anybody',
-    description: 'a daily puzzle-shooter – fully onchain',
+    description: 'a daily puzzle-shooter, fully onchain!',
     link: 'https://anybody.gg',
     bgVideo:
       'https://res.cloudinary.com/dsiwc6udm/video/upload/c_scale,f_auto,q_auto:eco,w_400/v1748287290/anybody-gameplay-clip-2_cf6p3x.mov',

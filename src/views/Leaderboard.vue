@@ -34,15 +34,16 @@
 
     <div v-else class="_flex-1 _overflow-y-scroll-masked _no-scrollbar _no-scrollbar _-mx-5 _px-5">
       <!-- leaderboard list -->
-      <div class="_space-y-2">
+      <ol class="_space-y-2">
         <!-- rows... -->
-        <div
+        <li
           v-for="(entry, index) in leaderboardData"
           :key="entry.UserId || index"
           @click="openProfile(entry.User?.username || entry.username)"
-          class="_flex _items-center _gap-2.5 _p-3 _rounded-lg _bg-metallic-linear _shadow-panel _text-mlg _max-w-full _min-w-0 _cursor-pointer"
+          class="_flex _items-center _text-left _gap-2.5 _p-3 _rounded-lg _bg-metallic-linear _shadow-panel _text-mlg _max-w-full _min-w-0 _cursor-pointer mouse:hover:_scale-[1.01] _duration-150 _cursor-pointer"
+          aria-label="View Profile"
         >
-          <div class="_min-w-4 _text-right _text-em-xs _opacity-25 _flex-shrink-0">
+          <div class="_min-w-[1.4em] _text-center _text-em-xs _opacity-25 _flex-shrink-0">
             {{ index + 1 }}
           </div>
           <div class="_flex _items-center _gap-2.5 _flex-1 _min-w-0">
@@ -60,18 +61,16 @@
               <!-- Placeholder for avatar, can be replaced with entry.User.avatarUrl if available -->
             </div>
             <!-- (blank face) -->
-            <object
+            <div
               v-else
-              :data="smileyFaceSvg"
-              type="image/svg+xml"
               alt="smiley face with dashed outline"
-              class="_size-[2em] _-my-0.5 _flex-shrink-0 _rounded-full _bg-zinc-400 _bg-cover _bg-center"
+              class="_size-[2em] _-my-0.5 _flex-shrink-0 _rounded-full _bg-cover _bg-center _scale-[0.95]ff _opacity-40"
               tabindex="-1"
-              style="
-                box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.75),
-                  inset 0 -1px 2px rgba(255, 255, 255, 0.75);
-              "
-            ></object>
+              :style="{
+                backgroundImage: `url(${smileyFacePng})`,
+                mixBlendMode: 'multiply'
+              }"
+            ></div>
             <div class="_flex-1 _weight-semibold _truncate _min-w-0">
               {{ entry.User?.displayName || entry.username || 'N/A' }}
             </div>
@@ -82,11 +81,11 @@
             </div>
             <div>🪩</div>
           </div>
-        </div>
+        </li>
         <div v-if="!leaderboardData.length && !loading" class="_text-center _py-10 _text-gray-500">
           No data available for this period.
         </div>
-      </div>
+      </ol>
     </div>
   </div>
 </template>
@@ -95,7 +94,7 @@
 import { ref, onMounted, watch, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 import HubPageHeader from '../components/HubPageHeader.vue'
-import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
+import smileyFacePng from '../assets/imgs/smiley-face-dashed-inside-noShadow.png'
 
 const selectedTab = ref('monthly') // 'monthly' for This Week, 'allTime' for All Time
 const leaderboardData = ref([])

@@ -198,7 +198,7 @@ export const possiblePoints = [
   },
   {
     name: "Mint today's Anybody Problem NFT",
-    id: 'mint-anybody-nft',
+    id: 'anybody-mint-nft',
     icon: anybodyIcon,
     description: 'Bonus balls for minting the daily NFT!',
     pachinkoBalls: '10/day',
@@ -210,7 +210,7 @@ export const possiblePoints = [
   },
   {
     name: 'Win Daily Speedy in Anybody Problem',
-    id: 'win-speedy-record',
+    id: 'anybody-win-speedy-record',
     icon: anybodyIcon,
     description: 'Finish fastest of the day!',
     pachinkoBalls: 25,
@@ -222,7 +222,7 @@ export const possiblePoints = [
   },
   {
     name: 'Burn Kudzus',
-    id: 'burn-kudzu',
+    id: 'kudzu-burn',
     icon: kudzuIcon,
     description: 'Every Kudzu NFT burned earns kudzu points and a pachinko ball',
     pachinkoBalls: 1,
@@ -234,7 +234,7 @@ export const possiblePoints = [
   },
   {
     name: 'Nuke to 1st on Kudzus',
-    id: 'nuke-kudzu',
+    id: 'kudzu-nuke',
     icon: kudzuIcon,
     description: 'Nuke to 1st place and earn bonus balls!',
     pachinkoBalls: 100,
