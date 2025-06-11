@@ -398,6 +398,7 @@ export const useAuthStore = defineStore('auth', {
       headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
       await this.fetchUserStatus()
       console.log({ isFarcaster: this.isFarcaster })
+      this.addFrame()
     },
 
     async addFrame() {
