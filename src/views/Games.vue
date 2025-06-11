@@ -95,6 +95,15 @@
           </div>
         </section>
       </template>
+
+      <section class="_mx-8 _text-center _flex _flex-col _gap-3.5 _pb-5">
+        <div class="_mt-8"></div>
+
+        <div class="_opacity-50 _animate-wiggle _mb-0.5">come chat</div>
+        <div class="_grid _grid-cols-2 _gap-2">
+          <SocialsButtons />
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -102,6 +111,7 @@
 <script setup>
 import HubPageHeader from '../components/HubPageHeader.vue'
 import anybodyTitleImg from '../assets/imgs/anybody-title.png'
+import SocialsButtons from '../components/SocialsButtons.vue'
 
 const today = new Date()
 
