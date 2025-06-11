@@ -76,7 +76,7 @@
               </a>
               <div v-if="game.description" class="_relative _-mt-3 _shadow-panel-inset _rounded-md">
                 <p
-                  class="_px-4.5 _leading-none _py-4.5 _italic _opacity-50ff _whitespace-nowrap _text-stroke-lg"
+                  class="_px-4.5 _leading-none _py-4.5 _italic _opacity-50ff _whitespace-nowrap _text-stroke-lg _tracking-[0.01em]"
                   v-html="game.description"
                 ></p>
                 <!-- (new badge) -->
@@ -110,7 +110,7 @@ const games = [
   {
     name: 'gm-game',
     link: 'https://gm.trifle.life',
-    description: 'a Proof-of-GM word game',
+    description: 'find a new gm → win <span class="_not-italic">🪩</span>BALL$',
     bgVideo:
       'https://res.cloudinary.com/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
     bgBlur: 0,
@@ -118,7 +118,7 @@ const games = [
   },
   {
     name: 'anybody',
-    description: 'a daily puzzle-shooter – fully onchain',
+    description: 'a daily puzzle-shooter, fully onchain!',
     link: 'https://anybody.gg',
     bgVideo:
       'https://res.cloudinary.com/dsiwc6udm/video/upload/c_scale,f_auto,q_auto:eco,w_400/v1748287290/anybody-gameplay-clip-2_cf6p3x.mov',
