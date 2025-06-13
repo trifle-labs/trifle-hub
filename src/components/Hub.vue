@@ -29,7 +29,7 @@
       <TrifleBall
         ref="trifleBall"
         :key="authUserAvatar || 'default'"
-        :mode="authUserAvatar ? 'glass' : 'metal'"
+        :mode="authUserAvatar ? 'glass-inner-wall' : 'metal'"
         :image-source="authUserAvatar"
         :camera-angle="8"
         :animate="!hubOpen"
@@ -215,9 +215,8 @@ const authUserAvatar = computed(() => auth.user?.avatar || auth.isFarcaster?.use
 
 const trifleBall = ref(null)
 watch(hubOpen, async (open) => {
-  console.log('hubOpen?', open)
   if (!open) {
-    await nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 150)) // wait for the animation to complete
     trifleBall.value.spinFast()
   }
 })

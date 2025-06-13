@@ -45,7 +45,7 @@ export class BallVisualizer {
     this.friction = 0.995
     this.animationFrameId = null
     this.isSpinningFast = false
-    this.fastSpinSpeed = 0.2 // Base speed for fast spin
+    this.fastSpinSpeed = 0.25 // Base speed for fast spin
     this.fastSpinDuration = 1000 // Duration in ms
 
     // Asset paths and mode
