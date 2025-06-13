@@ -416,7 +416,6 @@ export class BallVisualizer {
   setupEventListeners() {
     // Initial events on container
     this.container.addEventListener('mousedown', this.onMouseDown)
-    this.container.addEventListener('mouseleave', this.onMouseUp)
     this.container.addEventListener('touchstart', this.onTouchStart)
     this.container.addEventListener('touchmove', this.onTouchMove)
     this.container.addEventListener('touchend', this.onTouchEnd)
@@ -621,7 +620,6 @@ export class BallVisualizer {
 
     // Clean up all event listeners
     this.container.removeEventListener('mousedown', this.onMouseDown)
-    this.container.removeEventListener('mouseleave', this.onMouseUp)
     this.container.removeEventListener('touchstart', this.onTouchStart)
     this.container.removeEventListener('touchmove', this.onTouchMove)
     this.container.removeEventListener('touchend', this.onTouchEnd)
