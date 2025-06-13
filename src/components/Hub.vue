@@ -200,7 +200,6 @@ import Notifications from './Notifications.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 
 const hubOpen = defineModel('hubOpen')
-const hubButtonHidden = defineModel('hubButtonHidden')
 
 const props = defineProps({
   hubPageKey: { type: String, required: true },
@@ -216,6 +215,7 @@ const authUserAvatar = computed(() => auth.user?.avatar || auth.isFarcaster?.use
 
 const trifleBall = ref(null)
 watch(hubOpen, async (open) => {
+  console.log('hubOpen?', open)
   if (!open) {
     await nextTick()
     trifleBall.value.spinFast()

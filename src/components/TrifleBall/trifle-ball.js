@@ -66,6 +66,8 @@ export class BallVisualizer {
     this.spinOnClick = options.spinOnClick || false
     this._clickStartTime = null
     this._clickStartPos = null
+    this._lastClickTime = 0 // Add debounce tracking
+    this._clickDebounceTime = 300 // Debounce time in ms
 
     // Bind methods
     this.animate = this.animate.bind(this)
@@ -475,7 +477,10 @@ export class BallVisualizer {
       const dy = (event?.clientY ?? 0) - this._clickStartPos.y
       const dist = Math.sqrt(dx * dx + dy * dy)
 
-      if (elapsed < 200 && dist < 5) {
+      // Add debounce check
+      const now = Date.now()
+      if (elapsed < 200 && dist < 5 && now - this._lastClickTime > this._clickDebounceTime) {
+        this._lastClickTime = now
         this.onClick?.()
         if (this.spinOnClick) {
           this.spinFast()
@@ -541,7 +546,10 @@ export class BallVisualizer {
       const dy = endY - this._clickStartPos.y
       const dist = Math.sqrt(dx * dx + dy * dy)
 
-      if (elapsed < 200 && dist < 5) {
+      // Add debounce check
+      const now = Date.now()
+      if (elapsed < 200 && dist < 5 && now - this._lastClickTime > this._clickDebounceTime) {
+        this._lastClickTime = now
         this.onClick?.()
         if (this.spinOnClick) {
           this.spinFast()
