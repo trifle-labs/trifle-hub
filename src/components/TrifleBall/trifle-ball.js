@@ -450,8 +450,10 @@ export class BallVisualizer {
       y: event.clientY - this.previousMousePosition.y
     }
 
-    this.rotationSpeed.x = deltaMove.y * 0.012
-    this.rotationSpeed.y = deltaMove.x * 0.012
+    // Invert rotation for glass-inner-wall mode
+    const multiplier = this.mode === 'glass-inner-wall' ? -0.012 : 0.012
+    this.rotationSpeed.x = deltaMove.y * multiplier
+    this.rotationSpeed.y = deltaMove.x * multiplier
 
     this.previousMousePosition = {
       x: event.clientX,
@@ -518,8 +520,10 @@ export class BallVisualizer {
       y: event.touches[0].clientY - this.previousMousePosition.y
     }
 
-    this.rotationSpeed.x = deltaMove.y * 0.012
-    this.rotationSpeed.y = deltaMove.x * 0.012
+    // Invert rotation for glass-inner-wall mode
+    const multiplier = this.mode === 'glass-inner-wall' ? -0.012 : 0.012
+    this.rotationSpeed.x = deltaMove.y * multiplier
+    this.rotationSpeed.y = deltaMove.x * multiplier
 
     this.previousMousePosition = {
       x: event.touches[0].clientX,
