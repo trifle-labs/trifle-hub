@@ -108,7 +108,7 @@
             <div class="text-lg">32 🪩 4<sup>th</sup></div>
           </div> -->
           <nav
-            class="_order-last _w-full _flex _justify-evenly sm:_justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug sm:_pl-6 sm:_pr-9 _-mt-12 sm:_-mt-18 _relative _z-10 _text-stroke-md _text-em-md sm:_text-mlg _pointer-events-none"
+            class="_order-last _w-full _flex _justify-between _pl-3.5 _pr-5 _items-end _pb-4.5 sm:_pb-6 _leading-snug sm:_pl-6 sm:_pr-9 _-mt-12 sm:_-mt-18 _relative _z-10 _text-stroke-md _text-em-md sm:_text-mlg _pointer-events-none"
           >
             <button
               class="_flex _flex-col _items-center _-mr-6 _pointer-events-auto _relative"
