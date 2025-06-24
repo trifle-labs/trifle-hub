@@ -86,6 +86,7 @@ const initVisualizer = () => {
       }
     },
     onClick: () => {
+      console.log('clicked')
       emit('click')
     },
     onReady: () => (isReady.value = true)

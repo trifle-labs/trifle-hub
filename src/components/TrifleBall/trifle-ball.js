@@ -45,7 +45,7 @@ export class BallVisualizer {
     this.friction = 0.995
     this.animationFrameId = null
     this.isSpinningFast = false
-    this.fastSpinSpeed = 0.2 // Base speed for fast spin
+    this.fastSpinSpeed = 0.25 // Base speed for fast spin
     this.fastSpinDuration = 1000 // Duration in ms
 
     // Asset paths and mode
@@ -66,6 +66,8 @@ export class BallVisualizer {
     this.spinOnClick = options.spinOnClick || false
     this._clickStartTime = null
     this._clickStartPos = null
+    this._lastClickTime = 0 // Add debounce tracking
+    this._clickDebounceTime = 300 // Debounce time in ms
 
     // Bind methods
     this.animate = this.animate.bind(this)
@@ -414,7 +416,6 @@ export class BallVisualizer {
   setupEventListeners() {
     // Initial events on container
     this.container.addEventListener('mousedown', this.onMouseDown)
-    this.container.addEventListener('mouseleave', this.onMouseUp)
     this.container.addEventListener('touchstart', this.onTouchStart)
     this.container.addEventListener('touchmove', this.onTouchMove)
     this.container.addEventListener('touchend', this.onTouchEnd)
@@ -449,8 +450,10 @@ export class BallVisualizer {
       y: event.clientY - this.previousMousePosition.y
     }
 
-    this.rotationSpeed.x = deltaMove.y * 0.012
-    this.rotationSpeed.y = deltaMove.x * 0.012
+    // Invert rotation for glass-inner-wall mode
+    const multiplier = this.mode === 'glass-inner-wall' ? -0.012 : 0.012
+    this.rotationSpeed.x = deltaMove.y * multiplier
+    this.rotationSpeed.y = deltaMove.x * multiplier
 
     this.previousMousePosition = {
       x: event.clientX,
@@ -475,7 +478,10 @@ export class BallVisualizer {
       const dy = (event?.clientY ?? 0) - this._clickStartPos.y
       const dist = Math.sqrt(dx * dx + dy * dy)
 
-      if (elapsed < 200 && dist < 5) {
+      // Add debounce check
+      const now = Date.now()
+      if (elapsed < 200 && dist < 5 && now - this._lastClickTime > this._clickDebounceTime) {
+        this._lastClickTime = now
         this.onClick?.()
         if (this.spinOnClick) {
           this.spinFast()
@@ -514,8 +520,10 @@ export class BallVisualizer {
       y: event.touches[0].clientY - this.previousMousePosition.y
     }
 
-    this.rotationSpeed.x = deltaMove.y * 0.012
-    this.rotationSpeed.y = deltaMove.x * 0.012
+    // Invert rotation for glass-inner-wall mode
+    const multiplier = this.mode === 'glass-inner-wall' ? -0.012 : 0.012
+    this.rotationSpeed.x = deltaMove.y * multiplier
+    this.rotationSpeed.y = deltaMove.x * multiplier
 
     this.previousMousePosition = {
       x: event.touches[0].clientX,
@@ -541,7 +549,10 @@ export class BallVisualizer {
       const dy = endY - this._clickStartPos.y
       const dist = Math.sqrt(dx * dx + dy * dy)
 
-      if (elapsed < 200 && dist < 5) {
+      // Add debounce check
+      const now = Date.now()
+      if (elapsed < 200 && dist < 5 && now - this._lastClickTime > this._clickDebounceTime) {
+        this._lastClickTime = now
         this.onClick?.()
         if (this.spinOnClick) {
           this.spinFast()
@@ -613,7 +624,6 @@ export class BallVisualizer {
 
     // Clean up all event listeners
     this.container.removeEventListener('mousedown', this.onMouseDown)
-    this.container.removeEventListener('mouseleave', this.onMouseUp)
     this.container.removeEventListener('touchstart', this.onTouchStart)
     this.container.removeEventListener('touchmove', this.onTouchMove)
     this.container.removeEventListener('touchend', this.onTouchEnd)

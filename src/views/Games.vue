@@ -21,7 +21,7 @@
         Game {{ i }}
       </div>
     </div> -->
-    <div class="_mt-4 _-space-y-3">
+    <div class="_mt-5 _-space-y-1 _overflow-hidden">
       <template v-for="game in games" :key="game.name">
         <section class="_relative _group">
           <a
@@ -96,10 +96,10 @@
         </section>
       </template>
 
-      <section class="_mx-8 _text-center _flex _flex-col _gap-3.5 _pb-5">
-        <div class="_mt-8"></div>
+      <section class="_mx-8 _text-center _flex _flex-col _gap-3.5">
+        <div class="_mt-4"></div>
 
-        <div class="_opacity-50 _animate-wiggle _mb-0.5">come chat</div>
+        <div class="_opacity-40 _animate-wiggle _mb-0.5 _text-em-mlg">+ blah blah blah's</div>
         <div class="_grid _grid-cols-2 _gap-2">
           <SocialsButtons />
         </div>

@@ -29,7 +29,7 @@
       <TrifleBall
         ref="trifleBall"
         :key="authUserAvatar || 'default'"
-        :mode="authUserAvatar ? 'glass' : 'metal'"
+        :mode="authUserAvatar ? 'glass-inner-wall' : 'metal'"
         :image-source="authUserAvatar"
         :camera-angle="8"
         :animate="!hubOpen"
@@ -108,7 +108,7 @@
             <div class="text-lg">32 🪩 4<sup>th</sup></div>
           </div> -->
           <nav
-            class="_order-last _w-full _flex _justify-evenly sm:_justify-between _items-end _pb-4.5 sm:_pb-6 _leading-snug sm:_pl-6 sm:_pr-9 _-mt-12 sm:_-mt-18 _relative _z-10 _text-stroke-md _text-em-md sm:_text-mlg _pointer-events-none"
+            class="_order-last _w-full _flex _justify-between _pl-3.5 _pr-5 _items-end _pb-4.5 sm:_pb-6 _leading-snug sm:_pl-6 sm:_pr-9 _-mt-12 sm:_-mt-18 _relative _z-10 _text-stroke-md _text-em-md sm:_text-mlg _pointer-events-none"
           >
             <button
               class="_flex _flex-col _items-center _-mr-6 _pointer-events-auto _relative"
@@ -200,7 +200,6 @@ import Notifications from './Notifications.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 
 const hubOpen = defineModel('hubOpen')
-const hubButtonHidden = defineModel('hubButtonHidden')
 
 const props = defineProps({
   hubPageKey: { type: String, required: true },
@@ -217,7 +216,7 @@ const authUserAvatar = computed(() => auth.user?.avatar || auth.isFarcaster?.use
 const trifleBall = ref(null)
 watch(hubOpen, async (open) => {
   if (!open) {
-    await nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 150)) // wait for the animation to complete
     trifleBall.value.spinFast()
   }
 })

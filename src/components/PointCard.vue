@@ -2,17 +2,12 @@
   <component
     :is="sourceURL ? 'a' : 'div'"
     v-bind="sourceURL ? { href: sourceURL.origin, target: '_blank' } : {}"
-    class="_bg-metallic-linear _shadow-panel _w-full _p-2 _pr-3 _rounded-lg _block _flex _items-center _min-h-14"
+    class="_bg-metallic-linear _shadow-panel _w-full _p-2 _px-2.5 _pr-3 _rounded-lg _block _flex _items-center _min-h-14"
     :class="{ 'mouse:hover:_scale-[1.01] _origin-center _duration-150 _group': sourceURL }"
   >
-    <header class="_flex _w-full _gap-2.5 _items-center">
+    <header class="_flex _w-full _gap-2.5 _items-stretch">
       <!-- date -->
-      <div
-        class="_-mr-0.5 _text-xs _opacity-[0.35] _min-w-8 _min-h-8 _flex _items-center _justify-center"
-      >
-        {{ formatDate(point.createdAt) }}
-      </div>
-      <div class="_size-8 _flex-shrink-0">
+      <div class="_size-9 _flex-shrink-0">
         <img
           v-if="pointConfig && pointConfig.icon"
           :src="pointConfig.icon"
@@ -21,15 +16,15 @@
       </div>
       <!-- title -->
       <div
-        class="_flex-1 _flex _flex-col _gap-0.5 _justify-center _min-h-8 _text-left _leading-normal _min-w-0"
+        class="_flex-1 _flex _flex-col _gap-[0.25em] _justify-center _min-h-8 _text-left _leading-normal _min-w-0"
       >
-        <div class="_mr-3 _min-w-0 _truncate">
+        <div class="_min-w-0 _leading-[1.1]">
           <template v-if="point.name === 'anybody-daily'"
             >Solved {{ anybodyDayFromDate(point.createdAt) }}</template
           >
           <template v-else-if="point.name === 'gm'">"{{ point.extra }}"</template>
           <template v-else-if="point.name === 'gm-react'">
-            {{ !point.giver || point.giver === '???' ? 'someone' : '@' + point.giver }}
+            {{ !point.giver || point.giver === '???' ? 'someone' : point.giver }}
             ♥︎
             <span v-if="point.gmMessage" class="_weight-semiboldff">"{{ point.gmMessage }}"</span>
             <template v-else>your gm</template>
@@ -37,16 +32,17 @@
           <template v-else>{{ pointConfig?.name || point.name }}</template>
           <!-- date -->
         </div>
-        <div v-if="sourceURL" class="_text-em-2xs _opacity-[0.3] _leading-none">
-          <a :href="sourceURL.origin" target="_blank" class="mouse:group-hover:_underline">{{
+        <div v-if="sourceURL" class="_text-em-2xs _opacity-25 _leading-none _flex _gap-[0.35em]">
+          <!-- <a :href="sourceURL.origin" target="_blank" class="mouse:group-hover:_underline">{{
             sourceURL.host
-          }}</a>
+          }}</a> -->
+          <span>{{ formatDate(point.createdAt) }} ago</span>
+          <span>&middot;</span>
+          <u>{{ sourceURL.host }}</u>
         </div>
       </div>
       <!-- right group -->
-      <div
-        class="_flex _items-center _flex-row-reverse _h-[1.7em] _gap-[0.5em] _relative _text-em-sm _flex-shrink-0 sm:_text-mlg"
-      >
+      <div class="_flex _items-center _h-9 _text-em-sm _flex-shrink-0 sm:_text-mlg">
         <!-- points -->
         <div
           class="_rounded-full _bg-metallic-linear _shadow-panel _pr-[0.5em] _pl-[0.25em] _flex _gap-[0.15em]"
