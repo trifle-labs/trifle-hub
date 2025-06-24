@@ -1,4 +1,5 @@
 import discordIcon from '../assets/imgs/discord-logo-90.png'
+import twitterIcon from '../assets/imgs/twitter-x-logo.svg'
 import walletIcon from '../assets/imgs/ethereum-logo-orange-bg.svg'
 import farcasterIcon from '../assets/imgs/farcaster-logo.svg'
 import anybodyIcon from '../assets/imgs/anybody-icon.png'
@@ -48,6 +49,18 @@ export const possiblePoints = [
     once: true,
     enabled: true,
     link: { to: 'account' }
+  },
+
+  {
+    name: 'Link TwitterX',
+    id: 'auth-twitter',
+    icon: twitterIcon,
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: 'https://x.com/triflelife'
   },
   {
     name: 'Join Trifle Discord',

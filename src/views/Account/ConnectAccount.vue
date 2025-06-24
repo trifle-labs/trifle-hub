@@ -34,6 +34,7 @@
           <AuthButton platform="wallet" points="+10"> Login with Wallet </AuthButton>
         </template>
         <AuthButton platform="discord" points="+10"> Login with Discord </AuthButton>
+        <AuthButton platform="twitter" points="+10"> Login with TwitterX </AuthButton>
         <AuthButton platform="farcaster" points="+10" :class="{ '_order-first': auth.isFarcaster }">
           Login with Farcaster
         </AuthButton>

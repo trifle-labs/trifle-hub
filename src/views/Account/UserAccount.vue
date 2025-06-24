@@ -310,6 +310,92 @@
         </ul>
       </section>
 
+      <!-- twitter -->
+      <section class="_bg-metallic-linear _shadow-panel _p-4 _pb-5 _space-y-2 _rounded-lg">
+        <div v-if="twitterAuths.length" class="_flex _items-center _gap-2.5 _-mt-1.5">
+          <h3 class="_text-xl _weight-bold">twitter</h3>
+        </div>
+        <ul class="_space-y-2">
+          <!-- twitters... -->
+          <li
+            v-for="twitter in twitterAuths"
+            :key="twitter.id"
+            class="_flex _items-center _p-2 _pr-3.5 _justify-between _bg-metallic-linear _shadow-panel _rounded-lg"
+          >
+            <div class="_flex _items-center _gap-2">
+              <button
+                class="_size-11 _flex _items-stretch _p-1.5 _group _overflow-hidden _rounded-md"
+                :class="[
+                  {
+                    '_shadow-panel': twitter.avatar,
+                    '_shadow-panel-inset _bg-metallic-cone _cursor-default':
+                      twitter.avatar === auth.user?.avatar
+                  }
+                ]"
+                :disabled="!twitter.avatar"
+              >
+                <div
+                  v-if="twitter.avatar"
+                  @click="() => setAvatar('twitter', twitter.id)"
+                  style="background: none"
+                  type="button"
+                  title="Set as profile avatar"
+                >
+                  <img
+                    :src="`${twitter.avatar}`"
+                    class="_size-full _rounded-full _duration-150"
+                    :class="{
+                      'group-hover:_scale-[1.8]': twitter.avatar !== auth.user?.avatar
+                    }"
+                  />
+                </div>
+                <div v-else class="_w-full _flex _items-center _justify-center">
+                  <img
+                    src="../../assets/imgs/twitter-x-logo.svg"
+                    class="_size-6 _rounded"
+                    style="background-color: #000"
+                  />
+                </div>
+              </button>
+              <div class="_flex-1 _min-w-0 _leading-tight">
+                <div class="_flex-1 _min-w-0 _truncate _text-em-lg">
+                  {{ twitter.username }}
+                </div>
+                <div
+                  v-if="twitter.metadata?.verified"
+                  class="_text-em-2xs _text-blue-400 _leading-none"
+                >
+                  verified ✓
+                </div>
+              </div>
+            </div>
+            <!-- (disconnect twitter button) -->
+            <template v-if="totalAccountConnections > 1">
+              <button
+                class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
+                @click="(e) => handleDisconnectPlatform('twitter', twitter.id, e)"
+                styleff="filter: hue-rotate(130deg) saturate(2)"
+                aria-label="Remove"
+              >
+                <span styleff="filter: hue-rotate(-130deg) saturate(0.5)">
+                  <template
+                    v-if="
+                      aboutToDisconnect.platform == 'twitter' && aboutToDisconnect.id == twitter.id
+                    "
+                  >
+                    Confirm?
+                  </template>
+                  <template v-else> ⛌ </template>
+                </span>
+              </button>
+            </template>
+          </li>
+          <AuthButton v-if="!hasTwitterAuth" platform="twitter" points="+10" class="_w-full">
+            {{ twitterAuths.length > 0 ? 'Link Another TwitterX' : 'Link TwitterX' }}
+          </AuthButton>
+        </ul>
+      </section>
+
       <!-- farcaster -->
       <section
         class="_bg-metallic-linear _shadow-panel _p-4 _pb-5 _space-y-2 _rounded-lg"
@@ -452,12 +538,18 @@ const usernameInput = ref(null)
 const walletAuths = computed(() => auth.getPlatformData('wallet'))
 const discordAuths = computed(() => auth.getPlatformData('discord'))
 const farcasterAuths = computed(() => auth.getPlatformData('farcaster'))
+const twitterAuths = computed(() => auth.getPlatformData('twitter'))
 
 const hasDiscordAuth = computed(() => discordAuths.value.length > 0)
 const hasFarcasterAuth = computed(() => farcasterAuths.value.length > 0)
+const hasTwitterAuth = computed(() => twitterAuths.value.length > 0)
 
 const totalAccountConnections = computed(
-  () => walletAuths.value.length + discordAuths.value.length + farcasterAuths.value.length
+  () =>
+    walletAuths.value.length +
+    discordAuths.value.length +
+    farcasterAuths.value.length +
+    twitterAuths.value.length
 )
 
 const aboutToDisconnect = ref({ platform: null, id: null })
@@ -610,7 +702,7 @@ const handleLogout = async () => {
 
 const setAvatar = async (platform, platformId) => {
   try {
-    const response = await fetch(`${backendUrl.value}/auth/avatar`, {
+    const response = await fetch(`${backendUrl.value}/auth/update-avatar`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

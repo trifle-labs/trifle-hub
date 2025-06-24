@@ -15,7 +15,8 @@ const PLATFORMS = {
   WALLET: 'wallet',
   TELEGRAM: 'telegram',
   DISCORD: 'discord',
-  FARCASTER: 'farcaster'
+  FARCASTER: 'farcaster',
+  TWITTER: 'twitter'
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -523,6 +524,121 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    async connectTwitter() {
+      this.loading = true
+      this.error = null
+
+      // Always close any previous popup before opening a new one
+      if (window.__trifleTwitterPopup) {
+        try {
+          if (window.__trifleTwitterPopup) {
+            window.__trifleTwitterPopup.close()
+          }
+        } catch (e) {
+          console.warn('Error closing previous TwitterX popup:', e)
+        }
+        window.__trifleTwitterPopup = null
+      }
+
+      try {
+        let url = `${this.backendUrl}/auth/twitter`
+        if (this.isAuthenticated) {
+          // For additional auth, get a nonce first
+          const nonceResponse = await fetch(`${this.backendUrl}/auth/twitter-nonce`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            }
+          })
+
+          if (!nonceResponse.ok) {
+            throw new Error('Failed to get nonce for TwitterX authentication')
+          }
+
+          const { nonce } = await nonceResponse.json()
+          url += `?nonce=${encodeURIComponent(nonce)}`
+        }
+
+        // Open TwitterX auth window
+        window.__trifleTwitterPopup = window.open(
+          url,
+          '_blank',
+          'width=600,height=600,scrollbars=yes,resizable=yes'
+        )
+
+        // If window failed to open
+        if (!window.__trifleTwitterPopup) {
+          throw new Error(
+            'Could not open TwitterX authentication window. Please check your popup blocker settings.'
+          )
+        }
+
+        const authPromise = new Promise((resolve, reject) => {
+          let checkClosedInterval
+          let validResponse = false
+          const handleMessage = async (event) => {
+            console.log('TwitterX handleMessage', event)
+            // Only accept messages from our backend
+            if (event.origin === this.backendUrl) {
+              console.log('TwitterX event.data', event.data)
+              validResponse = true
+              // Clear the interval since we got a valid response
+              if (checkClosedInterval) {
+                clearInterval(checkClosedInterval)
+              }
+
+              // Handle successful authentication
+              if (event.data.token) {
+                localStorage.setItem('authToken', event.data.token)
+                await this.fetchUserStatus()
+                window.__trifleTwitterPopup = null
+                resolve()
+                return
+              }
+
+              // Handle authentication error
+              if (event.data.error) {
+                console.error('TwitterX authentication error:', event.data.error)
+                window.__trifleTwitterPopup = null
+                reject(event.data.error)
+                return
+              }
+            } else {
+              console.warn(`TwitterX message from ${event.origin} not from ${this.backendUrl}`)
+            }
+          }
+
+          window.addEventListener('message', handleMessage)
+
+          // Clean up if window is closed
+          checkClosedInterval = setInterval(() => {
+            if (window.__trifleTwitterPopup.closed) {
+              console.log('TwitterX window manually closing')
+              clearInterval(checkClosedInterval)
+              window.removeEventListener('message', handleMessage)
+              window.__trifleTwitterPopup = null
+              if (!validResponse) {
+                reject(
+                  'TwitterX window closed before authentication was completed. Please try again.'
+                )
+              }
+            }
+          }, 1000)
+        })
+
+        await authPromise
+      } catch (error) {
+        console.error('TwitterX authentication error:', error)
+        this.addNotification({
+          type: 'error',
+          message: error.message || 'Failed to connect TwitterX'
+        })
+      } finally {
+        this.loading = false
+      }
+    },
+
     async connectWallet() {
       try {
         const isConnected = this._appKitInstance.getIsConnectedState()
@@ -637,9 +753,9 @@ export const useAuthStore = defineStore('auth', {
         if (!verifyResponse.ok) {
           throw new Error('Failed to verify signature')
         }
-
-        if (!this.isAuthenticated) {
-          const { token } = await verifyResponse.json()
+        const verifyResponse_ = await verifyResponse.json()
+        if (verifyResponse_.token) {
+          const { token } = verifyResponse_
           console.log('set authToken from wallet auth', { token })
           localStorage.setItem('authToken', token)
         }

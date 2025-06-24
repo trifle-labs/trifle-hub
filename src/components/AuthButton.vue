@@ -107,6 +107,9 @@ const handleConnect = async (platform) => {
     case 'wallet':
       await handleWalletConnect()
       break
+    case 'twitter':
+      await handleTwitterConnect()
+      break
     default:
       throw new Error(`Unsupported platform: ${platform}`)
   }
@@ -151,6 +154,20 @@ const handleDiscordConnect = async () => {
   }
 }
 
+const handleTwitterConnect = async () => {
+  try {
+    await auth.connectTwitter()
+  } catch (err) {
+    if (err.message.includes('Authentication window closed')) {
+      auth.addNotification({
+        type: 'error',
+        message: 'TwitterX login failed. Try again?'
+      })
+    }
+    console.error('TwitterX connection failed:', err)
+  }
+}
+
 // const handleTelegramConnect = async () => {
 //   if (!telegramEnabled.value) return
 //   console.log('Telegram connect clicked (feature not fully implemented yet)')
@@ -158,7 +175,7 @@ const handleDiscordConnect = async () => {
 
 // const handleTwitterConnect = async () => {
 //   if (!twitterEnabled.value) return
-//   console.log('Twitter connect clicked (feature not fully implemented yet)')
+//   console.log('TwitterX connect clicked (feature not fully implemented yet)')
 // }
 </script>
 
