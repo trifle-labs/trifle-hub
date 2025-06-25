@@ -110,6 +110,9 @@ const handleConnect = async (platform) => {
     case 'twitter':
       await handleTwitterConnect()
       break
+    case 'telegram':
+      await handleTelegramConnect()
+      break
     default:
       throw new Error(`Unsupported platform: ${platform}`)
   }
@@ -165,6 +168,18 @@ const handleTwitterConnect = async () => {
       })
     }
     console.error('TwitterX connection failed:', err)
+  }
+}
+
+const handleTelegramConnect = async () => {
+  try {
+    await auth.connectTelegram()
+  } catch (err) {
+    console.error('Telegram connection failed:', err)
+    auth.addNotification({
+      type: 'error',
+      message: 'Telegram login failed. Try again?'
+    })
   }
 }
 

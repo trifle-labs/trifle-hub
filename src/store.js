@@ -19,6 +19,8 @@ const PLATFORMS = {
   TWITTER: 'twitter'
 }
 
+const botUsername = process.env.VITE_TELEGRAM_BOT_USERNAME || 'trifle_auth_bot'
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     backendUrl: null,
@@ -47,7 +49,9 @@ export const useAuthStore = defineStore('auth', {
     _wagmiConfigInstance: null,
     notifications: [], // { id, type: 'error'|'success', message }
     closeHubCallback: null,
-    currentProfileUsername: null
+    currentProfileUsername: null,
+    // Telegram polling cleanup
+    telegramPollingCleanup: null
   }),
 
   getters: {
@@ -879,6 +883,9 @@ export const useAuthStore = defineStore('auth', {
         // Clear Discord auth
         localStorage.removeItem('authToken')
 
+        // Cleanup any ongoing Telegram authentication
+        this.cleanupTelegramAuth()
+
         // Clear all state
         this.user = null
         this.isAuthenticated = false
@@ -1116,6 +1123,201 @@ export const useAuthStore = defineStore('auth', {
     },
     setProfileUsername(username) {
       this.currentProfileUsername = username
+    },
+
+    // Cleanup any ongoing Telegram authentication
+    cleanupTelegramAuth() {
+      if (this.telegramPollingCleanup) {
+        this.telegramPollingCleanup()
+        this.telegramPollingCleanup = null
+      }
+      if (window.__trifleTelegramPopup) {
+        try {
+          window.__trifleTelegramPopup.close()
+        } catch (e) {
+          console.warn('Error closing Telegram popup during cleanup:', e)
+        }
+        window.__trifleTelegramPopup = null
+      }
+    },
+    async connectTelegram() {
+      this.loading = true
+      this.error = null
+
+      // Cleanup any previous Telegram authentication
+      this.cleanupTelegramAuth()
+
+      try {
+        // Get nonce
+        let url = `${this.backendUrl}/telegram/nonce${this.isAuthenticated ? '-login' : ''}`
+        const headers = {
+          'Content-Type': 'application/json'
+        }
+        if (this.isAuthenticated) {
+          headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
+        }
+
+        const nonceResponse = await fetch(url, {
+          method: 'POST',
+          headers
+        })
+
+        if (!nonceResponse.ok) {
+          throw new Error('Failed to get nonce for Telegram authentication')
+        }
+
+        const { nonce } = await nonceResponse.json()
+
+        // Provide user guidance
+        this.addNotification({
+          type: 'success',
+          message: 'Opening Telegram... Complete authentication there, then return here!'
+        })
+
+        // Open Telegram in popup window
+        const telegramUrl = `https://t.me/${botUsername}?start=${nonce}`
+        window.__trifleTelegramPopup = window.open(
+          telegramUrl,
+          '_blank',
+          'width=500,height=700,scrollbars=yes,resizable=yes'
+        )
+
+        // If window failed to open
+        if (!window.__trifleTelegramPopup) {
+          throw new Error(
+            'Could not open Telegram authentication window. Please check your popup blocker settings.'
+          )
+        }
+
+        // Start polling for completion (store cleanup function)
+        await this.pollTelegramAuth(nonce)
+      } catch (error) {
+        console.error('Telegram authentication error:', error)
+        this.addNotification({
+          type: 'error',
+          message: error.message || 'Failed to connect Telegram'
+        })
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async pollTelegramAuth(nonce) {
+      const maxAttempts = 150 // 5 minutes at 2-second intervals
+      let attempts = 0
+
+      return new Promise((resolve, reject) => {
+        let checkClosedInterval
+        let authCompleted = false
+
+        // Store cleanup function
+        this.telegramPollingCleanup = () => {
+          if (pollInterval) clearInterval(pollInterval)
+          if (checkClosedInterval) clearInterval(checkClosedInterval)
+          authCompleted = true
+        }
+
+        const pollInterval = setInterval(async () => {
+          attempts++
+
+          try {
+            const response = await fetch(`${this.backendUrl}/telegram/verify`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ nonce })
+            })
+
+            const data = await response.json()
+
+            if (response.ok && data.status === 'completed') {
+              clearInterval(pollInterval)
+              if (checkClosedInterval) clearInterval(checkClosedInterval)
+              authCompleted = true
+              this.telegramPollingCleanup = null
+
+              // Close the popup window
+              if (window.__trifleTelegramPopup && !window.__trifleTelegramPopup.closed) {
+                window.__trifleTelegramPopup.close()
+              }
+              window.__trifleTelegramPopup = null
+
+              // Handle successful authentication
+              if (data.token) {
+                localStorage.setItem('authToken', data.token)
+                await this.fetchUserStatus()
+                this.addNotification({
+                  type: 'success',
+                  message: 'Telegram connected successfully!'
+                })
+                resolve()
+                return
+              }
+            } else if (response.status === 401 || response.status === 404) {
+              // Expired or not found
+              clearInterval(pollInterval)
+              if (checkClosedInterval) clearInterval(checkClosedInterval)
+              authCompleted = true
+              this.telegramPollingCleanup = null
+
+              // Close the popup window
+              if (window.__trifleTelegramPopup && !window.__trifleTelegramPopup.closed) {
+                window.__trifleTelegramPopup.close()
+              }
+              window.__trifleTelegramPopup = null
+
+              this.addNotification({
+                type: 'error',
+                message: 'Telegram authentication expired. Please try again.'
+              })
+              reject(new Error('Authentication expired'))
+              return
+            } else if (response.status === 202) {
+              // Still pending, continue polling
+              console.log('Waiting for Telegram authentication...')
+            }
+
+            // Check timeout
+            if (attempts >= maxAttempts) {
+              clearInterval(pollInterval)
+              if (checkClosedInterval) clearInterval(checkClosedInterval)
+              authCompleted = true
+              this.telegramPollingCleanup = null
+
+              // Close the popup window
+              if (window.__trifleTelegramPopup && !window.__trifleTelegramPopup.closed) {
+                window.__trifleTelegramPopup.close()
+              }
+              window.__trifleTelegramPopup = null
+
+              this.addNotification({
+                type: 'error',
+                message: 'Telegram authentication timed out. Please try again.'
+              })
+              reject(new Error('Authentication timeout'))
+            }
+          } catch (err) {
+            console.error('Polling error:', err)
+            // Continue polling unless it's a critical error
+          }
+        }, 2000) // Poll every 2 seconds
+
+        // Check if popup is manually closed by user
+        checkClosedInterval = setInterval(() => {
+          if (window.__trifleTelegramPopup && window.__trifleTelegramPopup.closed) {
+            console.log('Telegram popup was manually closed by user')
+            clearInterval(pollInterval)
+            clearInterval(checkClosedInterval)
+            window.__trifleTelegramPopup = null
+            this.telegramPollingCleanup = null
+
+            if (!authCompleted) {
+              reject(new Error('Authentication cancelled by user'))
+            }
+          }
+        }, 1000)
+      })
     }
   }
 })

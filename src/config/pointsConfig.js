@@ -1,5 +1,6 @@
 import discordIcon from '../assets/imgs/discord-logo-90.png'
 import twitterIcon from '../assets/imgs/twitter-x-logo.svg'
+import telegramIcon from '../assets/imgs/telegram-logo.svg'
 import walletIcon from '../assets/imgs/ethereum-logo-orange-bg.svg'
 import farcasterIcon from '../assets/imgs/farcaster-logo.svg'
 import anybodyIcon from '../assets/imgs/anybody-icon.png'
@@ -61,6 +62,17 @@ export const possiblePoints = [
     once: true,
     enabled: true,
     link: 'https://x.com/triflelife'
+  },
+  {
+    name: 'Link Telegram',
+    id: 'auth-telegram',
+    icon: telegramIcon,
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: 'https://t.me/trifle_auth_bot'
   },
   {
     name: 'Join Trifle Discord',
