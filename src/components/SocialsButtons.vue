@@ -8,7 +8,7 @@
       platforms.telegram
     ]"
     :key="social.label"
-    :href="social.link"
+    :href="social.url"
     target="_blank"
     class="_bubble-btn-full _px-4.5 _cursor-pointer"
     :style="{
