@@ -120,7 +120,7 @@ const games = [
   {
     name: 'gm-game',
     link: 'https://gm.trifle.life',
-    description: 'find a new gm → win <span class="_not-italic">🪩</span>BALL$',
+    description: 'write novel gm\'s → win <span class="_not-italic">🪩</span>BALL$',
     bgVideo:
       'https://res.cloudinary.com/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
     bgBlur: 0,

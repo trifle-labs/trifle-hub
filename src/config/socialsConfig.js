@@ -46,7 +46,7 @@ export const platforms = {
   twitter: {
     name: 'TwitterX',
     icon: twitterLogo,
-    url: 'https://x.com/trifle.life',
+    url: 'https://x.com/triflelife',
     bubbleButtonStyle: {
       hueRotate: 0,
       saturate: 1,
