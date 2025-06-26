@@ -6,7 +6,9 @@ import farcasterIcon from '../assets/imgs/farcaster-logo.svg'
 import anybodyIcon from '../assets/imgs/anybody-icon.png'
 import kudzuIcon from '../assets/imgs/kudzu-icon.gif'
 import gmIcon from '../assets/imgs/gm.svg'
-import { discordLink } from './socialsConfig'
+import { platforms } from './socialsConfig'
+
+const discordLink = platforms.discord.url
 
 const gmLink = 'https://gm.trifle.life'
 const anybodyLink = 'https://anybody.gg'
@@ -61,7 +63,7 @@ export const possiblePoints = [
     claimed: false,
     once: true,
     enabled: true,
-    link: 'https://x.com/triflelife'
+    link: { to: 'account' }
   },
   {
     name: 'Link Telegram',
@@ -72,7 +74,7 @@ export const possiblePoints = [
     claimed: false,
     once: true,
     enabled: true,
-    link: 'https://t.me/trifle_auth_bot'
+    link: { to: 'account' }
   },
   {
     name: 'Join Trifle Discord',
@@ -168,7 +170,7 @@ export const possiblePoints = [
     once: true,
     enabled: true,
     fid: 832276,
-    link: 'https://farcaster.xyz/trifle'
+    link: platforms.farcaster.url
   },
 
   {
@@ -182,7 +184,7 @@ export const possiblePoints = [
     once: false,
     enabled: true,
     fid: 832276,
-    link: 'https://farcaster.xyz/trifle'
+    link: platforms.farcaster.url
   },
   {
     name: "Re-cast Trifle's casts on Farcaster",
@@ -195,7 +197,7 @@ export const possiblePoints = [
     once: false,
     enabled: true,
     fid: 832276,
-    link: 'https://farcaster.xyz/trifle'
+    link: platforms.farcaster.url
   },
   {
     name: 'Cast your GM with mini app link',
