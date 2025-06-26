@@ -115,14 +115,14 @@ import SocialsButtons from '../components/SocialsButtons.vue'
 
 const today = new Date()
 
-// use cloudinary for videos so they're cached across domains for users
+// use https://gm-trifle.b-cdn.net for videos so they're cached across domains for users
 const games = [
   {
     name: 'gm-game',
     link: 'https://gm.trifle.life',
     description: 'write novel gm\'s → win <span class="_not-italic">🪩</span>BALL$',
     bgVideo:
-      'https://res.cloudinary.com/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
+      'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
     bgBlur: 0,
     isNewUntil: new Date('July 15, 2025')
   },
@@ -131,7 +131,7 @@ const games = [
     description: 'a daily puzzle-shooter, fully onchain!',
     link: 'https://anybody.gg',
     bgVideo:
-      'https://res.cloudinary.com/dsiwc6udm/video/upload/c_scale,f_auto,q_auto:eco,w_400/v1748287290/anybody-gameplay-clip-2_cf6p3x.mov',
+      'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/c_scale,f_auto,q_auto:eco,w_400/v1748287290/anybody-gameplay-clip-2_cf6p3x.mov',
     titleImg: anybodyTitleImg,
     bgBlur: 2
   },
@@ -140,7 +140,7 @@ const games = [
     link: 'https://kudzu.rodeo',
     description: 'burn the most NFTs → win TIA',
     bgVideo:
-      'https://res.cloudinary.com/dsiwc6udm/video/upload/ac_none,c_scale,q_auto:best,w_600/v1748286440/fdckedgxrgrfkmlb4ech.webm',
+      'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/ac_none,c_scale,q_auto:best,w_600/v1748286440/fdckedgxrgrfkmlb4ech.webm',
     bgBlur: 0
   }
 ]
