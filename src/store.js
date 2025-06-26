@@ -119,7 +119,7 @@ export const useAuthStore = defineStore('auth', {
         sdk.actions.viewCast({
           hash: href.split('/')[4]
         })
-      } else if (linkMatchesDomainExactly) {
+      } else if (linkMatchesDomain) {
         e.preventDefault()
         this.closeHub()
       } else if (this.isFarcaster && isFarcasterMiniApp) {
