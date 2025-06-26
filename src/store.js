@@ -19,8 +19,6 @@ const PLATFORMS = {
   TWITTER: 'twitter'
 }
 
-const botUsername = process.env.VITE_TELEGRAM_BOT_USERNAME || 'trifle_auth_bot'
-
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     backendUrl: null,
@@ -1193,6 +1191,15 @@ export const useAuthStore = defineStore('auth', {
           type: 'success',
           message: 'Opening Telegram... Complete authentication there, then return here!'
         })
+
+        const botInfo = await fetch(`${this.backendUrl}/telegram/bot-info`)
+        if (!botInfo.ok) {
+          throw new Error('Failed to get bot information')
+        }
+        const { botUsername } = await botInfo.json()
+        if (!botUsername) {
+          throw new Error('Failed to get bot information')
+        }
 
         // Open Telegram in popup window
         const telegramUrl = `https://t.me/${botUsername}?start=${nonce}`
