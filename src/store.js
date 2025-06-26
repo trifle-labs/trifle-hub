@@ -528,6 +528,22 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    async cancelTwitterAuth() {
+      if (!this.isAuthenticated) return
+      const url = `${this.backendUrl}/auth/twitter-purge-orphans`
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        }
+      })
+      if (!res.ok) {
+        throw new Error('Failed to cancel TwitterX authentication')
+      }
+      return res.json()
+    },
+
     async connectTwitter() {
       this.loading = true
       this.error = null
@@ -543,11 +559,12 @@ export const useAuthStore = defineStore('auth', {
         }
         window.__trifleTwitterPopup = null
       }
+      await this.cancelTwitterAuth()
 
       try {
         let url = `${this.backendUrl}/auth/twitter`
         if (this.isAuthenticated) {
-          // For additional auth, get a nonce first
+          // authenticated users need a nonce to connect the accounts
           const nonceResponse = await fetch(`${this.backendUrl}/auth/twitter-nonce`, {
             method: 'POST',
             headers: {
@@ -563,7 +580,6 @@ export const useAuthStore = defineStore('auth', {
           const { nonce } = await nonceResponse.json()
           url += `?nonce=${encodeURIComponent(nonce)}`
         }
-
         // Open TwitterX auth window
         window.__trifleTwitterPopup = window.open(
           url,
@@ -573,6 +589,7 @@ export const useAuthStore = defineStore('auth', {
 
         // If window failed to open
         if (!window.__trifleTwitterPopup) {
+          this.cancelTwitterAuth()
           throw new Error(
             'Could not open TwitterX authentication window. Please check your popup blocker settings.'
           )
@@ -603,6 +620,7 @@ export const useAuthStore = defineStore('auth', {
 
               // Handle authentication error
               if (event.data.error) {
+                this.cancelTwitterAuth()
                 console.error('TwitterX authentication error:', event.data.error)
                 window.__trifleTwitterPopup = null
                 reject(event.data.error)
@@ -623,6 +641,7 @@ export const useAuthStore = defineStore('auth', {
               window.removeEventListener('message', handleMessage)
               window.__trifleTwitterPopup = null
               if (!validResponse) {
+                this.cancelTwitterAuth()
                 reject(
                   'TwitterX window closed before authentication was completed. Please try again.'
                 )
@@ -633,6 +652,7 @@ export const useAuthStore = defineStore('auth', {
 
         await authPromise
       } catch (error) {
+        this.cancelTwitterAuth()
         console.error('TwitterX authentication error:', error)
         this.addNotification({
           type: 'error',
@@ -1232,6 +1252,7 @@ export const useAuthStore = defineStore('auth', {
             const data = await response.json()
 
             if (response.ok && data.status === 'completed') {
+              console.log('data.status === completed')
               clearInterval(pollInterval)
               if (checkClosedInterval) clearInterval(checkClosedInterval)
               authCompleted = true
@@ -1245,6 +1266,7 @@ export const useAuthStore = defineStore('auth', {
 
               // Handle successful authentication
               if (data.token) {
+                console.log('data.token present')
                 localStorage.setItem('authToken', data.token)
                 await this.fetchUserStatus()
                 this.addNotification({
