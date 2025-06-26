@@ -4,8 +4,6 @@ import farcasterLogo from '../assets/imgs/farcaster-logo.svg'
 import twitterLogo from '../assets/imgs/twitter-x-logo.svg'
 import telegramLogo from '../assets/imgs/telegram-logo.svg'
 
-export const discordLink = 'https://discord.gg/aEaEZT9Wr9'
-
 export const platforms = {
   wallet: {
     name: 'Wallet',
@@ -19,7 +17,7 @@ export const platforms = {
   discord: {
     name: 'Discord',
     icon: discordLogo,
-    url: discordLink,
+    url: 'https://trifle.life/discord',
     bubbleButtonStyle: {
       hueRotate: -345,
       saturate: 2
@@ -28,7 +26,7 @@ export const platforms = {
   farcaster: {
     name: 'Farcaster',
     icon: farcasterLogo,
-    url: 'https://farcaster.xyz/trifle',
+    url: 'https://trifle.life/farcaster',
     bubbleButtonStyle: {
       hueRotate: -335,
       saturate: 2
@@ -37,7 +35,7 @@ export const platforms = {
   telegram: {
     name: 'Telegram',
     icon: telegramLogo,
-    url: 'https://t.me/anybodygg',
+    url: 'https://trifle.life/telegram',
     bubbleButtonStyle: {
       hueRotate: -20,
       saturate: 1.5
@@ -46,7 +44,7 @@ export const platforms = {
   twitter: {
     name: 'TwitterX',
     icon: twitterLogo,
-    url: 'https://x.com/triflelife',
+    url: 'https://trifle.life/twitter',
     bubbleButtonStyle: {
       hueRotate: 0,
       saturate: 1,
