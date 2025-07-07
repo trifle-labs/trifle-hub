@@ -1,6 +1,7 @@
 // /Users/billy/Github/trifle-labs/trifle-hub/vite.config.js
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -9,7 +10,10 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    cssInjectedByJsPlugin()
+  ],
   build: {
     lib: {
       // Could also be a dictionary or array of multiple entry points
@@ -55,7 +59,6 @@ export default defineConfig({
         }
       }
     }
-    // Optional: Improve CSS handling for library mode
-    // cssCodeSplit: true, // Extracts CSS into a separate file
+    // CSS is now automatically injected by cssInjectedByJsPlugin
   }
 })

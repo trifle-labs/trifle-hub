@@ -6,6 +6,7 @@ import { initializeWagmiConfig } from './config/wagmiConfig'
 import { createPinia } from 'pinia'
 import { useAuthStore } from './store'
 export { TrifleHubVuePlugin, TrifleHub }
+import './style/index.css'
 
 const queryClient = new QueryClient()
 
