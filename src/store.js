@@ -160,6 +160,14 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
 
       try {
+        try {
+          // Initialize Farcaster miniapp if present
+          const ready = await sdk.actions.ready()
+          console.log({ ready })
+        } catch (e) {
+          console.warn('error initializing farcaster', e)
+        }
+
         // Check for existing session
         const savedSession = localStorage.getItem('auth_session')
         console.log('savedSession', { savedSession })
@@ -189,8 +197,6 @@ export const useAuthStore = defineStore('auth', {
           }
         })
 
-        // Initialize Farcaster miniapp if present
-        await sdk.actions.ready()
         document.addEventListener('click', this.handleClick)
         const isMiniApp = await sdk.isInMiniApp()
         if (isMiniApp) {
