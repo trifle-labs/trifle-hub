@@ -48,29 +48,15 @@
           </div>
           <div class="_flex _items-center _gap-2.5 _flex-1 _min-w-0">
             <div
-              v-if="entry.avatar"
               class="_size-[2em] _-my-0.5 _flex-shrink-0 _rounded-full _bg-zinc-400 _bg-cover _bg-center"
-              :style="{
-                backgroundImage: `url(${entry.avatar})`
-              }"
+              :style="avatarFallback.getAvatarBackgroundStyle(entry.avatar)"
               style="
                 box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.75),
                   inset 0 -1px 2px rgba(255, 255, 255, 0.75);
               "
             >
-              <!-- Placeholder for avatar, can be replaced with entry.User.avatarUrl if available -->
+              <!-- Avatar with fallback -->
             </div>
-            <!-- (blank face) -->
-            <div
-              v-else
-              alt="smiley face with dashed outline"
-              class="_size-[2em] _-my-0.5 _flex-shrink-0 _rounded-full _bg-cover _bg-center _scale-[0.95]ff _opacity-40"
-              tabindex="-1"
-              :style="{
-                backgroundImage: `url(${smileyFacePng})`,
-                mixBlendMode: 'multiply'
-              }"
-            ></div>
             <div class="_flex-1 _weight-semibold _truncate _min-w-0">
               {{ entry.User?.displayName || entry.username || 'N/A' }}
             </div>
@@ -95,6 +81,8 @@ import { ref, onMounted, watch, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 import HubPageHeader from '../components/HubPageHeader.vue'
 import smileyFacePng from '../assets/imgs/smiley-face-dashed-inside-noShadow.png'
+import { createAvatarFallback } from '../utils.js'
+import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 
 const selectedTab = ref('monthly') // 'monthly' for This Week, 'allTime' for All Time
 const leaderboardData = ref([])
@@ -104,6 +92,9 @@ const error = ref(null)
 const auth = inject('TrifleHub/store')
 const { backendUrl } = storeToRefs(auth)
 const hub = inject('hub')
+
+// Avatar fallback utility
+const avatarFallback = createAvatarFallback(smileyFaceSvg)
 
 const openProfile = (username) => {
   auth.setProfileUsername(username)

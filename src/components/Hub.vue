@@ -29,11 +29,12 @@
       <TrifleBall
         ref="trifleBall"
         :key="authUserAvatar || 'default'"
-        :mode="authUserAvatar ? 'glass-inner-wall' : 'metal'"
-        :image-source="authUserAvatar"
+        :mode="authUserAvatar && authUserAvatar !== smileyFaceSvg ? 'glass-inner-wall' : 'metal'"
+        :image-source="authUserAvatar && authUserAvatar !== smileyFaceSvg ? authUserAvatar : null"
         :camera-angle="8"
         :animate="!hubOpen"
-        class="_cursor-pointer _pointer-events-auto"
+        class="_cursor-pointer _pointer-events-auto _transition-opacity _duration-300"
+        :class="{ '_opacity-75': isTestingAvatar }"
         @click="hubOpen = !hubOpen"
         tabindex="-1"
       />
@@ -160,19 +161,21 @@
               >
                 <!-- (avatar) -->
                 <div
-                  v-if="authUserAvatar"
-                  class="_size-[80%] _rounded-full _block _bg-cover _bg-center"
+                  v-if="authUserAvatar && authUserAvatar !== smileyFaceSvg"
+                  class="_size-[80%] _rounded-full _block _bg-cover _bg-center _transition-opacity _duration-300"
+                  :class="{ '_opacity-50': isTestingAvatar }"
                   :style="{ backgroundImage: `url(${authUserAvatar})` }"
                   style="box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.75)"
                   aria-label="your avatar image"
                 />
-                <!-- (blank face) -->
+                <!-- (smiley face fallback) -->
                 <object
                   v-else
                   :data="smileyFaceSvg"
                   type="image/svg+xml"
                   alt="smiley face with dashed outline"
-                  class="_w-full _pointer-events-none"
+                  class="_w-full _pointer-events-none _transition-opacity _duration-300"
+                  :class="{ '_opacity-50': isTestingAvatar }"
                   tabindex="-1"
                 ></object>
               </div>
@@ -211,7 +214,84 @@ const hubPage = computed(() => hubPages[props.hubPageKey])
 const { openHub } = inject('hub')
 const auth = inject('TrifleHub/store')
 
-const authUserAvatar = computed(() => auth.user?.avatar || auth.isFarcaster?.user?.avatar)
+// Avatar fallback utility
+
+const rawAuthUserAvatar = computed(() => auth.user?.avatar || auth.isFarcaster?.user?.avatar)
+const authUserAvatar = ref(smileyFaceSvg)
+const isTestingAvatar = ref(false)
+const avatarTestCache = new Map()
+
+// Test avatar URL with caching and timeout
+const testAvatar = async (avatarUrl) => {
+  if (!avatarUrl || avatarUrl === smileyFaceSvg) {
+    return smileyFaceSvg
+  }
+
+  // Check cache first
+  if (avatarTestCache.has(avatarUrl)) {
+    const cachedResult = avatarTestCache.get(avatarUrl)
+    return cachedResult ? avatarUrl : smileyFaceSvg
+  }
+
+  return new Promise((resolve) => {
+    const img = new Image()
+    let resolved = false
+
+    const cleanup = () => {
+      if (!resolved) {
+        resolved = true
+        img.onload = null
+        img.onerror = null
+      }
+    }
+
+    const timeout = setTimeout(() => {
+      cleanup()
+      console.warn(`Avatar timeout after 5s: ${avatarUrl}`)
+      avatarTestCache.set(avatarUrl, false)
+      resolve(smileyFaceSvg)
+    }, 5000)
+
+    img.onload = () => {
+      cleanup()
+      clearTimeout(timeout)
+      avatarTestCache.set(avatarUrl, true)
+      resolve(avatarUrl)
+    }
+
+    img.onerror = () => {
+      cleanup()
+      clearTimeout(timeout)
+      console.warn(`Avatar failed to load: ${avatarUrl}`)
+      avatarTestCache.set(avatarUrl, false)
+      resolve(smileyFaceSvg)
+    }
+
+    img.src = avatarUrl
+  })
+}
+
+// Watch for changes in the raw avatar and test it with timeout
+watch(
+  rawAuthUserAvatar,
+  async (newAvatar) => {
+    if (!newAvatar) {
+      authUserAvatar.value = smileyFaceSvg
+      return
+    }
+
+    if (newAvatar === smileyFaceSvg) {
+      authUserAvatar.value = smileyFaceSvg
+      return
+    }
+
+    isTestingAvatar.value = true
+    const result = await testAvatar(newAvatar)
+    authUserAvatar.value = result
+    isTestingAvatar.value = false
+  },
+  { immediate: true }
+)
 
 const trifleBall = ref(null)
 watch(hubOpen, async (open) => {

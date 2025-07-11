@@ -24,6 +24,7 @@ import {
 import { BallVisualizer } from './trifle-ball'
 import arcadeTexture from './assets/arcade-edit-blur.jpg'
 import stickerTexture from './assets/trifle-fidget.png'
+import smileyFaceSvg from '../../assets/imgs/smiley-face-dashed-outline.svg'
 
 const props = defineProps({
   cameraAngle: {
@@ -76,6 +77,7 @@ const initVisualizer = () => {
     arcadeTexturePath: arcadeTexture,
     stickerTexturePath: props.mode === 'metal' ? stickerTexture : null,
     imageSource: props.mode !== 'metal' ? props.imageSource : null,
+    fallbackImageSource: smileyFaceSvg,
     mode: props.mode,
     cameraAngle: props.cameraAngle,
     spinOnClick: true,

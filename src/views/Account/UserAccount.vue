@@ -136,6 +136,7 @@
                     :class="{
                       'group-hover:_scale-[1.8]': wallet.avatar !== auth.user?.avatar
                     }"
+                    @error="avatarFallback.handleImageError"
                   />
                 </div>
                 <div v-else class="_w-full _flex _items-center _justify-center">
@@ -267,6 +268,7 @@
                     :class="{
                       'group-hover:_scale-[1.8]': discord.avatar !== auth.user?.avatar
                     }"
+                    @error="avatarFallback.handleImageError"
                   />
                 </div>
                 <div v-else class="_w-full _flex _items-center _justify-center">
@@ -347,6 +349,7 @@
                     :class="{
                       'group-hover:_scale-[1.8]': twitter.avatar !== auth.user?.avatar
                     }"
+                    @error="avatarFallback.handleImageError"
                   />
                 </div>
                 <div v-else class="_w-full _flex _items-center _justify-center">
@@ -433,6 +436,7 @@
                     :class="{
                       'group-hover:_scale-[1.8]': telegram.avatar !== auth.user?.avatar
                     }"
+                    @error="avatarFallback.handleImageError"
                   />
                 </div>
                 <div v-else class="_w-full _flex _items-center _justify-center">
@@ -521,6 +525,7 @@
                       :class="{
                         'group-hover:_scale-[1.8]': farcaster.avatar !== auth.user?.avatar
                       }"
+                      @error="avatarFallback.handleImageError"
                     />
                   </div>
                   <div v-else class="_w-full _flex _items-center _justify-center">
@@ -590,9 +595,13 @@ import AuthButton from '../../components/AuthButton.vue'
 import AccountLayout from '../../components/AccountLayout.vue'
 import TrifleBall from '../../components/TrifleBall/TrifleBall.vue'
 import SplitWalletButton from '../../components/AuthenticateWalletSection.vue'
+import { createAvatarFallback } from '../../utils.js'
 
 const auth = inject('TrifleHub/store')
 const { isAuthenticated, backendUrl } = storeToRefs(auth)
+
+// Avatar fallback utility
+const avatarFallback = createAvatarFallback(smileyFaceSvg)
 
 const isFarcaster = computed(() => auth.isFarcaster)
 

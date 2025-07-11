@@ -37,9 +37,9 @@
         >
           <div class="_flex _items-center">
             <div
-              v-if="auth.user?.avatar"
+              v-if="auth.user?.avatar || smileyFaceSvg"
               class="_size-[1em] _block _rounded-full _shadow-panel-inset _bg-cover _bg-center"
-              :style="{ backgroundImage: `url(${auth.user?.avatar})` }"
+              :style="avatarFallback.getAvatarBackgroundStyle(auth.user?.avatar)"
             />
             <div class="_opacity-30 _text-base _ml-[0.5em]">Your Balance</div>
           </div>
@@ -267,6 +267,8 @@ import { storeToRefs } from 'pinia'
 import { ref, onMounted, inject, watch, computed } from 'vue'
 import { possiblePoints } from '../config/pointsConfig'
 import SocialsButtons from '../components/SocialsButtons.vue'
+import { createAvatarFallback } from '../utils.js'
+import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 
 const auth = inject('TrifleHub/store')
 const { openHub } = inject('hub')
@@ -278,6 +280,9 @@ const filter = ref('all') // 'all', 'once', 'ongoing'
 const selectedTab = ref('earn')
 
 const { backendUrl, isAuthenticated } = storeToRefs(auth)
+
+// Avatar fallback utility
+const avatarFallback = createAvatarFallback(smileyFaceSvg)
 
 const openProfile = () => {
   auth.setProfileUsername(auth.user?.username)

@@ -52,6 +52,7 @@ export class BallVisualizer {
     this.arcadeTexturePath = options.arcadeTexturePath
     this.stickerTexturePath = options.stickerTexturePath
     this.imageSource = options.imageSource
+    this.fallbackImageSource = options.fallbackImageSource
     this.mode = options.mode || 'metal'
 
     // Callbacks
@@ -233,7 +234,8 @@ export class BallVisualizer {
     const imageRadius = ballRadius * 0.95
     const glassRadius = ballRadius * 0.951 // just slightly larger
     const innerGeo = new SphereGeometry(imageRadius, 128, 128)
-    new TextureLoader().load(this.imageSource, (texture) => {
+
+    const createBallWithTexture = (texture) => {
       texture.colorSpace = SRGBColorSpace
       // Use linear filtering for better quality
       texture.minFilter = LinearFilter
@@ -255,7 +257,34 @@ export class BallVisualizer {
       this.scene.add(innerSphere)
       this.ball = innerSphere
       this.onReady?.()
-    })
+    }
+
+    const createBasicBall = () => {
+      // Create ball with just the smiley face color if all textures fail
+      const innerMat = new MeshBasicMaterial({
+        color: 0xf0f0f0,
+        side: DoubleSide
+      })
+      const innerSphere = new Mesh(innerGeo, innerMat)
+      this.scene.add(innerSphere)
+      this.ball = innerSphere
+      this.onReady?.()
+    }
+
+    // Add 10-second timeout to texture loading
+    this.loadTextureWithTimeout(this.imageSource, 5000)
+      .then(createBallWithTexture)
+      .catch(async (error) => {
+        console.warn('Failed to load avatar texture, using smiley face fallback:', error)
+        try {
+          // Try to use smiley face fallback
+          const fallbackTexture = await this.createFallbackTexture()
+          createBallWithTexture(fallbackTexture)
+        } catch (fallbackError) {
+          console.warn('Smiley face fallback also failed, creating basic ball:', fallbackError)
+          createBasicBall()
+        }
+      })
 
     // Glass overlay sphere (arcade reflections, high contrast)
     const glassGeo = new SphereGeometry(glassRadius, 128, 128)
@@ -272,7 +301,8 @@ export class BallVisualizer {
     const imageRadius = ballRadius * 0.98
     const glassRadius = ballRadius * 0.981 // just slightly larger
     const innerGeo = new SphereGeometry(imageRadius, 128, 128)
-    new TextureLoader().load(this.imageSource, (texture) => {
+
+    const createBallWithTexture = (texture) => {
       texture.colorSpace = SRGBColorSpace
       // Use linear filtering for better quality
       texture.minFilter = LinearFilter
@@ -294,7 +324,34 @@ export class BallVisualizer {
       this.scene.add(innerWall)
       this.ball = innerWall
       this.onReady?.()
-    })
+    }
+
+    const createBasicBall = () => {
+      // Create ball with just the smiley face color if all textures fail
+      const innerMat = new MeshBasicMaterial({
+        color: 0xf0f0f0,
+        side: BackSide
+      })
+      const innerWall = new Mesh(innerGeo, innerMat)
+      this.scene.add(innerWall)
+      this.ball = innerWall
+      this.onReady?.()
+    }
+
+    // Add 10-second timeout to texture loading
+    this.loadTextureWithTimeout(this.imageSource, 5000)
+      .then(createBallWithTexture)
+      .catch(async (error) => {
+        console.warn('Failed to load avatar texture, using smiley face fallback:', error)
+        try {
+          // Try to use smiley face fallback
+          const fallbackTexture = await this.createFallbackTexture()
+          createBallWithTexture(fallbackTexture)
+        } catch (fallbackError) {
+          console.warn('Smiley face fallback also failed, creating basic ball:', fallbackError)
+          createBasicBall()
+        }
+      })
 
     // Glass overlay sphere (arcade reflections, high contrast)
     const glassGeo = new SphereGeometry(glassRadius, 128, 128)
@@ -349,6 +406,57 @@ export class BallVisualizer {
     return gridTexture
   }
 
+  loadTextureWithTimeout(url, timeoutMs = 5000) {
+    return new Promise((resolve, reject) => {
+      const loader = new TextureLoader()
+      let isResolved = false
+
+      // Set up timeout
+      const timeout = setTimeout(() => {
+        if (!isResolved) {
+          isResolved = true
+          reject(new Error(`Texture loading timed out after ${timeoutMs}ms: ${url}`))
+        }
+      }, timeoutMs)
+
+      // Load texture
+      loader.load(
+        url,
+        (texture) => {
+          if (!isResolved) {
+            isResolved = true
+            clearTimeout(timeout)
+            resolve(texture)
+          }
+        },
+        undefined, // onProgress callback
+        (error) => {
+          if (!isResolved) {
+            isResolved = true
+            clearTimeout(timeout)
+            reject(error)
+          }
+        }
+      )
+    })
+  }
+
+  async createFallbackTexture() {
+    // Simply load the smiley face image we already have
+    if (this.fallbackImageSource) {
+      try {
+        const texture = await this.loadTextureWithTimeout(this.fallbackImageSource, 5000)
+        texture.colorSpace = SRGBColorSpace
+        return texture
+      } catch (error) {
+        console.warn('Failed to load smiley face fallback:', error)
+      }
+    }
+
+    // If smiley face fails, throw error to indicate complete failure
+    throw new Error('No fallback texture available')
+  }
+
   createDecal(ballRadius) {
     if (!this.stickerTexturePath) {
       // If no sticker texture, ball is ready immediately
@@ -356,9 +464,9 @@ export class BallVisualizer {
       return
     }
 
-    new TextureLoader().load(
-      this.stickerTexturePath,
-      (texture) => {
+    // Add 10-second timeout to decal texture loading
+    this.loadTextureWithTimeout(this.stickerTexturePath, 5000)
+      .then((texture) => {
         const material = new MeshBasicMaterial({
           map: texture,
           transparent: true,
@@ -379,14 +487,12 @@ export class BallVisualizer {
 
         // Emit ready after decal is added
         this.onReady?.()
-      },
-      undefined, // onProgress callback (not needed)
-      () => {
+      })
+      .catch((error) => {
         // On error, still emit ready since the ball itself is usable
-        console.warn('Failed to load decal texture')
+        console.warn('Failed to load decal texture:', error)
         this.onReady?.()
-      }
-    )
+      })
   }
 
   setupEnvironment(ballMat) {
@@ -403,14 +509,20 @@ export class BallVisualizer {
     envGroup.add(envMesh)
 
     const envmaploader = new PMREMGenerator(this.renderer)
-    new TextureLoader().load(this.arcadeTexturePath, (texture) => {
-      texture.mapping = EquirectangularReflectionMapping
-      const envmap = envmaploader.fromEquirectangular(texture)
-      ballMat.envMap = envmap.texture
-      ballMat.envMapIntensity = 1.2
-      ballMat.needsUpdate = true
-      texture.dispose()
-    })
+    // Add 10-second timeout to environment texture loading
+    this.loadTextureWithTimeout(this.arcadeTexturePath, 5000)
+      .then((texture) => {
+        texture.mapping = EquirectangularReflectionMapping
+        const envmap = envmaploader.fromEquirectangular(texture)
+        ballMat.envMap = envmap.texture
+        ballMat.envMapIntensity = 1.2
+        ballMat.needsUpdate = true
+        texture.dispose()
+      })
+      .catch((error) => {
+        console.warn('Failed to load environment texture:', error)
+        // Environment texture is optional, so we just log the error
+      })
   }
 
   setupEventListeners() {
