@@ -30,19 +30,6 @@ export default {
         20: 'repeat(20, minmax(0, 1fr))',
         21: 'repeat(21, minmax(0, 1fr))'
       },
-      animation: {
-        'pulse-light': 'pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'pulse-deep': 'pulse-deep 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'pulse-fast': 'pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'pulse-deep-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'blink-fast': 'blink 200ms linear infinite',
-        blink: 'blink 400ms linear infinite',
-        'blink-deep': 'blink-deep 1000ms linear infinite',
-        'blink-red-fast': 'blink-red 100ms linear infinite',
-        wiggle: 'wiggle 0.8s linear infinite',
-        'wiggle-sm': 'wiggle-sm 0.8s linear infinite',
-        float: 'float 4s ease-in-out infinite'
-      },
       fontFamily: { trifle: ['APL333', 'sans-serif'] },
       fontSize: {
         '2xs': '0.75rem',
@@ -78,6 +65,19 @@ export default {
         'panel-inset': '0 1px 1px var(--thub-shadow-color) inset, 0 1px 0 rgba(255, 255, 255, 0.75)'
       },
       borderWidth: { 3: '3px' },
+      animation: {
+        'pulse-light': 'pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-deep': 'pulse-deep 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-fast': 'pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-deep-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'blink-fast': 'blink 200ms linear infinite',
+        blink: 'blink 400ms linear infinite',
+        'blink-deep': 'blink-deep 1000ms linear infinite',
+        'blink-red-fast': 'blink-red 100ms linear infinite',
+        wiggle: 'wiggle 0.8s linear infinite',
+        'wiggle-sm': 'wiggle-sm 0.8s linear infinite',
+        float: 'float 4s ease-in-out infinite'
+      },
       keyframes: {
         'pulse-light': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.75 } },
         'pulse-deep': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.25 } },
