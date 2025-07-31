@@ -30,7 +30,7 @@ export default {
         20: 'repeat(20, minmax(0, 1fr))',
         21: 'repeat(21, minmax(0, 1fr))'
       },
-      fontFamily: { trifle: ['APL333', 'sans-serif'] },
+      fontFamily: { trifle: ['"APL333"', '"Comic Sans MS"', 'sans-serif'] },
       fontSize: {
         '2xs': '0.75rem',
         xs: '0.875rem',
