@@ -119,6 +119,10 @@
   ._h6:not(:first-child) {
     margin-top: 1.25rem;
   }
+
+  ._border-dashed {
+    border-style: dashed;
+  }
   
   /* states */
   

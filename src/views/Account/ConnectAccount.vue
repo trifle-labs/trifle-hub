@@ -20,8 +20,10 @@
       </p>
     </template>
 
-    <section class="_w-full _px-1.5 sm:_px-8 _flex _flex-col _gap-4 _items-center">
-      <nav class="_flex _flex-col _gap-1.5 _w-full _leading-none">
+    <section
+      class="_w-full _max-w-[22em] _mx-auto _px-1.5 sm:_px-8 _flex _flex-col _gap-4 _items-center"
+    >
+      <nav class="_flex _flex-col _w-full _leading-none">
         <template v-if="accountConnected && currentWalletNeedsAuth">
           <SplitWalletButton
             :wallet-address="accountAddress"
@@ -31,13 +33,13 @@
           />
         </template>
         <template v-else>
-          <AuthButton platform="wallet" points="+10"> Login with Wallet </AuthButton>
+          <AuthButton platform="wallet" points="+10"> Wallet Login </AuthButton>
         </template>
-        <AuthButton platform="discord" points="+10"> Login with Discord </AuthButton>
-        <AuthButton platform="twitter" points="+10"> Login with TwitterX </AuthButton>
-        <AuthButton platform="telegram" points="+10"> Login with Telegram </AuthButton>
+        <AuthButton platform="discord" points="+10"> Discord Login </AuthButton>
+        <AuthButton platform="twitter" points="+10"> TwitterX Login </AuthButton>
+        <AuthButton platform="telegram" points="+10"> Telegram Login </AuthButton>
         <AuthButton platform="farcaster" points="+10" :class="{ '_order-first': auth.isFarcaster }">
-          Login with Farcaster
+          Farcaster Login
         </AuthButton>
       </nav>
       <!-- TODO: follow up with support request on how to do this
