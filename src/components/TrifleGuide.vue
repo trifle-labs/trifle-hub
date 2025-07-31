@@ -8,9 +8,6 @@
       <div>🪩🪩🪩🪩🪩</div>
       <div>🪩🪩🪩🪩🪩🪩</div>
       <div>🪩🪩🪩🪩🪩🪩🪩</div>
-      <!-- <div>🪩🪩🪩🪩🪩🪩🪩🪩</div> -->
-      <!-- <div>🪩🪩🪩🪩🪩🪩🪩🪩🪩</div> -->
-      <!-- <div>🪩🪩🪩🪩🪩🪩🪩🪩🪩🪩</div> -->
     </div>
     <div class="_flex _flex-col">
       <div class="_text-[#B4B4BB] _text-stroke-xl _text-center">more from...</div>
@@ -46,7 +43,7 @@
       <div>🪩🪩🪩🪩</div>
     </div>
     <!-- games -->
-    <div class="_relative _w-full _max-w-[22em] _overflow-visible">
+    <button class="_relative _w-full _max-w-[22em] _group" @click="hub.openHub('games')">
       <figure
         class="_w-full _scale-[1.6] masked-oval _relative _flex _items-center _justify-center _pointer-events-none"
         style="aspect-ratio: 14.5/9; filter: blur(2px)"
@@ -68,15 +65,16 @@
         ></video>
       </figure>
       <div class="_absolute _inset-0 _flex _items-center _justify-center">
-        <button
-          @click="hub.openHub('games')"
-          class="_bg-metallic-cone _rounded-full _text-em-2xl _text-stroke-2xl _pl-[0.25em] _pr-[0.5em] _shadow-panel _whitespace-nowrap _animate-wiggle-sm _flex _items-center _gap-1"
-        >
-          <img src="../assets/imgs/tilt-head-sm.png" class="_h-[1.25em]" />
-          games, contests
-        </button>
+        <div class="group-hover:_scale-[1.2] _duration-150">
+          <div
+            class="_bg-metallic-cone _rounded-full _text-em-2xl _text-stroke-2xl _pl-[0.25em] _pr-[0.5em] _shadow-panel _whitespace-nowrap _animate-wiggle-sm _flex _items-center _gap-1"
+          >
+            <img src="../assets/imgs/tilt-head-sm.png" class="_h-[1.25em]" />
+            games, contests
+          </div>
+        </div>
       </div>
-    </div>
+    </button>
     <div
       class="_mt-4 _flex _flex-col-reverse _items-center _tracking-[0.75em] _animate-scaleup-sm _relative _z-10"
     >
@@ -86,7 +84,7 @@
       <div>🪩🪩🪩🪩</div>
     </div>
     <!-- earn -->
-    <div class="_relative _w-full _max-w-[22em]">
+    <button class="_relative _w-full _max-w-[22em] _group" @click="hub.openHub('earn')">
       <div class="_absolute _inset-0 _flex _items-center _justify-center">
         <img
           :src="authStore.user?.avatar || smileyFace"
@@ -113,14 +111,15 @@
         ></video>
       </figure>
       <div class="_absolute _bottom-0 _left-0 _w-full _flex _items-center _justify-center _h-1/3">
-        <button
-          @click="hub.openHub('earn')"
-          class="_bg-metallic-cone _rounded-full _text-em-2xl _text-stroke-2xl _pl-[0.25em] _pr-[0.5em] _shadow-panel _whitespace-nowrap _animate-wiggle-sm _flex _items-center _gap-1"
-        >
-          🪩 earn BALL$
-        </button>
+        <div class="group-hover:_scale-[1.2] _duration-150">
+          <div
+            class="_bg-metallic-cone _rounded-full _text-em-2xl _text-stroke-2xl _pl-[0.25em] _pr-[0.5em] _shadow-panel _whitespace-nowrap _animate-wiggle-sm _flex _items-center _gap-1"
+          >
+            🪩 earn BALL$
+          </div>
+        </div>
       </div>
-    </div>
+    </button>
     <div
       class="_mt-5 _flex _flex-col-reverse _items-center _tracking-[0.75em] _animate-scaleup-sm _relative _z-10"
     >
@@ -129,11 +128,8 @@
       <div>🪩🪩🪩</div>
       <div>🪩🪩🪩🪩</div>
     </div>
-    <!-- <div class="_text-[#B4B4BB] _text-2xl _text-stroke-xl _text-center _animate-wiggle">
-      + bla bla bla's
-    </div> -->
     <nav
-      class="_gap-[0.5em] _text-center _flex _flex-wrap _justify-center _max-w-[16em] _mx-auto _text-em-lg _text-stroke-lg _pointer-events-auto _tracking-[0.02em]"
+      class="_gap-em-2xs _text-center _flex _flex-wrap _justify-center _max-w-[12em] _mx-auto _text-em-lg _text-stroke-lg _pointer-events-auto _tracking-[0.02em]"
     >
       <div
         v-for="social in [
@@ -148,7 +144,7 @@
         <a
           :href="social.url"
           target="_blank"
-          class="_block _bg-metallic-linear _shadow-panel _rounded-full _px-[0.65em] _py-[0.2em] _mouse:hover:_scale-[1.3] _duration-300 _transition _pointer-events-auto"
+          class="_block _bg-metallic-linear _shadow-panel _rounded-full _px-[0.65em] _py-[0.2em] mouse:hover:_scale-[1.3] mouse:hover:_z-10 _relative _duration-300 _transition _pointer-events-auto"
           :style="{ color: social.textColor }"
           :fid="social.fid"
         >

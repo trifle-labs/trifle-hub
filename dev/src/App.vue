@@ -1,5 +1,5 @@
 <template>
-  <div class="_w-full _overflow-x-hidden">
+  <div class="_w-full">
     <TrifleHub position="top-right">
       <router-view />
       <TrifleGuide class="_mx-auto _text-base" />

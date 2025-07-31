@@ -19,6 +19,13 @@
       >
         Components
       </button>
+      <button
+        class="_bubble-btn _p-4 _flex-1"
+        @click="activeTab = 'misc'"
+        :style="activeTab === 'misc' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
+      >
+        Misc
+      </button>
     </nav>
     <div ref="scrollEl" class="_flex-1 _overflow-y-scroll-masked _no-scrollbar _-mx-5 _px-5">
       <component :is="pages[activeTab]" />
@@ -30,13 +37,15 @@
 import { ref } from 'vue'
 import TypographyDemo from './TypographyDemo.vue'
 import ComponentsDemo from './ComponentsDemo.vue'
+import MiscDemo from './MiscDemo.vue'
 import { watch } from 'vue'
 import HubPageHeader from '../components/HubPageHeader.vue'
 const activeTab = ref('typography')
 
 const pages = {
   typography: TypographyDemo,
-  components: ComponentsDemo
+  components: ComponentsDemo,
+  misc: MiscDemo
 }
 
 const scrollEl = ref(null)

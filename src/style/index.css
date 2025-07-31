@@ -60,6 +60,9 @@
   ._text-stroke-2xl {
     -webkit-text-stroke: 0.068em currentColor;
   }
+  ._text-stroke-3xl {
+    -webkit-text-stroke: 0.075em currentColor;
+  }
   ._bodyText {
     @apply _text-base _leading-snug;
   }
