@@ -1,5 +1,5 @@
 <template>
-  <section class="_flex _flex-col _items-center _gap-[1.75em] _border">
+  <section class="_flex _flex-col _items-center _gap-[1.75em]">
     <div class="_flex _flex-col-reverse _items-center _tracking-[0.75em] _animate-scaleup-sm">
       <div>🪩</div>
       <div>🪩🪩</div>
