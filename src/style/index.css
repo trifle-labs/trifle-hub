@@ -1,6 +1,10 @@
+/* fonts should not be loaded in a layer! */
+@import 'fonts.css';
+
+/* other styles in a layer so you can order them in consumer app no matter when they're loaded */
+/* i.e with `@layer trifle-hub, app` */
 @layer trifle-hub {
   @import 'reset.css';
-  @import 'fonts.css';
   
   @tailwind base;
   @tailwind components;
