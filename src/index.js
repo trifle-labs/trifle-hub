@@ -5,7 +5,12 @@ import { WagmiPlugin } from '@wagmi/vue'
 import { initializeWagmiConfig } from './config/wagmiConfig'
 import { createPinia } from 'pinia'
 import { useAuthStore } from './store'
-export { TrifleHubVuePlugin, TrifleHub }
+import { defineAsyncComponent } from 'vue'
+
+// Dynamic import for code splitting
+const TrifleGuide = () => import('./components/TrifleGuide.vue')
+
+export { TrifleHubVuePlugin, TrifleHub, TrifleGuide }
 
 const queryClient = new QueryClient()
 
@@ -47,6 +52,9 @@ const TrifleHubVuePlugin = {
     app.use(VueQueryPlugin, { queryClient })
 
     app.component('TrifleHub', TrifleHub)
+
+    // Register TrifleGuide as an async component for code splitting
+    app.component('TrifleGuide', defineAsyncComponent(TrifleGuide))
   }
 }
 

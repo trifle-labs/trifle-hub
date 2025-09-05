@@ -167,23 +167,27 @@ const games = [
   mask-repeat: no-repeat;
   mask-size: 100% 100%;
 }
+</style>
 
-._animate-rainbow-wiggle {
-  animation: rainbow-wiggle 1s ease-in-out infinite;
-}
+<style>
+@layer trifle-hub {
+  ._animate-rainbow-wiggle {
+    animation: rainbow-wiggle 1s ease-in-out infinite;
+  }
 
-@keyframes rainbow-wiggle {
-  0% {
-    filter: hue-rotate(0deg) brightness(1) contrast(1) saturate(3);
-    transform: rotate(-8deg);
-  }
-  50% {
-    filter: hue-rotate(180deg) brightness(1) contrast(1) saturate(3);
-    transform: rotate(8deg);
-  }
-  100% {
-    filter: hue-rotate(360deg) brightness(1) contrast(1) saturate(3);
-    transform: rotate(-8deg);
+  @keyframes rainbow-wiggle {
+    0% {
+      filter: hue-rotate(0deg) brightness(1) contrast(1) saturate(3);
+      transform: rotate(-8deg);
+    }
+    50% {
+      filter: hue-rotate(180deg) brightness(1) contrast(1) saturate(3);
+      transform: rotate(8deg);
+    }
+    100% {
+      filter: hue-rotate(360deg) brightness(1) contrast(1) saturate(3);
+      transform: rotate(-8deg);
+    }
   }
 }
 </style>

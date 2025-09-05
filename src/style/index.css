@@ -1,219 +1,232 @@
-@import 'reset.css';
+/* fonts should not be loaded in a layer! */
 @import 'fonts.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* other styles in a layer so you can order them in consumer app no matter when they're loaded */
+/* i.e with `@layer trifle-hub, app` */
+@layer trifle-hub {
+  @import 'reset.css';
+  
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+  
+  :root {
+    --thub-color-blue: #4100ff;
+  
+    --thub-color-primary: var(--thub-color-blue);
+    --thub-color-primary-75: color-mix(in srgb, var(--thub-color-primary) 75%, transparent);
+  
+    --thub-metallic-light: rgb(227, 230, 244);
+    /* --thub-metallic-light: rgb(240, 240, 245, 0.5); */
+    --thub-metallic-dark: #a3abca;
+  
+    --thub-shadow-color: rgba(0, 0, 0, 0.5);
+  
+    --thub-menu-button-size: 7rem;
+    --thub-menu-button-margin: 0;
+    --thub-z-index: 900;
+  }
+  
+  .trifle-hub-ui {
+    font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* typography */
+  
+  .trifle-hub-ui h1,
+  .trifle-hub-ui h2,
+  .trifle-hub-ui h3,
+  .trifle-hub-ui h4,
+  .trifle-hub-ui h5,
+  .trifle-hub-ui h6 {
+    font-weight: normal;
+  }
+  ._text-stroke-xs {
+    -webkit-text-stroke: 0.015em currentColor;
+  }
+  ._text-stroke-sm {
+    -webkit-text-stroke: 0.025em currentColor;
+  }
+  ._text-stroke-md {
+    -webkit-text-stroke: 0.04em currentColor;
+  }
+  ._text-stroke-lg {
+    -webkit-text-stroke: 0.0525em currentColor;
+  }
+  ._text-stroke-xl {
+    -webkit-text-stroke: 0.06em currentColor;
+  }
+  ._text-stroke-2xl {
+    -webkit-text-stroke: 0.068em currentColor;
+  }
+  ._text-stroke-3xl {
+    -webkit-text-stroke: 0.075em currentColor;
+  }
+  ._bodyText {
+    @apply _text-base _leading-snug;
+  }
+  ._finePrint {
+    @apply _text-sm _leading-snug;
+  }
+  ._h1 {
+    @apply _text-4xl _text-stroke-xl;
+  }
+  ._h2 {
+    @apply _text-3xl _text-stroke-xl;
+  }
+  ._h3 {
+    @apply _text-2xl _text-stroke-lg;
+  }
+  ._h4 {
+    @apply _text-xl _text-stroke-lg;
+  }
+  ._h5 {
+    @apply _text-lg _text-stroke-lg;
+  }
+  ._h6 {
+    @apply _text-base _text-stroke-lg;
+  }
+  ._semibold,
+  ._weight-semibold {
+    @apply _text-stroke-lg;
+  }
+  ._bold,
+  ._weight-bold,
+  .trifle-hub-ui b,
+  .trifle-hub-ui strong {
+    font-weight: normal;
+    @apply _text-stroke-xl;
+  }
+  ._weight-black {
+    @apply _text-stroke-2xl;
+  }
+  
+  ._bodyText + *,
+  ._finePrint + * {
+    margin-top: 1rem;
+  }
+  ._h1 + *,
+  ._h2 + *,
+  ._h3 + *,
+  ._h4 + *,
+  ._h5 + *,
+  ._h6 + * {
+    margin-top: 0.25rem;
+  }
+  ._h1:not(:first-child),
+  ._h2:not(:first-child),
+  ._h3:not(:first-child),
+  ._h4:not(:first-child),
+  ._h5:not(:first-child),
+  ._h6:not(:first-child) {
+    margin-top: 1.25rem;
+  }
 
-:root {
-  --thub-color-blue: #4100ff;
-
-  --thub-color-primary: var(--thub-color-blue);
-  --thub-color-primary-75: color-mix(in srgb, var(--thub-color-primary) 75%, transparent);
-
-  --thub-metallic-light: rgb(227, 230, 244);
-  /* --thub-metallic-light: rgb(240, 240, 245, 0.5); */
-  --thub-metallic-dark: #a3abca;
-
-  --thub-shadow-color: rgba(0, 0, 0, 0.5);
-
-  --thub-menu-button-size: 7rem;
-  --thub-menu-button-margin: 0;
-  --thub-z-index: 900;
-}
-
-.trifle-hub-ui {
-  font-smoothing: antialiased;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-/* typography */
-
-.trifle-hub-ui h1,
-.trifle-hub-ui h2,
-.trifle-hub-ui h3,
-.trifle-hub-ui h4,
-.trifle-hub-ui h5,
-.trifle-hub-ui h6 {
-  font-weight: normal;
-}
-._text-stroke-xs {
-  -webkit-text-stroke: 0.015em currentColor;
-}
-._text-stroke-sm {
-  -webkit-text-stroke: 0.025em currentColor;
-}
-._text-stroke-md {
-  -webkit-text-stroke: 0.04em currentColor;
-}
-._text-stroke-lg {
-  -webkit-text-stroke: 0.0525em currentColor;
-}
-._text-stroke-xl {
-  -webkit-text-stroke: 0.06em currentColor;
-}
-._text-stroke-2xl {
-  -webkit-text-stroke: 0.068em currentColor;
-}
-._bodyText {
-  @apply _text-base _leading-snug;
-}
-._finePrint {
-  @apply _text-sm _leading-snug;
-}
-._h1 {
-  @apply _text-4xl _text-stroke-xl;
-}
-._h2 {
-  @apply _text-3xl _text-stroke-xl;
-}
-._h3 {
-  @apply _text-2xl _text-stroke-lg;
-}
-._h4 {
-  @apply _text-xl _text-stroke-lg;
-}
-._h5 {
-  @apply _text-lg _text-stroke-lg;
-}
-._h6 {
-  @apply _text-base _text-stroke-lg;
-}
-._semibold,
-._weight-semibold {
-  @apply _text-stroke-lg;
-}
-._bold,
-._weight-bold,
-.trifle-hub-ui b,
-.trifle-hub-ui strong {
-  font-weight: normal;
-  @apply _text-stroke-xl;
-}
-._weight-black {
-  @apply _text-stroke-2xl;
-}
-
-._bodyText + *,
-._finePrint + * {
-  margin-top: 1rem;
-}
-._h1 + *,
-._h2 + *,
-._h3 + *,
-._h4 + *,
-._h5 + *,
-._h6 + * {
-  margin-top: 0.25rem;
-}
-._h1:not(:first-child),
-._h2:not(:first-child),
-._h3:not(:first-child),
-._h4:not(:first-child),
-._h5:not(:first-child),
-._h6:not(:first-child) {
-  margin-top: 1.25rem;
-}
-
-/* states */
-
-#trifle-hub *:focus {
-  @apply _outline-none;
-}
-#trifle-hub *:not(input):focus-visible {
-  @apply _ring-2 _ring-offset-2 _ring-[var(--thub-color-primary-75)] _ring-offset-transparent;
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-._no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-._no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-._bg-metallic-cone {
-  --light-color: var(--thub-metallic-light);
-  --dark-color: var(--thub-metallic-dark); /* or currentColor ?? */
-  background: repeating-conic-gradient(
-    from 50deg at 60% 65%,
-    var(--light-color) 0%,
-    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 5%,
-    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 9%,
-    color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 13%,
-    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 17%,
-    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 21%,
-    var(--light-color) 25%,
-    var(--light-color) 33.33%,
-    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 38.33%,
-    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 42.33%,
-    color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 46.33%,
-    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 50.33%,
-    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 54.33%,
-    var(--light-color) 58.33%,
-    var(--light-color) 66.66%,
-    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 71.66%,
-    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 75.66%,
-    color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 79.66%,
-    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 83.66%,
-    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 87.66%,
-    var(--light-color) 91.66%,
-    var(--light-color) 100%
-  );
-}
-
-._bg-metallic-linear {
-  --light-color: var(--thub-metallic-light);
-  --dark-color: var(--thub-metallic-dark);
-  background: linear-gradient(
-    -45deg,
-    var(--light-color) 0%,
-    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 15%,
-    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 25%,
-    color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 35%,
-    color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 45%,
-    color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 55%,
-    var(--light-color) 65%,
-    var(--light-color) 100%
-  );
-}
-
-._metallic-panel {
-  /* @apply _bg-metallic-cone; */
-  /* @apply _bg-metallic-linear; */
-  background: rgba(255, 255, 255, 0.5);
-  @apply _rounded-lg;
-  @apply _shadow-panel;
-}
-
-._bubble-btn {
-  border-radius: 10px;
-  border-image-source: url(../assets/imgs/bubblegum-recess.png);
-  border-image-slice: 82 95 77 92 fill;
-  border-image-width: 17px;
-  border-image-outset: 0px;
-  border-image-repeat: stretch;
-  background-color: transparent;
-  user-select: none;
-  margin: -4px -7px -5px -7px;
-  transition: border-image-width 0.1s ease-in-out;
-}
-._bubble-btn:active:not([disabled]) {
-  border-image-width: 15px;
-}
-._bubble-btn:active:not([disabled]) > * {
-  transform: scale(0.995);
-  transform-origin: center;
-}
-._bubble-btn-full {
-  @apply _bubble-btn;
-  width: calc(100% + 14px);
-}
-@media (hover: hover) {
-  ._bubble-btn:hover:not([disabled]) {
-    border-image-width: 19px;
+  ._border-dashed {
+    border-style: dashed;
+  }
+  
+  /* states */
+  
+  #trifle-hub *:focus {
+    @apply _outline-none;
+  }
+  #trifle-hub *:not(input):focus-visible {
+    @apply _ring-2 _ring-offset-2 _ring-[var(--thub-color-primary-75)] _ring-offset-transparent;
+  }
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ._no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  ._no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  ._bg-metallic-cone {
+    --light-color: var(--thub-metallic-light);
+    --dark-color: var(--thub-metallic-dark); /* or currentColor ?? */
+    background: repeating-conic-gradient(
+      from 50deg at 60% 65%,
+      var(--light-color) 0%,
+      color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 5%,
+      color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 9%,
+      color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 13%,
+      color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 17%,
+      color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 21%,
+      var(--light-color) 25%,
+      var(--light-color) 33.33%,
+      color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 38.33%,
+      color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 42.33%,
+      color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 46.33%,
+      color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 50.33%,
+      color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 54.33%,
+      var(--light-color) 58.33%,
+      var(--light-color) 66.66%,
+      color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 71.66%,
+      color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 75.66%,
+      color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 79.66%,
+      color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 83.66%,
+      color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 87.66%,
+      var(--light-color) 91.66%,
+      var(--light-color) 100%
+    );
+  }
+  
+  ._bg-metallic-linear {
+    --light-color: var(--thub-metallic-light);
+    --dark-color: var(--thub-metallic-dark);
+    background: linear-gradient(
+      -45deg,
+      var(--light-color) 0%,
+      color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 15%,
+      color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 25%,
+      color-mix(in srgb, var(--light-color) 45%, var(--dark-color)) 35%,
+      color-mix(in srgb, var(--light-color) 65%, var(--dark-color)) 45%,
+      color-mix(in srgb, var(--light-color) 85%, var(--dark-color)) 55%,
+      var(--light-color) 65%,
+      var(--light-color) 100%
+    );
+  }
+  
+  ._metallic-panel {
+    /* @apply _bg-metallic-cone; */
+    /* @apply _bg-metallic-linear; */
+    background: rgba(255, 255, 255, 0.5);
+    @apply _rounded-lg;
+    @apply _shadow-panel;
+  }
+  
+  ._bubble-btn {
+    border-radius: 10px;
+    border-image-source: url(../assets/imgs/bubblegum-recess.png);
+    border-image-slice: 82 95 77 92 fill;
+    border-image-width: 17px;
+    border-image-outset: 0px;
+    border-image-repeat: stretch;
+    background-color: transparent;
+    user-select: none;
+    margin: -4px -7px -5px -7px;
+    transition: border-image-width 0.1s ease-in-out;
+  }
+  ._bubble-btn:active:not([disabled]) {
+    border-image-width: 15px;
+  }
+  ._bubble-btn:active:not([disabled]) > * {
+    transform: scale(0.995);
+    transform-origin: center;
+  }
+  ._bubble-btn-full {
+    @apply _bubble-btn;
+    width: calc(100% + 14px);
+  }
+  @media (hover: hover) {
+    ._bubble-btn:hover:not([disabled]) {
+      border-image-width: 19px;
+    }
   }
 }

@@ -21,16 +21,19 @@ export const platforms = {
     bubbleButtonStyle: {
       hueRotate: -345,
       saturate: 2
-    }
+    },
+    textColor: 'rgb(90 67 255)'
   },
   farcaster: {
     name: 'Farcaster',
     icon: farcasterLogo,
-    url: 'https://trifle.life/farcaster',
+    url: 'https://farcaster.xyz/trifle/', // so hub catches faracster url and keeps in farcaster...
     bubbleButtonStyle: {
       hueRotate: -335,
       saturate: 2
-    }
+    },
+    textColor: 'rgb(150 92 255)',
+    fid: 832276
   },
   telegram: {
     name: 'Telegram',
@@ -39,16 +42,19 @@ export const platforms = {
     bubbleButtonStyle: {
       hueRotate: -20,
       saturate: 1.5
-    }
+    },
+    textColor: 'rgb(20 163 238)'
   },
   twitter: {
     name: 'TwitterX',
+    nameLowercase: 'twitterX',
     icon: twitterLogo,
     url: 'https://trifle.life/twitter',
     bubbleButtonStyle: {
       hueRotate: 0,
       saturate: 1,
       brightness: 0.95
-    }
+    },
+    textColor: '#000000'
   }
 }

@@ -1,4 +1,19 @@
 /** @type {import('tailwindcss').Config} */
+
+const emSizing = {
+  'em-3xs': '0.625em',
+  'em-2xs': '0.75em',
+  'em-xs': '0.875em',
+  'em-sm': '0.9375em',
+  em: '1em',
+  'em-lg': '1.125em',
+  'em-xl': '1.25em',
+  'em-2xl': '1.5em',
+  'em-3xl': '1.75em',
+  'em-4xl': '2em',
+  'em-5xl': '2.25em',
+  'em-6xl': '2.5em'
+}
 export default {
   prefix: '_',
   content: [
@@ -9,11 +24,17 @@ export default {
   ],
   theme: {
     extend: {
-      spacing: { 4.5: '1.125rem', 5.5: '1.375rem', 13: '3.25rem', 18: '4.5rem' },
       screens: {
         xs: '440px', // for mobile landscape ?
         mouse: { raw: '(hover:hover)' },
         touch: { raw: '(hover:none)' }
+      },
+      spacing: {
+        4.5: '1.125rem',
+        5.5: '1.375rem',
+        13: '3.25rem',
+        18: '4.5rem',
+        ...emSizing
       },
       gridTemplateColumns: {
         9: 'repeat(9, minmax(0, 1fr))',
@@ -30,20 +51,7 @@ export default {
         20: 'repeat(20, minmax(0, 1fr))',
         21: 'repeat(21, minmax(0, 1fr))'
       },
-      animation: {
-        'pulse-light': 'pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'pulse-deep': 'pulse-deep 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'pulse-fast': 'pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'pulse-deep-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'blink-fast': 'blink 200ms linear infinite',
-        blink: 'blink 400ms linear infinite',
-        'blink-deep': 'blink-deep 1000ms linear infinite',
-        'blink-red-fast': 'blink-red 100ms linear infinite',
-        wiggle: 'wiggle 0.8s linear infinite',
-        'wiggle-sm': 'wiggle-sm 0.8s linear infinite',
-        float: 'float 4s ease-in-out infinite'
-      },
-      fontFamily: { trifle: ['APL333', 'sans-serif'] },
+      fontFamily: { trifle: ['"APL333"', '"Comic Sans MS"', 'sans-serif'] },
       fontSize: {
         '2xs': '0.75rem',
         xs: '0.875rem',
@@ -57,17 +65,7 @@ export default {
         '3xl': '2rem',
         '4xl': '2.25rem',
         '5xl': '2.375rem',
-        // em sizing
-        'em-2xs': '0.75em',
-        'em-xs': '0.875em',
-        'em-sm': '0.9375em',
-        'em-lg': '1.125em',
-        'em-xl': '1.25em',
-        'em-2xl': '1.5em',
-        'em-3xl': '1.75em',
-        'em-4xl': '2em',
-        'em-5xl': '2.25em',
-        'em-6xl': '2.5em'
+        ...emSizing
       },
       borderColor: {
         DEFAULT: 'currentColor'
@@ -78,6 +76,21 @@ export default {
         'panel-inset': '0 1px 1px var(--thub-shadow-color) inset, 0 1px 0 rgba(255, 255, 255, 0.75)'
       },
       borderWidth: { 3: '3px' },
+      animation: {
+        'pulse-light': 'pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-deep': 'pulse-deep 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-fast': 'pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-deep-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'blink-fast': 'blink 200ms linear infinite',
+        blink: 'blink 400ms linear infinite',
+        'blink-deep': 'blink-deep 1000ms linear infinite',
+        'blink-red-fast': 'blink-red 100ms linear infinite',
+        wiggle: 'wiggle 0.8s linear infinite',
+        'wiggle-sm': 'wiggle-sm 0.8s linear infinite',
+        float: 'float 4s ease-in-out infinite',
+        'scaleup-sm': 'scaleup-sm 1s ease-in-out infinite',
+        'scaleup-xs': 'scaleup-xs 1s ease-in-out infinite'
+      },
       keyframes: {
         'pulse-light': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.75 } },
         'pulse-deep': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.25 } },
@@ -99,6 +112,14 @@ export default {
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-4px)' }
+        },
+        'scaleup-sm': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.05)' }
+        },
+        'scaleup-xs': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.025)' }
         }
       }
     }
