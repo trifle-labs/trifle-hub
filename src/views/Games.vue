@@ -112,8 +112,12 @@
 import HubPageHeader from '../components/HubPageHeader.vue'
 import anybodyTitleImg from '../assets/imgs/anybody-title.png'
 import SocialsButtons from '../components/SocialsButtons.vue'
-
+import { sdk } from '@farcaster/miniapp-sdk'
 const today = new Date()
+
+const anybodyLink = sdk.context
+  ? 'https://farcaster.xyz/miniapps/pKtDvlLtJ-iI/anybody-problem'
+  : 'https://anybody.gg'
 
 // use https://gm-trifle.b-cdn.net for videos so they're cached across domains for users
 const games = [
@@ -129,7 +133,7 @@ const games = [
   {
     name: 'anybody',
     description: 'a daily puzzle-shooter, fully onchain!',
-    link: 'https://anybody.gg',
+    link: anybodyLink,
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/c_scale,f_auto,q_auto:eco,w_400/v1748287290/anybody-gameplay-clip-2_cf6p3x.mov',
     titleImg: anybodyTitleImg,

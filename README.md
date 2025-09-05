@@ -6,10 +6,10 @@ Install the TrifleHub plugin using npm or yarn:
 
 ```bash
 # Using npm
-npm install @trifle/hub
+npm install @trifle/trifle-hub
 
 # Using yarn
-yarn add @trifle/hub
+yarn add @trifle/trifle-hub
 ```
 
 ## Configuration and Setup
@@ -19,7 +19,7 @@ Import and register the TrifleHub plugin in your Vue application:
 ```js
 import { createApp } from 'vue'
 import App from './App.vue'
-import TrifleHubVuePlugin from '@trifle/hub'
+import TrifleHubVuePlugin from '@trifle/trifle-hub'
 
 const app = createApp(App)
 

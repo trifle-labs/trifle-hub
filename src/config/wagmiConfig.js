@@ -2,7 +2,7 @@ import { createAppKit } from '@reown/appkit/vue'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { mainnet, base } from '@reown/appkit/networks'
 import { farcasterFrame as miniAppConnector } from '@farcaster/frame-wagmi-connector'
-import { sdk } from '@farcaster/frame-sdk'
+import { sdk } from '@farcaster/miniapp-sdk'
 // Default configuration
 const defaultConfig = {
   projectId: '',
@@ -31,7 +31,7 @@ const defaultConfig = {
   }
 }
 
-export function initializeWagmiConfig(config) {
+export async function initializeWagmiConfig(config) {
   const finalConfig = {
     ...defaultConfig,
     ...(config || {}),
@@ -51,7 +51,7 @@ export function initializeWagmiConfig(config) {
     }
   }
   // const context = await sdk.context
-  const connectors = [] //[miniAppConnector()]
+  const connectors = (await sdk.context) ? [miniAppConnector()] : []
 
   // Create Wagmi Adapter
   const wagmiAdapter = new WagmiAdapter({

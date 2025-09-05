@@ -8,7 +8,7 @@ import { isMobile } from './utils'
 import { useAccount } from '@wagmi/vue'
 import { signMessage, watchAccount } from '@wagmi/core'
 import { createSiweMessage } from 'viem/siwe'
-import { sdk } from '@farcaster/frame-sdk'
+import { sdk } from '@farcaster/miniapp-sdk'
 
 // Platform types
 const PLATFORMS = {
@@ -99,8 +99,15 @@ export const useAuthStore = defineStore('auth', {
 
       const linkMatchesDomainExactly = href == window.location.href.replace(/\/$/, '')
 
-      const isFarcasterMiniApp = href.includes('farcaster.xyz/miniapps/')
-
+      const miniAppURLs = [
+        'gm.trifle.life',
+        'anybody.gg',
+        'like.trifle.life',
+        'like.trifle.life/lottery'
+      ]
+      const isFarcasterMiniApp =
+        href.includes('farcaster.xyz/miniapps/') || miniAppURLs.some((url) => href.includes(url))
+      console.log('!!!!')
       console.log({ href, link, location: window.location })
       console.log({
         isFarcasterProfile,
@@ -124,10 +131,7 @@ export const useAuthStore = defineStore('auth', {
         this.closeHub()
       } else if (this.isFarcaster && isFarcasterMiniApp) {
         e.preventDefault()
-        sdk.actions.composeCast({
-          text: 'G___ M______',
-          embeds: ['https://gm.trifle.life']
-        })
+        sdk.actions.openMiniApp(href)
       } else if (this.isFarcaster && !linkMatchesDomain) {
         e.preventDefault()
         sdk.actions.openUrl(link.href)
@@ -281,7 +285,11 @@ export const useAuthStore = defineStore('auth', {
     async connectFarcaster() {
       let url, data, authWindow
       if (this.isFarcaster) {
-        data = await sdk.experimental.quickAuth()
+        if (sdk.quickAuth.getToken) {
+          data = sdk.quickAuth.getToken
+        } else {
+          data = await sdk.quickAuth.getToken()
+        }
         url = `${this.backendUrl}/farcaster/${
           this.isAuthenticated ? 'add-quick-auth' : 'quick-auth'
         }`

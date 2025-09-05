@@ -29,7 +29,7 @@ const TrifleHubVuePlugin = {
     options.backendUrl = options.backendUrl || 'https://bot-staging.trifle.life'
     const store = useAuthStore(piniaInstanceForPlugin)
 
-    const { wagmiConfig, appKit } = initializeWagmiConfig(options.reownConfig)
+    const { wagmiConfig, appKit } = await initializeWagmiConfig(options.reownConfig)
 
     app.provide('TrifleHub/wagmiConfig', wagmiConfig)
     app.provide('TrifleHub/appKit', appKit)

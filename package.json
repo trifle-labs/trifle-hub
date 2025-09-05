@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@farcaster/auth-client": "^0.6.0",
-    "@farcaster/frame-sdk": "^0.1.6",
+    "@farcaster/miniapp-sdk": "^0.1.9",
     "@farcaster/frame-wagmi-connector": "^0.0.42",
     "@reown/appkit": "^1.7.8",
     "@reown/appkit-adapter-wagmi": "^1.7.8",
