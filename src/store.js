@@ -107,7 +107,6 @@ export const useAuthStore = defineStore('auth', {
       ]
       const isFarcasterMiniApp =
         href.includes('farcaster.xyz/miniapps/') || miniAppURLs.some((url) => href.includes(url))
-      console.log('!!!!')
       console.log({ href, link, location: window.location })
       console.log({
         isFarcasterProfile,
@@ -134,8 +133,8 @@ export const useAuthStore = defineStore('auth', {
 
         sdk.actions.openMiniApp({ url: href })
       } else if (this.isFarcaster && !linkMatchesDomain) {
-        // e.preventDefault()
-        // sdk.actions.openUrl(link.href)
+        e.preventDefault()
+        sdk.actions.openUrl(link.href)
       }
     },
     setInstances(appKit, wagmiConfig) {
