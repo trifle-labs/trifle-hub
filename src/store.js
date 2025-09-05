@@ -285,11 +285,7 @@ export const useAuthStore = defineStore('auth', {
     async connectFarcaster() {
       let url, data, authWindow
       if (this.isFarcaster) {
-        if (sdk.quickAuth.getToken) {
-          data = sdk.quickAuth.getToken
-        } else {
-          data = await sdk.quickAuth.getToken()
-        }
+        data = await sdk.quickAuth.getToken()
         url = `${this.backendUrl}/farcaster/${
           this.isAuthenticated ? 'add-quick-auth' : 'quick-auth'
         }`
