@@ -31,6 +31,8 @@ app.use(TrifleHubVuePlugin, {
     // Other ReOWN AppKit configuration options
   },
 
+  connectors: [],
+
   // Optional: Backend URL (defaults to 'https://bot-staging.trifle.life')
   backendUrl: 'https://bot-staging.trifle.life',
 

@@ -32,7 +32,7 @@ const defaultConfig = {
   }
 }
 
-export async function initializeWagmiConfig(config) {
+export function initializeWagmiConfig(config, connectors = []) {
   const finalConfig = {
     ...defaultConfig,
     ...(config || {}),
@@ -51,20 +51,34 @@ export async function initializeWagmiConfig(config) {
       ...(config.themeVariables || {})
     }
   }
-  // const context = await sdk.context
-  const connectors = (await sdk.context) ? [miniAppConnector()] : []
+  console.log({ finalConfig })
+  // const isMiniApp = sdk.context()
+  // const miniApp = typeof isMiniApp === Promise ? false : true
 
+  // console.log(
+  //   { miniApp },
+  //   typeof isMiniApp,
+  //   'sdk.context',
+  //   sdk.context,
+  //   'sdk.context()',
+  //   sdk.context()
+  // )
+  // const context = await sdk.context
+  console.log({ connectors })
   // Create Wagmi Adapter
-  const wagmiAdapter = new WagmiAdapter({
+  const wagmiAdapterConfig = {
     projectId: finalConfig.projectId,
-    networks: finalConfig.networks,
-    connectors
-  })
+    networks: finalConfig.networks
+  }
+  if (connectors?.length > 0) {
+    wagmiAdapterConfig.connectors = connectors
+  }
+  const wagmiAdapter = new WagmiAdapter(wagmiAdapterConfig)
 
   const createAppKitObject = {}
   Object.assign(createAppKitObject, finalConfig)
   Object.adapters = [wagmiAdapter]
-
+  console.log({ createAppKitObject })
   // Create modal
   const appKit = createAppKit(createAppKitObject)
 

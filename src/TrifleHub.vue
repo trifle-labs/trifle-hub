@@ -9,7 +9,6 @@ import { useRoute } from 'vue-router'
 import hubPages from './routes'
 import Hub from './components/Hub.vue'
 const store = inject('TrifleHub/store')
-alert('hello')
 const props = defineProps({
   position: {
     type: String,
