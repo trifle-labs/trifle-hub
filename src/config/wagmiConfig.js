@@ -75,9 +75,10 @@ export function initializeWagmiConfig(config, connectors = []) {
   }
   const wagmiAdapter = new WagmiAdapter(wagmiAdapterConfig)
 
-  const createAppKitObject = {}
-  Object.assign(createAppKitObject, finalConfig)
-  Object.adapters = [wagmiAdapter]
+  const createAppKitObject = {
+    ...finalConfig,
+    adapters: [wagmiAdapter]
+  }
   console.log({ createAppKitObject })
   // Create modal
   const appKit = createAppKit(createAppKitObject)
