@@ -1,7 +1,7 @@
 import { createAppKit } from '@reown/appkit/vue'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { mainnet, base } from '@reown/appkit/networks'
-import { farcasterFrame as miniAppConnector } from '@farcaster/frame-wagmi-connector'
+import { farcasterFrame as miniAppConnector } from '@farcaster/miniapp-wagmi-connector'
 import { sdk } from '@farcaster/miniapp-sdk'
 // Default configuration
 const defaultConfig = {
@@ -13,7 +13,8 @@ const defaultConfig = {
     icons: []
   },
   networks: [mainnet, base],
-  enableNetworkSwitch: false,
+  enableNetworkSwitch: true,
+  allowUnsupportedChain: true,
   features: {
     analytics: true,
     email: true,
@@ -60,17 +61,12 @@ export async function initializeWagmiConfig(config) {
     connectors
   })
 
+  const createAppKitObject = {}
+  Object.assign(createAppKitObject, finalConfig)
+  Object.adapters = [wagmiAdapter]
+
   // Create modal
-  const appKit = createAppKit({
-    adapters: [wagmiAdapter],
-    networks: finalConfig.networks,
-    metadata: finalConfig.metadata,
-    projectId: finalConfig.projectId,
-    features: finalConfig.features,
-    featuredWalletIds: finalConfig.featuredWalletIds,
-    themeMode: finalConfig.themeMode,
-    themeVariables: finalConfig.themeVariables
-  })
+  const appKit = createAppKit(createAppKitObject)
 
   return { wagmiConfig: wagmiAdapter.wagmiConfig, appKit }
 }

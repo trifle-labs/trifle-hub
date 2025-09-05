@@ -10,8 +10,6 @@ import { defineAsyncComponent } from 'vue'
 // Dynamic import for code splitting
 const TrifleGuide = () => import('./components/TrifleGuide.vue')
 
-export { TrifleHubVuePlugin, TrifleHub, TrifleGuide }
-
 const queryClient = new QueryClient()
 
 const TrifleHubVuePlugin = {
@@ -58,4 +56,5 @@ const TrifleHubVuePlugin = {
   }
 }
 
-export default TrifleHubVuePlugin
+export { TrifleHubVuePlugin, TrifleHub, TrifleGuide }
+// export default TrifleHubVuePlugin

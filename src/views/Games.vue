@@ -26,7 +26,6 @@
         <section class="_relative _group">
           <a
             :href="game.link"
-            target="_blank"
             class="_block _pointer-events-auto _cursor-pointer _scale-[1.05] mouse:hover:_scale-[1.1] _duration-500"
           >
             <figure
@@ -62,7 +61,6 @@
             >
               <a
                 :href="game.link"
-                target="_blank"
                 class="_-mt-8 _relative _z-10 _bg-metallic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _tracking-[0.2em] _text-em-2xl sm:_text-em-3xl mouse:hover:_scale-[1.05] _duration-150"
                 :class="{
                   '_animate-rainbow-wiggle': game.isNewUntil > today

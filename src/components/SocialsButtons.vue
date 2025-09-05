@@ -10,6 +10,7 @@
     :key="social.label"
     :href="social.url"
     target="_blank"
+    :fid="social.fid"
     class="_bubble-btn-full _px-4.5 _cursor-pointer"
     :style="{
       filter: `hue-rotate(${social.bubbleButtonStyle.hueRotate}deg) saturate(${

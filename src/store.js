@@ -131,10 +131,11 @@ export const useAuthStore = defineStore('auth', {
         this.closeHub()
       } else if (this.isFarcaster && isFarcasterMiniApp) {
         e.preventDefault()
-        sdk.actions.openMiniApp(href)
+
+        sdk.actions.openMiniApp({ url: href })
       } else if (this.isFarcaster && !linkMatchesDomain) {
-        e.preventDefault()
-        sdk.actions.openUrl(link.href)
+        // e.preventDefault()
+        // sdk.actions.openUrl(link.href)
       }
     },
     setInstances(appKit, wagmiConfig) {
