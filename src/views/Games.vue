@@ -26,7 +26,6 @@
         <section class="_relative _group">
           <a
             :href="game.link"
-            target="_blank"
             class="_block _pointer-events-auto _cursor-pointer _scale-[1.05] mouse:hover:_scale-[1.1] _duration-500"
           >
             <figure
@@ -45,7 +44,9 @@
                 class="_absolute _top-0 _left-0 _w-full _h-full _object-cover"
                 :style="{
                   filter: game.bgBlur ? `blur(${game.bgBlur}px)` : 'none'
+                  // imageRendering: 'pixelated'
                 }"
+                loading="lazy"
               ></video>
               <img
                 v-else
@@ -62,13 +63,16 @@
             >
               <a
                 :href="game.link"
-                target="_blank"
-                class="_-mt-8 _relative _z-10 _bg-metallic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _tracking-[0.2em] _text-em-2xl sm:_text-em-3xl mouse:hover:_scale-[1.05] _duration-150"
+                class="_-mt-8 _relative _z-10 _bg-metallic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _text-em-2xl sm:_text-em-3xl mouse:hover:_scale-[1.05] _duration-150"
                 :class="{
-                  '_animate-rainbow-wiggle': game.isNewUntil > today
+                  '_animate-rainbow-wiggle': game.isNewUntil > today && !game.title,
+                  '_animate-rainbow-wiggle-sm': game.isNewUntil > today && game.title,
+                  '_tracking-[0.2em]': !game.title,
+                  '_tracking-[0.05em]': game.title
                 }"
               >
-                <template v-if="game.isNewUntil > today">
+                <template v-if="game.title">{{ game.title }}</template>
+                <template v-else-if="game.isNewUntil > today">
                   <span class="mouse:group-hover:_hidden">NEW</span>
                   <span class="mouse:group-hover:_inline _hidden">PLAY</span>
                 </template>
@@ -112,15 +116,30 @@
 import HubPageHeader from '../components/HubPageHeader.vue'
 import anybodyTitleImg from '../assets/imgs/anybody-title.png'
 import SocialsButtons from '../components/SocialsButtons.vue'
-
+import { sdk } from '@farcaster/miniapp-sdk'
 const today = new Date()
+
+const anybodyLink = sdk.context
+  ? 'https://farcaster.xyz/miniapps/pKtDvlLtJ-iI/anybody-problem'
+  : 'https://anybody.gg'
 
 // use https://gm-trifle.b-cdn.net for videos so they're cached across domains for users
 const games = [
   {
+    name: 'like-lottery',
+    title: 'LIKE LOTTERY',
+    link: 'https://like.trifle.life/lottery',
+    description: 'follow → like → win $1K',
+    bgVideo:
+      'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1757079745/lottery-gif-loop-better-shorter__16-9__240p-400br_f5bx63.mp4',
+    bgBlur: 0,
+    isNewUntil: new Date('September 30, 2025')
+  },
+  {
     name: 'gm-game',
+    // title: 'GM GAME',
     link: 'https://gm.trifle.life',
-    description: 'write novel gm\'s → win <span class="_not-italic">🪩</span>BALL$',
+    description: 'write gm\'s → win BALL$ <span class="_not-italic">🪩</span>',
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
     bgBlur: 0,
@@ -128,8 +147,8 @@ const games = [
   },
   {
     name: 'anybody',
-    description: 'a daily puzzle-shooter, fully onchain!',
-    link: 'https://anybody.gg',
+    description: 'daily puzzle-shooter, fully onchain',
+    link: anybodyLink,
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/c_scale,f_auto,q_auto:eco,w_400/v1748287290/anybody-gameplay-clip-2_cf6p3x.mov',
     titleImg: anybodyTitleImg,
@@ -138,7 +157,7 @@ const games = [
   {
     name: 'kudzu',
     link: 'https://kudzu.rodeo',
-    description: 'burn the most NFTs → win TIA',
+    description: 'burn NFTs → win $TIA',
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/ac_none,c_scale,q_auto:best,w_600/v1748286440/fdckedgxrgrfkmlb4ech.webm',
     bgBlur: 0
@@ -171,6 +190,10 @@ const games = [
     animation: rainbow-wiggle 1s ease-in-out infinite;
   }
 
+  ._animate-rainbow-wiggle-sm {
+    animation: rainbow-wiggle-sm 1s ease-in-out infinite;
+  }
+
   @keyframes rainbow-wiggle {
     0% {
       filter: hue-rotate(0deg) brightness(1) contrast(1) saturate(3);
@@ -183,6 +206,21 @@ const games = [
     100% {
       filter: hue-rotate(360deg) brightness(1) contrast(1) saturate(3);
       transform: rotate(-8deg);
+    }
+  }
+
+  @keyframes rainbow-wiggle-sm {
+    0% {
+      filter: hue-rotate(0deg) brightness(1) contrast(1) saturate(3);
+      transform: rotate(-4deg);
+    }
+    50% {
+      filter: hue-rotate(180deg) brightness(1) contrast(1) saturate(3);
+      transform: rotate(4deg);
+    }
+    100% {
+      filter: hue-rotate(360deg) brightness(1) contrast(1) saturate(3);
+      transform: rotate(-4deg);
     }
   }
 }

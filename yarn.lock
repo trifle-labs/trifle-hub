@@ -419,41 +419,30 @@
     neverthrow "^6.1.0"
     viem "^2.29.2"
 
-"@farcaster/frame-sdk@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@farcaster/frame-sdk/-/frame-sdk-0.1.6.tgz#e4701fbfbfc3e6ce408a246c27018760259e10cc"
-  integrity sha512-vaLeLDCX6Mr4KYcdRx2XiX30dT3QPPerO5ggsRfJ5Sm2AoQcqwToMBlKTr59kqspYxEb+Oc8eYcywP5AsXfamw==
-  dependencies:
-    "@farcaster/miniapp-sdk" "0.1.6"
-    "@farcaster/quick-auth" "^0.0.6"
-    comlink "^4.4.2"
-    eventemitter3 "^5.0.1"
-    ox "^0.4.4"
-
-"@farcaster/frame-wagmi-connector@^0.0.42":
-  version "0.0.42"
-  resolved "https://registry.npmjs.org/@farcaster/frame-wagmi-connector/-/frame-wagmi-connector-0.0.42.tgz"
-  integrity sha512-KI6/Jai7TVOz1B166E86Pf+ehNFyknn0AzSXJ7RTeSX/Uvh1jna+DgISNpRJjV08YJHBxkynAi+kQI4dlbqJoQ==
-
-"@farcaster/miniapp-core@0.3.5":
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/@farcaster/miniapp-core/-/miniapp-core-0.3.5.tgz#0b4bca75a8dd28a47f2a41c3a35d22546dcac587"
-  integrity sha512-iE4znMmDOgYUgnuHcvidrk0YwYNZuY2OiilnbquGlnn6ZzJrFF7sNz5E8CP5qkiiKnYTEguKyk8I1bpG/vaETg==
+"@farcaster/miniapp-core@0.3.8":
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/@farcaster/miniapp-core/-/miniapp-core-0.3.8.tgz#753aa7dc08b40573914367d4d07550c534c452c3"
+  integrity sha512-LaRG1L3lxHqo5pP/E2CX9hNqusR0C8hX3QTV2+hzmQJz6IGvmSpH6Q9ivlLyDfbdqokiMFo5Y3Z1EX1zBHMEQQ==
   dependencies:
     "@solana/web3.js" "^1.98.2"
     ox "^0.4.4"
     zod "^3.25.0"
 
-"@farcaster/miniapp-sdk@0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@farcaster/miniapp-sdk/-/miniapp-sdk-0.1.6.tgz#2e5b72a957ab4ee53cbd7d6aa75d04a997822ccc"
-  integrity sha512-WXvX51UrqD1rHiB4GtGenFzCT1aYEoHNhUA44GuGbI534HUNLuH4cm60J8I0C1SkNy9CnQcHzc3Nek7hnTbXHw==
+"@farcaster/miniapp-sdk@^0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@farcaster/miniapp-sdk/-/miniapp-sdk-0.1.9.tgz#b6b1999c3fedbe8a1f2b02e6b3a92bdb2818ecb2"
+  integrity sha512-hn0dlIy0JP2Hx6PgKcn9bjYwyPS/SQgYJ/a0qjzG8ZsDfUdjsMPf3yI/jicBipTml/UUoKcbqXM68fsrsbNMKA==
   dependencies:
-    "@farcaster/miniapp-core" "0.3.5"
+    "@farcaster/miniapp-core" "0.3.8"
     "@farcaster/quick-auth" "^0.0.6"
     comlink "^4.4.2"
     eventemitter3 "^5.0.1"
     ox "^0.4.4"
+
+"@farcaster/miniapp-wagmi-connector@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@farcaster/miniapp-wagmi-connector/-/miniapp-wagmi-connector-1.0.0.tgz#77454ffd4c70772a40d2480b2d59cfe9439182d0"
+  integrity sha512-vMRZbekUUctnAUvBFhNoEsJlujRRdxop94fDy5LrKiRR9ax0wtp8gCvLYO+LpaP2PtGs0HFpRwlHNDJWvBR8bg==
 
 "@farcaster/quick-auth@^0.0.6":
   version "0.0.6"

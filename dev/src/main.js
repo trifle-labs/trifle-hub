@@ -37,7 +37,7 @@ app.use(pinia)
 app.use(TrifleHubVuePlugin, {
   reownConfig,
   devHookPiniaInstance: pinia,
-  backendUrl: import.meta.env.VITE_API_URL || 'http://localhost:3000'
+  backendUrl: import.meta.env.VITE_API_URL || 'https://bot.trifle.life'
 })
 
 router.isReady().then(() => {

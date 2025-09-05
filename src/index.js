@@ -6,17 +6,17 @@ import { initializeWagmiConfig } from './config/wagmiConfig'
 import { createPinia } from 'pinia'
 import { useAuthStore } from './store'
 import { defineAsyncComponent } from 'vue'
+import { sdk } from '@farcaster/miniapp-sdk'
 
 // Dynamic import for code splitting
 const TrifleGuide = () => import('./components/TrifleGuide.vue')
-
-export { TrifleHubVuePlugin, TrifleHub, TrifleGuide }
 
 const queryClient = new QueryClient()
 
 const TrifleHubVuePlugin = {
   install: async (app, options = {}) => {
-    console.log('install TrifleHubVuePlugin')
+    console.log('install TrifleHubVuePluginn')
+    console.log({ options })
     if (!options.reownConfig) {
       throw new Error('reownConfig is required when installing TrifleHub')
     }
@@ -34,7 +34,7 @@ const TrifleHubVuePlugin = {
     options.backendUrl = options.backendUrl || 'https://bot-staging.trifle.life'
     const store = useAuthStore(piniaInstanceForPlugin)
 
-    const { wagmiConfig, appKit } = initializeWagmiConfig(options.reownConfig)
+    const { wagmiConfig, appKit } = initializeWagmiConfig(options.reownConfig, options.connectors)
 
     app.provide('TrifleHub/wagmiConfig', wagmiConfig)
     app.provide('TrifleHub/appKit', appKit)
@@ -58,4 +58,5 @@ const TrifleHubVuePlugin = {
   }
 }
 
-export default TrifleHubVuePlugin
+export { TrifleHubVuePlugin, TrifleHub, TrifleGuide }
+// export default TrifleHubVuePlugin

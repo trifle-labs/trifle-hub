@@ -7,11 +7,14 @@ import anybodyIcon from '../assets/imgs/anybody-icon.png'
 import kudzuIcon from '../assets/imgs/kudzu-icon.gif'
 import gmIcon from '../assets/imgs/gm.svg'
 import { platforms } from './socialsConfig'
+import { sdk } from '@farcaster/miniapp-sdk'
 
 const discordLink = platforms.discord.url
 
 const gmLink = 'https://gm.trifle.life'
-const anybodyLink = 'https://anybody.gg'
+const anybodyLink = sdk.context
+  ? 'https://farcaster.xyz/miniapps/pKtDvlLtJ-iI/anybody-problem'
+  : 'https://anybody.gg'
 const kudzuLink = 'https://kudzu.rodeo'
 
 export const possiblePoints = [

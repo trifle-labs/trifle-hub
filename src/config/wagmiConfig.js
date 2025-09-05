@@ -1,8 +1,8 @@
 import { createAppKit } from '@reown/appkit/vue'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { mainnet, base } from '@reown/appkit/networks'
-import { farcasterFrame as miniAppConnector } from '@farcaster/frame-wagmi-connector'
-import { sdk } from '@farcaster/frame-sdk'
+import { farcasterFrame as miniAppConnector } from '@farcaster/miniapp-wagmi-connector'
+import { sdk } from '@farcaster/miniapp-sdk'
 // Default configuration
 const defaultConfig = {
   projectId: '',
@@ -13,7 +13,8 @@ const defaultConfig = {
     icons: []
   },
   networks: [mainnet, base],
-  enableNetworkSwitch: false,
+  enableNetworkSwitch: true,
+  allowUnsupportedChain: true,
   features: {
     analytics: true,
     email: true,
@@ -31,7 +32,7 @@ const defaultConfig = {
   }
 }
 
-export function initializeWagmiConfig(config) {
+export function initializeWagmiConfig(config, connectors = []) {
   const finalConfig = {
     ...defaultConfig,
     ...(config || {}),
@@ -50,27 +51,37 @@ export function initializeWagmiConfig(config) {
       ...(config.themeVariables || {})
     }
   }
+  console.log({ finalConfig })
+  // const isMiniApp = sdk.context()
+  // const miniApp = typeof isMiniApp === Promise ? false : true
+
+  // console.log(
+  //   { miniApp },
+  //   typeof isMiniApp,
+  //   'sdk.context',
+  //   sdk.context,
+  //   'sdk.context()',
+  //   sdk.context()
+  // )
   // const context = await sdk.context
-  const connectors = [] //[miniAppConnector()]
-
+  console.log({ connectors })
   // Create Wagmi Adapter
-  const wagmiAdapter = new WagmiAdapter({
+  const wagmiAdapterConfig = {
     projectId: finalConfig.projectId,
-    networks: finalConfig.networks,
-    connectors
-  })
+    networks: finalConfig.networks
+  }
+  if (connectors?.length > 0) {
+    wagmiAdapterConfig.connectors = connectors
+  }
+  const wagmiAdapter = new WagmiAdapter(wagmiAdapterConfig)
 
+  const createAppKitObject = {
+    ...finalConfig,
+    adapters: [wagmiAdapter]
+  }
+  console.log({ createAppKitObject })
   // Create modal
-  const appKit = createAppKit({
-    adapters: [wagmiAdapter],
-    networks: finalConfig.networks,
-    metadata: finalConfig.metadata,
-    projectId: finalConfig.projectId,
-    features: finalConfig.features,
-    featuredWalletIds: finalConfig.featuredWalletIds,
-    themeMode: finalConfig.themeMode,
-    themeVariables: finalConfig.themeVariables
-  })
+  const appKit = createAppKit(createAppKitObject)
 
   return { wagmiConfig: wagmiAdapter.wagmiConfig, appKit }
 }

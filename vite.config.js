@@ -10,10 +10,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    cssInjectedByJsPlugin()
-  ],
+  plugins: [vue(), cssInjectedByJsPlugin()],
   build: {
     lib: {
       // Could also be a dictionary or array of multiple entry points
@@ -35,8 +32,8 @@ export default defineConfig({
         '@reown/appkit-adapter-wagmi',
         '@reown/appkit-siwe',
         'viem',
-        '@farcaster/frame-sdk',
-        '@farcaster/frame-wagmi-connector',
+        '@farcaster/miniapp-sdk',
+        '@farcaster/miniapp-wagmi-connector',
         '@tanstack/vue-query',
         '@vueuse/core',
         'pinia',
