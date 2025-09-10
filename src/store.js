@@ -285,11 +285,15 @@ export const useAuthStore = defineStore('auth', {
     async connectFarcaster() {
       let url, data, authWindow
       if (this.isFarcaster) {
+        console.log('connecting farcaster')
         data = await sdk.quickAuth.getToken()
+        console.log({ data })
+
         url = `${this.backendUrl}/farcaster/${
           this.isAuthenticated ? 'add-quick-auth' : 'quick-auth'
         }`
       } else {
+        console.log('this is not farcaster, using remote sign-in')
         // Always close any previous popup before opening a new one
         if (window.__trifleFarcasterPopup) {
           try {
