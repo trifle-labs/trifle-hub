@@ -100,7 +100,7 @@ export const useAuthStore = defineStore('auth', {
       const linkMatchesDomainExactly = href == window.location.href.replace(/\/$/, '')
 
       const miniAppURLs = [
-        'gm.trifle.life',
+        'like.trifle.life/gm',
         'anybody.gg',
         'like.trifle.life',
         'like.trifle.life/lottery'
