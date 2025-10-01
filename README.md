@@ -19,7 +19,7 @@ Import and register the TrifleHub plugin in your Vue application:
 ```js
 import { createApp } from 'vue'
 import App from './App.vue'
-import TrifleHubVuePlugin from '@trifle/trifle-hub'
+import { TrifleHubVuePlugin } from '@trifle/trifle-hub'
 
 const app = createApp(App)
 
