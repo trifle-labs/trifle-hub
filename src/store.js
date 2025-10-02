@@ -106,7 +106,7 @@ export const useAuthStore = defineStore('auth', {
         'like.trifle.life/lottery'
       ]
       const isFarcasterMiniApp =
-        href.includes('farcaster.xyz/miniapps/') || miniAppURLs.some((url) => href.includes(url))
+        href.includes('farcaster.xyz/miniapps/') || miniAppURLs.some((url) => href.endsWith(url))
       console.log({ href, link, location: window.location })
       console.log({
         isFarcasterProfile,
