@@ -138,7 +138,7 @@ const games = [
   {
     name: 'gm-game',
     // title: 'GM GAME',
-    link: 'https://like.trifle.life/gm',
+    link: 'https://gm.trifle.life',
     description: 'write gm\'s → win BALL$ <span class="_not-italic">🪩</span>',
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',

@@ -11,7 +11,7 @@ import { sdk } from '@farcaster/miniapp-sdk'
 
 const discordLink = platforms.discord.url
 
-const gmLink = 'https://like.trifle.life/gm'
+const gmLink = 'https://gm.trifle.life'
 const anybodyLink = sdk.context
   ? 'https://farcaster.xyz/miniapps/pKtDvlLtJ-iI/anybody-problem'
   : 'https://anybody.gg'
@@ -141,7 +141,7 @@ export const possiblePoints = [
     id: 'gm',
     icon: gmIcon,
     description:
-      'Every unique "Good Morning" you write in Discord, Farcaster, or <u>like.trifle.life/gm</u> earns +1🪩',
+      'Every unique "Good Morning" you write in Discord, Farcaster, or <u>gm.trifle.life</u> earns +1🪩',
     pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
@@ -206,7 +206,7 @@ export const possiblePoints = [
     name: 'Cast your GM with mini app link',
     id: 'gm-cast',
     icon: farcasterIcon,
-    description: 'Include "like.trifle.life/gm" when you cast a "gm" for a bonus 1🪩',
+    description: 'Include "gm.trifle.life" when you cast a "gm" for a bonus 1🪩',
     pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
