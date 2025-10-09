@@ -1,4 +1,4 @@
-# TrifleHub Documentation
+# TrifleHub Documentation 👀
 
 ## Installation
 
