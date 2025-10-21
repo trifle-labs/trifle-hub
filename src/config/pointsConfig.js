@@ -91,18 +91,18 @@ export const possiblePoints = [
     enabled: true,
     link: discordLink
   },
-  {
-    name: 'Add to Farcaster',
-    id: 'gm-fc-notifications',
-    icon: farcasterIcon,
-    description: 'Add the GM Mini App to your Farcaster with notifications enabled',
-    pachinkoBalls: 25,
-    kudzuBurn: 0,
-    claimed: false,
-    once: true,
-    enabled: true,
-    link: 'https://farcaster.xyz/miniapps/gBsKvLYGQnEE/gm-game'
-  },
+  // {
+  //   name: 'Add to Farcaster',
+  //   id: 'gm-fc-notifications',
+  //   icon: farcasterIcon,
+  //   description: 'Add the GM Mini App to your Farcaster with notifications enabled',
+  //   pachinkoBalls: 25,
+  //   kudzuBurn: 0,
+  //   claimed: false,
+  //   once: true,
+  //   enabled: true,
+  //   link: 'https://farcaster.xyz/miniapps/gBsKvLYGQnEE/gm-game'
+  // },
   // {
   //   name: 'Link Email via Discord',
   //   id: 'auth-email',
@@ -162,46 +162,46 @@ export const possiblePoints = [
     link: gmLink
   },
 
-  {
-    name: 'Follow Trifle on Farcaster',
-    id: 'trifle-fc-follow',
-    icon: farcasterIcon,
-    // description: 'Follow Trifle on Farcaster',
-    pachinkoBalls: 25,
-    kudzuBurn: 0,
-    claimed: false,
-    once: true,
-    enabled: true,
-    fid: 832276,
-    link: platforms.farcaster.url
-  },
+  // {
+  //   name: 'Follow Trifle on Farcaster',
+  //   id: 'trifle-fc-follow',
+  //   icon: farcasterIcon,
+  //   // description: 'Follow Trifle on Farcaster',
+  //   pachinkoBalls: 25,
+  //   kudzuBurn: 0,
+  //   claimed: false,
+  //   once: true,
+  //   enabled: true,
+  //   fid: 832276,
+  //   link: platforms.farcaster.url
+  // },
 
-  {
-    name: "Like Trifle's casts on Farcaster",
-    id: 'trifle-fc-like',
-    icon: farcasterIcon,
-    description: "Earn 1🪩 for every like of Trifle's casts",
-    pachinkoBalls: '1+',
-    kudzuBurn: 0,
-    claimed: false,
-    once: false,
-    enabled: true,
-    fid: 832276,
-    link: platforms.farcaster.url
-  },
-  {
-    name: "Re-cast Trifle's casts on Farcaster",
-    id: 'trifle-fc-recast',
-    icon: farcasterIcon,
-    description: "Earn 1🪩 for every re-cast of Trifle's casts",
-    pachinkoBalls: '1+',
-    kudzuBurn: 0,
-    claimed: false,
-    once: false,
-    enabled: true,
-    fid: 832276,
-    link: platforms.farcaster.url
-  },
+  // {
+  //   name: "Like Trifle's casts on Farcaster",
+  //   id: 'trifle-fc-like',
+  //   icon: farcasterIcon,
+  //   description: "Earn 1🪩 for every like of Trifle's casts",
+  //   pachinkoBalls: '1+',
+  //   kudzuBurn: 0,
+  //   claimed: false,
+  //   once: false,
+  //   enabled: true,
+  //   fid: 832276,
+  //   link: platforms.farcaster.url
+  // },
+  // {
+  //   name: "Re-cast Trifle's casts on Farcaster",
+  //   id: 'trifle-fc-recast',
+  //   icon: farcasterIcon,
+  //   description: "Earn 1🪩 for every re-cast of Trifle's casts",
+  //   pachinkoBalls: '1+',
+  //   kudzuBurn: 0,
+  //   claimed: false,
+  //   once: false,
+  //   enabled: true,
+  //   fid: 832276,
+  //   link: platforms.farcaster.url
+  // },
   {
     name: 'Cast your GM with mini app link',
     id: 'gm-cast',
@@ -226,28 +226,40 @@ export const possiblePoints = [
     enabled: true,
     link: anybodyLink
   },
+  // {
+  //   name: "Mint today's Anybody Problem NFT",
+  //   id: 'anybody-mint-nft',
+  //   icon: anybodyIcon,
+  //   description: 'Bonus balls for minting the daily NFT!',
+  //   pachinkoBalls: '10/day',
+  //   kudzuBurn: 0,
+  //   claimed: false,
+  //   once: false,
+  //   enabled: false,
+  //   link: anybodyLink
+  // },
   {
-    name: "Mint today's Anybody Problem NFT",
-    id: 'anybody-mint-nft',
-    icon: anybodyIcon,
-    description: 'Bonus balls for minting the daily NFT!',
-    pachinkoBalls: '10/day',
-    kudzuBurn: 0,
-    claimed: false,
-    once: false,
-    enabled: false,
-    link: anybodyLink
-  },
-  {
-    name: 'Win Daily Speedy in Anybody Problem',
-    id: 'anybody-win-speedy-record',
+    name: 'Daily Speedy in Anybody Problem',
+    id: 'anybody-daily-speedy',
     icon: anybodyIcon,
     description: 'Finish fastest of the day!',
     pachinkoBalls: 25,
     kudzuBurn: 0,
     claimed: false,
     once: false,
-    enabled: false,
+    enabled: true,
+    link: anybodyLink
+  },
+  {
+    name: 'Daily Streak in Anybody Problem',
+    id: 'anybody-daily-streaky',
+    icon: anybodyIcon,
+    description: "Be the one who's played every day for the longest time!",
+    pachinkoBalls: 5,
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
     link: anybodyLink
   },
   {
@@ -259,21 +271,21 @@ export const possiblePoints = [
     kudzuBurn: 1,
     claimed: false,
     once: false,
-    enabled: false,
+    enabled: true,
     link: kudzuLink
-  },
-  {
-    name: 'Nuke to 1st on Kudzus',
-    id: 'kudzu-nuke',
-    icon: kudzuIcon,
-    description: 'Nuke to 1st place and earn bonus balls!',
-    pachinkoBalls: 100,
-    kudzuBurn: 0,
-    claimed: false,
-    once: true,
-    enabled: false,
-    link: kudzuLink + '/nuke'
   }
+  // {
+  //   name: 'Nuke to 1st on Kudzus',
+  //   id: 'kudzu-nuke',
+  //   icon: kudzuIcon,
+  //   description: 'Nuke to 1st place and earn bonus balls!',
+  //   pachinkoBalls: 100,
+  //   kudzuBurn: 0,
+  //   claimed: false,
+  //   once: true,
+  //   enabled: false,
+  //   link: kudzuLink + '/nuke'
+  // }
   // {
   //   name: 'Blind Run Discord Game',
   //   id: 'blind-run',
