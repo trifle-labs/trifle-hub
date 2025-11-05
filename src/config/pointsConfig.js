@@ -203,6 +203,18 @@ export const possiblePoints = [
   //   link: platforms.farcaster.url
   // },
   {
+    name: 'Swap Balls',
+    id: 'award-pending',
+    icon: farcasterIcon,
+    description: 'Swap your pachinko balls for lotto balls.',
+    pachinkoBalls: '1+',
+    lottoBalls: '1+',
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: { to: 'spend' }
+  },
+  {
     name: 'Cast your GM with mini app link',
     id: 'gm-cast',
     icon: farcasterIcon,

@@ -138,7 +138,7 @@
             :href="typeof quest.link === 'string' ? quest.link : undefined"
             :target="typeof quest.link === 'string' ? '_blank' : undefined"
             :rel="typeof quest.link === 'string' ? 'noopener noreferrer' : undefined"
-            @click="quest.link?.to && openHub(quest.link.to)"
+            @click="quest.link?.to && handleLink(quest.link.to)"
             class="_w-full _block _relative"
             :class="{ '_pointer-events-none': quest.completed && quest.once }"
           >
@@ -244,9 +244,10 @@
           class="_bg-metallic-linear _p-5 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-5 _py-5"
         >
           <div class="_flex _justify-center _leading-none _items-center _text-lg">
-            <div class="_text-stroke-xl _animate-pulse-deep">coming soon...</div>
+            <p class="_text-stroke-2xl">Swap your 🪩 BALL$ for lotto-balls <TicketEmoji /></p>
           </div>
         </section>
+        <SwapBalls />
         <section
           class="_bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
         >
@@ -267,7 +268,8 @@ import { storeToRefs } from 'pinia'
 import { ref, onMounted, inject, watch, computed } from 'vue'
 import { possiblePoints } from '../config/pointsConfig'
 import SocialsButtons from '../components/SocialsButtons.vue'
-
+import SwapBalls from '../components/SwapBalls.vue'
+import TicketEmoji from '../components/TicketEmoji.vue'
 const auth = inject('TrifleHub/store')
 const { openHub } = inject('hub')
 const quests = ref([])
@@ -278,7 +280,13 @@ const filter = ref('all') // 'all', 'once', 'ongoing'
 const selectedTab = ref('earn')
 
 const { backendUrl, isAuthenticated } = storeToRefs(auth)
-
+const handleLink = (link) => {
+  if (link == 'spend') {
+    selectedTab.value = 'spend'
+  } else {
+    openHub(link)
+  }
+}
 const openProfile = () => {
   auth.setProfileUsername(auth.user?.username)
   openHub('profile')
