@@ -206,7 +206,7 @@ const props = defineProps({
   position: { type: String, default: 'bottom-left', required: true }
 })
 
-const hubPage = computed(() => hubPages[props.hubPageKey])
+const hubPage = computed(() => hubPages[props.hubPageKey] || hubPages.account)
 
 const { openHub } = inject('hub')
 const auth = inject('TrifleHub/store')

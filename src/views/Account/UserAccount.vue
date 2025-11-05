@@ -617,7 +617,7 @@ const { openHub } = inject('hub')
 const usernameInput = ref(null)
 
 const walletAuths = computed(() => auth.getPlatformData('wallet'))
-const discordAuths = computed(() => auth.getPlatformData('discord'))
+const discordAuths = computed(() => auth.getPlatformData('discord').filter((d) => d.username))
 const farcasterAuths = computed(() => auth.getPlatformData('farcaster'))
 const twitterAuths = computed(() => auth.getPlatformData('twitter'))
 const telegramAuths = computed(() => auth.getPlatformData('telegram'))

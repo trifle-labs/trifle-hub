@@ -469,14 +469,23 @@ export const useAuthStore = defineStore('auth', {
           url += `?nonce=${encodeURIComponent(nonce)}`
         }
 
-        // Open Discord auth window
-        window.__trifleDiscordPopup = window.open(url, '_blank', 'width=500,height=800')
+        if (this.isFarcaster) {
+          console.log('this is farcaster, opening url', url)
+          this.discordAuthBeforeFarcaster = this.user?.linkedAccounts?.discord
+            ?.map((d) => d.username)
+            .join(',')
+          console.log({ discordAuthBeforeFarcaster: this.discordAuthBeforeFarcaster })
+          await sdk.actions.openUrl(url)
+        } else {
+          // Open Discord auth window
+          window.__trifleDiscordPopup = window.open(url, '_blank', 'width=500,height=800')
 
-        // If window failed to open
-        if (!window.__trifleDiscordPopup) {
-          throw new Error(
-            'Could not open Discord authentication window. Please check your popup blocker settings.'
-          )
+          // If window failed to open
+          if (!window.__trifleDiscordPopup) {
+            throw new Error(
+              'Could not open Discord authentication window. Please check your popup blocker settings.'
+            )
+          }
         }
         const authPromise = new Promise((resolve, reject) => {
           let checkClosedInterval
@@ -517,7 +526,12 @@ export const useAuthStore = defineStore('auth', {
 
           // Clean up if window is closed
           checkClosedInterval = setInterval(() => {
-            if (window.__trifleDiscordPopup.closed) {
+            console.log(
+              'checkClosedInterval',
+              window.__trifleDiscordPopup?.closed,
+              this.discordAuthBeforeFarcaster
+            )
+            if (window.__trifleDiscordPopup?.closed) {
               console.log('manually closing window')
               clearInterval(checkClosedInterval)
               window.removeEventListener('message', handleMessage)
@@ -527,6 +541,22 @@ export const useAuthStore = defineStore('auth', {
                   'Discord window closed before authentication was completed. Please try again.'
                 )
               }
+            } else if (typeof this.discordAuthBeforeFarcaster === 'string') {
+              this.fetchUserStatus().then(() => {
+                const discordAuthAfter = this.user?.linkedAccounts?.discord
+                  ?.map((d) => d.username)
+                  .join(',')
+                console.log({
+                  discordAuthAfter,
+                  discordAuthBeforeFarcaster: this.discordAuthBeforeFarcaster
+                })
+                if (discordAuthAfter !== this.discordAuthBeforeFarcaster) {
+                  clearInterval(checkClosedInterval)
+                  window.removeEventListener('message', handleMessage)
+                  window.__trifleDiscordPopup = null
+                  resolve()
+                }
+              })
             }
           }, 1000)
         })
@@ -595,19 +625,29 @@ export const useAuthStore = defineStore('auth', {
           const { nonce } = await nonceResponse.json()
           url += `?nonce=${encodeURIComponent(nonce)}`
         }
-        // Open TwitterX auth window
-        window.__trifleTwitterPopup = window.open(
-          url,
-          '_blank',
-          'width=600,height=600,scrollbars=yes,resizable=yes'
-        )
 
-        // If window failed to open
-        if (!window.__trifleTwitterPopup) {
-          this.cancelTwitterAuth()
-          throw new Error(
-            'Could not open TwitterX authentication window. Please check your popup blocker settings.'
+        if (this.isFarcaster) {
+          console.log('this is farcaster, opening url', url)
+          this.twitterAuthBeforeFarcaster = this.user?.linkedAccounts?.twitter
+            ?.map((t) => t.username)
+            .join(',')
+          console.log({ twitterAuthBeforeFarcaster: this.twitterAuthBeforeFarcaster })
+          await sdk.actions.openUrl(url)
+        } else {
+          // Open TwitterX auth window
+          window.__trifleTwitterPopup = window.open(
+            url,
+            '_blank',
+            'width=600,height=600,scrollbars=yes,resizable=yes'
           )
+
+          // If window failed to open
+          if (!window.__trifleTwitterPopup) {
+            this.cancelTwitterAuth()
+            throw new Error(
+              'Could not open TwitterX authentication window. Please check your popup blocker settings.'
+            )
+          }
         }
 
         const authPromise = new Promise((resolve, reject) => {
@@ -650,7 +690,12 @@ export const useAuthStore = defineStore('auth', {
 
           // Clean up if window is closed
           checkClosedInterval = setInterval(() => {
-            if (window.__trifleTwitterPopup.closed) {
+            console.log(
+              'checkClosedInterval',
+              window.__trifleTwitterPopup?.closed,
+              this.twitterAuthBeforeFarcaster
+            )
+            if (window.__trifleTwitterPopup?.closed) {
               console.log('TwitterX window manually closing')
               clearInterval(checkClosedInterval)
               window.removeEventListener('message', handleMessage)
@@ -661,6 +706,22 @@ export const useAuthStore = defineStore('auth', {
                   'TwitterX window closed before authentication was completed. Please try again.'
                 )
               }
+            } else if (typeof this.twitterAuthBeforeFarcaster === 'string') {
+              this.fetchUserStatus().then(() => {
+                const twitterAuthAfter = this.user?.linkedAccounts?.twitter
+                  ?.map((t) => t.username)
+                  .join(',')
+                console.log({
+                  twitterAuthAfter,
+                  twitterAuthBeforeFarcaster: this.twitterAuthBeforeFarcaster
+                })
+                if (twitterAuthAfter !== this.twitterAuthBeforeFarcaster) {
+                  clearInterval(checkClosedInterval)
+                  window.removeEventListener('message', handleMessage)
+                  window.__trifleTwitterPopup = null
+                  resolve()
+                }
+              })
             }
           }, 1000)
         })
@@ -1220,20 +1281,26 @@ export const useAuthStore = defineStore('auth', {
 
         // Open Telegram in popup window
         const telegramUrl = `https://t.me/${botUsername}?start=${nonce}`
-        window.__trifleTelegramPopup = window.open(
-          telegramUrl,
-          '_blank',
-          'width=500,height=700,scrollbars=yes,resizable=yes'
-        )
 
-        // If window failed to open
-        if (!window.__trifleTelegramPopup) {
-          throw new Error(
-            'Could not open Telegram authentication window. Please check your popup blocker settings.'
+        if (this.isFarcaster) {
+          await sdk.actions.openUrl(telegramUrl)
+        } else {
+          window.__trifleTelegramPopup = window.open(
+            telegramUrl,
+            '_blank',
+            'width=500,height=700,scrollbars=yes,resizable=yes'
           )
+
+          // If window failed to open
+          if (!window.__trifleTelegramPopup) {
+            throw new Error(
+              'Could not open Telegram authentication window. Please check your popup blocker settings.'
+            )
+          }
         }
 
         // Start polling for completion (store cleanup function)
+        // For Farcaster, we'll poll to detect when the account is added
         await this.pollTelegramAuth(nonce)
       } catch (error) {
         console.error('Telegram authentication error:', error)
@@ -1323,7 +1390,6 @@ export const useAuthStore = defineStore('auth', {
               // Still pending, continue polling
               console.log('Waiting for Telegram authentication...')
             }
-
             // Check timeout
             if (attempts >= maxAttempts) {
               clearInterval(pollInterval)
