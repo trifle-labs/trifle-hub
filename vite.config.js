@@ -34,45 +34,23 @@ export default defineConfig({
     },
     rollupOptions: {
       // Externalize peer dependencies so they aren't bundled
+      // Dependencies like @wagmi/*, viem, @reown/appkit, etc. are bundled with the library
       external: [
         'vue',
         'vue-router',
-        '@wagmi/core',
-        '@wagmi/vue',
-        '@reown/appkit',
-        '@reown/appkit/vue', // Externalize deep imports too
-        '@reown/appkit/networks', // Externalize deep imports too
-        '@reown/appkit-adapter-wagmi',
-        '@reown/appkit-siwe',
-        'viem',
-        '@farcaster/miniapp-sdk',
-        '@farcaster/miniapp-wagmi-connector',
-        '@tanstack/vue-query',
-        '@vueuse/core',
         'pinia',
-        'three' // Externalize three
-        // Note: siwe removed - it's part of viem/siwe, not a separate package
-        // Note: tailwindcss removed - it's a build tool, not a runtime dependency
-        // Optional: Use regex for broader matching if listing all gets tedious
-        // e.g., /^vue/, /^@wagmi\\/.*/, /^@reown\\/appkit/, /^viem/
+        'three' // Externalize peer dependencies only
+        // Note: @vueuse/core is bundled (in dependencies)
+        // Note: tailwindcss is a build tool, not a runtime dependency
       ],
       output: {
         // Provide global variables to use in the UMD build
+        // Only needed for externalized peer dependencies
         globals: {
           vue: 'Vue',
           'vue-router': 'VueRouter',
-          '@wagmi/core': 'WagmiCore',
-          '@wagmi/vue': 'WagmiVue',
-          viem: 'Viem',
-          '@reown/appkit': 'ReownAppkit',
-          '@reown/appkit-adapter-wagmi': 'ReownAppkitAdapterWagmi',
-          '@reown/appkit-siwe': 'ReownAppkitSiwe',
-          '@tanstack/vue-query': 'TanStackVueQuery',
-          '@farcaster/miniapp-sdk': 'FarcasterMiniappSdk',
-          '@farcaster/miniapp-wagmi-connector': 'FarcasterMiniappWagmiConnector',
           pinia: 'Pinia',
           three: 'THREE' // For UMD builds
-          // Add other globals if needed for UMD
         }
       }
     }
