@@ -33,45 +33,33 @@ export default defineConfig({
       formats: ['es', 'umd'] // Include ES and UMD formats
     },
     rollupOptions: {
-      // Externalize dependencies to keep bundle size small
-      // These are in dependencies but externalized so they're not bundled
+      // Externalize peer dependencies (consumers interact with these directly)
+      // Bundle internal dependencies (@tanstack/vue-query, @reown/appkit, etc.)
       external: [
         'vue',
         'vue-router',
-        'pinia',
-        'three',
         '@wagmi/core',
         '@wagmi/vue',
-        '@reown/appkit',
-        '@reown/appkit/vue', // Externalize deep imports too
-        '@reown/appkit/networks', // Externalize deep imports too
-        '@reown/appkit-adapter-wagmi',
-        '@reown/appkit-siwe',
         'viem',
         '@farcaster/miniapp-sdk',
         '@farcaster/miniapp-wagmi-connector',
-        '@tanstack/vue-query',
-        '@vueuse/core'
-        // Note: @farcaster/auth-client is bundled (not externalized)
-        // Note: tailwindcss is a build tool, not a runtime dependency
+        'pinia',
+        'three',
+        'siwe', // Part of viem, but listed for completeness
+        'tailwindcss' // Build tool, not runtime
       ],
       output: {
         // Provide global variables to use in the UMD build
         globals: {
           vue: 'Vue',
           'vue-router': 'VueRouter',
-          pinia: 'Pinia',
-          three: 'THREE',
           '@wagmi/core': 'WagmiCore',
           '@wagmi/vue': 'WagmiVue',
           viem: 'Viem',
-          '@reown/appkit': 'ReownAppkit',
-          '@reown/appkit-adapter-wagmi': 'ReownAppkitAdapterWagmi',
-          '@reown/appkit-siwe': 'ReownAppkitSiwe',
-          '@tanstack/vue-query': 'TanStackVueQuery',
           '@farcaster/miniapp-sdk': 'FarcasterMiniappSdk',
           '@farcaster/miniapp-wagmi-connector': 'FarcasterMiniappWagmiConnector',
-          '@vueuse/core': 'VueUse'
+          pinia: 'Pinia',
+          three: 'THREE'
         }
       }
     }
