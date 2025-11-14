@@ -1,0 +1,39 @@
+@layer trifle-hub {
+button {
+  font-size: inherit;
+  text-transform: inherit;
+  font-weight: inherit;
+}
+
+input {
+  /* remove arrows from input */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: inherit;
+  font-weight: inherit;
+  font-family: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}

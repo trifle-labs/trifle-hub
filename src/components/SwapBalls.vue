@@ -1,21 +1,21 @@
 <template>
   <form
     ref="el"
-    class="_bg-metallic-linear p-4 rounded-lg _shadow-panel flex flex-col items-center gap-2.5 _text-2xl _text-stroke-2xl text-right"
+    class="trifle-hub-ui _bg-metallic-linear _p-4 _rounded-lg _shadow-panel _flex _flex-col _items-center _gap-2.5 _text-2xl _text-stroke-2xl _text-right"
     @submit.prevent="submit"
   >
-    <header class="w-full flex justify-between items-center">
-      <div class="flex gap-[0.25em]">
-        <img :src="myUser?.avatar" class="size-[1.2em] rounded-full" />
+    <header class="_w-full _flex _justify-between _items-center">
+      <div class="_flex _gap-[0.25em]">
+        <img :src="myUser?.avatar" class="_size-[1.2em] _rounded-full" />
         <div>{{ myUser?.username }}</div>
       </div>
       <button
         type="button"
-        class="_text-em-xs _shadow-panel pl-[0.3em] pr-[0.35em] rounded-full _bg-metallic-cone leading-none h-[1.375em] flex items-center _gap-[0.15em]"
+        class="_text-em-xs _shadow-panel _pl-[0.3em] _pr-[0.35em] _rounded-full _bg-metallic-cone _leading-none _h-[1.375em] _flex _items-center _gap-[0.15em]"
         @click="openBallsHub"
       >
         <span>🪩</span><span v-if="ballsLoading" class="_animate-blink-fast">...</span
-        ><span v-else class="_text-stroke-xl" :class="{ 'text-rot': amount > 0 }">{{
+        ><span v-else class="_text-stroke-xl" :class="{ '_text-rot': amount > 0 }">{{
           ((myBallsBalance || 0) - amount).toLocaleString()
         }}</span>
       </button>
@@ -23,11 +23,11 @@
     <!-- input -->
     <div
       v-if="myBallsBalance > 0"
-      class="w-full flex _shadow-panel-inset _bg-metallic-linearff rounded-lg ffh-[2em] p-[0.05em]"
+      class="_w-full _flex _shadow-panel-inset _rounded-lg _p-[0.05em]"
     >
       <input
         type="number"
-        class="flex-1 border w-0 text-right p-0"
+        class="_flex-1 _border _w-0 _text-right _p-0"
         v-model="amount"
         placeholder="0"
         min="0"
@@ -36,16 +36,16 @@
         @change="clearStatus"
         :disabled="!myBallsBalance"
       />
-      <div class="p-[0.3em] flex items-center justify-center">
-        <TicketEmoji :animate="canSwap" ffclass="h-[1.02em]" />
+      <div class="_p-[0.3em] _flex _items-center _justify-center">
+        <TicketEmoji :animate="canSwap" />
       </div>
     </div>
-    <div v-if="myBallsBalance > 0" class="flex justify-evenly w-full -my-0.5ff">
+    <div v-if="myBallsBalance > 0" class="_flex _justify-evenly _w-full">
       <button
         v-for="percentage in [0.1, 0.25, 0.5, 0.75, 1]"
         :key="percentage"
         type="button"
-        class="text-[0.625em] _text-stroke-3xl _shadow-panel px-[0.5em] rounded-full _bg-metallic-cone leading-none h-[1.5em] flex items-center _gap-[0.15em]"
+        class="_text-em-2xs _text-stroke-3xl _shadow-panel _px-[0.5em] _rounded-full _bg-metallic-cone _leading-none _h-[1.5em] _flex _items-center _gap-[0.15em]"
         @click="setAmountToPercentage(percentage)"
       >
         <template v-if="percentage === 1">MAX</template>
@@ -53,14 +53,14 @@
       </button>
     </div>
     <template v-if="!myBallsBalance">
-      <div class="flex w-full">
+      <div class="_flex _w-full">
         <button
           type="button"
-          class="flex-1 _bubble-btn px-6 h-16 flex items-center justify-center _text-xl _text-stroke-2xl animate-scaleup-xs"
+          class="_flex-1 _bubble-btn _px-6 _h-16 _flex _items-center _justify-center _text-xl _text-stroke-2xl _animate-scaleup-xs"
           style="filter: hue-rotate(-345deg) saturate(2.5)"
           @click="openBallsHub"
         >
-          <span style="filter: hue-rotate(345deg) saturate(0.9)" class="tracking-wide">
+          <span style="filter: hue-rotate(345deg) saturate(0.9)" class="_tracking-wide">
             🪩 GET BALL$ 🪩
           </span>
         </button>
@@ -68,8 +68,8 @@
     </template>
     <!-- down arrow swap button -->
     <!-- <div
-      class="h-7 w-9 _bg-metallic-cone rounded flex items-center justify-center _shadow-panel -my-5 relative z-10"
-      :class="{ 'cursor-pointer': canSwap }"
+      class="_h-7 _w-9 _bg-metallic-cone _rounded _flex _items-center _justify-center _shadow-panel _-my-5 _relative _z-10"
+      :class="{ '_cursor-pointer': canSwap }"
       @click="submit"
     >
       <svg
@@ -78,40 +78,40 @@
         viewBox="0 0 24 24"
         stroke-width="4"
         stroke="currentColor"
-        class="size-5"
+        class="_size-5"
       >
         <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
       </svg>
     </div> -->
     <!-- converted -->
-    <!-- <div class="w-full flex _shadow-panel _bg-metallic-linear rounded-lg h-[2em]">
-      <div class="flex-1 flex items-center justify-end" :class="{ 'opacity-25': amount === 0 }">
+    <!-- <div class="_w-full _flex _shadow-panel _bg-metallic-linear _rounded-lg _h-[2em]">
+      <div class="_flex-1 _flex _items-center _justify-end" :class="{ '_opacity-25': amount === 0 }">
         {{ amount }}
       </div>
-      <div class="p-[0.3em] flex items-center justify-center">
-        <TicketEmoji :animate="canSwap" class="h-[1.02em]" />
+      <div class="_p-[0.3em] _flex _items-center _justify-center">
+        <TicketEmoji :animate="canSwap" class="_h-[1.02em]" />
       </div>
     </div> -->
     <!-- (status) -->
     <transition-group name="status" @afterEnter="afterEnter">
-      <section v-if="status" class="w-full" :key="JSON.stringify(status)">
+      <section v-if="status" class="_w-full" :key="JSON.stringify(status)">
         <div
-          class="w-full _bg-metallic-linear p-2.5 rounded-lg _shadow-panel text-left _text-stroke-2xl _text-lg leading-normal flex flex-col"
+          class="_w-full _bg-metallic-linear _p-2.5 _rounded-lg _shadow-panel _text-left _text-stroke-2xl _text-lg _leading-normal _flex _flex-col"
           :class="{
-            'animate-scaleup-xs': ['success', 'pending'].includes(status.type),
-            'text-rot': status.type === 'error'
+            '_animate-scaleup-xs': ['success', 'pending'].includes(status.type),
+            '_text-rot': status.type === 'error'
           }"
         >
-          <header class="flex items-start gap-[0.5em]">
+          <header class="_flex _items-start _gap-[0.5em]">
             <div v-if="statusIcon">
               {{ statusIcon }}
             </div>
-            <div class="flex-1">
+            <div class="_flex-1">
               <template v-if="status.type === 'success'">
                 🪄 BADA-BING-BADA-BOTTO, you added {{ status.data.pointsAwarded }} ball{{
                   status.data.pointsAwarded > 1 ? 's' : ''
                 }}
-                <TicketEmoji class="mb-[0.25em]" :animate="false" />
+                <TicketEmoji class="_mb-[0.25em]" :animate="false" />
                 to the LOTTOS!</template
               ><template v-else>
                 {{ status.message }}
@@ -120,11 +120,11 @@
             <button
               v-if="status.data?.detail"
               type="button"
-              class="h-[1.4em] flex items-center justify-center"
+              class="_h-[1.4em] _flex _items-center _justify-center"
               @click="statusDetailVisible = !statusDetailVisible"
             >
               <div
-                class="size-[1.3em] text-black _bg-metallic-cone rounded flex items-center justify-center _shadow-panel pt-[0.1em]"
+                class="_size-[1.3em] _text-black _bg-metallic-cone _rounded _flex _items-center _justify-center _shadow-panel _pt-[0.1em]"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -132,8 +132,8 @@
                   viewBox="0 0 24 24"
                   stroke-width="4"
                   stroke="currentColor"
-                  class="size-5/6 opacity-75"
-                  :class="{ '-rotate-180': statusDetailVisible }"
+                  class="_size-5/6 _opacity-75"
+                  :class="{ '_-rotate-180': statusDetailVisible }"
                 >
                   <path
                     stroke-linecap="round"
@@ -146,7 +146,7 @@
           </header>
           <p
             v-if="status.data?.detail && statusDetailVisible"
-            class="_text-em-2xs mt-[0.25em] _text-stroke-xl"
+            class="_text-em-2xs _mt-[0.25em] _text-stroke-xl"
           >
             {{ status.data.detail?.toString() }}
           </p>
@@ -154,10 +154,10 @@
       </section>
     </transition-group>
 
-    <footer v-if="myBallsBalance > 0" class="flex w-full mt-0.5">
+    <footer v-if="myBallsBalance > 0" class="_flex _w-full _mt-0.5">
       <button
         type="submit"
-        class="flex-1 _bubble-btn px-6 h-16 flex items-center justify-center _text-xl _text-stroke-2xl"
+        class="_flex-1 _bubble-btn _px-6 _h-16 _flex _items-center _justify-center _text-xl _text-stroke-2xl"
         :style="{ filter: canSwap ? 'hue-rotate(-345deg) saturate(2.5)' : 'none' }"
       >
         <div :class="{ '_animate-scaleup-sm': canSwap }">SWAP</div>
@@ -212,7 +212,7 @@ const myBallsBalance = computed(() => myUser.value?.totalBalls)
 
 const el = ref()
 const afterEnter = () => {
-  const className = 'animate-shake-x-micro-fast'
+  const className = '_animate-shake-x-micro-fast'
   el.value.classList.add(className)
   setTimeout(() => el.value.classList.remove(className), 120)
 }

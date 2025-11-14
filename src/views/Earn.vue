@@ -33,36 +33,40 @@
       <template v-if="isAuthenticated">
         <section
           @click="openProfile"
-          class="_px-3 _py-3.5 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none _text-3xl _cursor-pointer"
+          class="_px-3 _py-3 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none _text-3xl _cursor-pointer"
         >
           <div class="_flex _items-center">
             <div
               v-if="auth.user?.avatar"
-              class="_size-[1em] _block _rounded-full _shadow-panel-inset _bg-cover _bg-center"
+              class="_size-[1.125em] _block _rounded-full _shadow-panel-inset _bg-cover _bg-center"
               :style="{ backgroundImage: `url(${auth.user?.avatar})` }"
             />
-            <div class="_opacity-30 _text-base _ml-[0.5em]">Your Balance</div>
+            <div class="_opacity-30 _text-mlg _text-stroke-lg _ml-[0.5em]">Your Balance</div>
           </div>
           <div class="_text-right _flex-1 _whitespace-nowrap _min-w-0 _truncate">
-            <span class="_text-stroke-xl"> {{ totalBalls?.toLocaleString() || '???' }} </span>🪩
+            <span class="_text-stroke-3xl">{{ totalBalls?.toLocaleString() || '???' }}</span> 🪩
           </div>
         </section>
       </template>
     </header>
-    <nav class="_gap-[0.45rem] _mt-6 _grid _grid-cols-2 _text-stroke-md _tracking-wide _mb-3">
+    <nav
+      class="_gap-[0.45rem] _mt-6 _grid _grid-cols-2 _text-stroke-2xl _text-xl _tracking-wide _mb-3"
+    >
       <button
         class="_bubble-btn _px-4.5 _h-16"
+        :class="{ '_animate-wiggle-sm': selectedTab === 'earn' }"
         @click="selectedTab = 'earn'"
         :style="selectedTab === 'earn' ? 'filter: hue-rotate(-70deg) saturate(2.1)' : ''"
       >
-        Earn
+        earn
       </button>
       <button
         class="_bubble-btn _px-4.5 _h-16"
+        :class="{ '_animate-wiggle-sm': selectedTab === 'spend' }"
         @click="selectedTab = 'spend'"
-        :style="selectedTab === 'spend' ? 'filter: hue-rotate(70deg) saturate(2)' : ''"
+        :style="selectedTab === 'spend' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
       >
-        Redeem
+        redeem
       </button>
     </nav>
 
@@ -227,15 +231,6 @@
             </div>
           </component>
         </div>
-        <section
-          class="_bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
-        >
-          <div class="_text-em-xs _opacity-50">follow for updates</div>
-
-          <div class="_grid _grid-cols-2 _gap-2">
-            <SocialsButtons />
-          </div>
-        </section>
       </div>
 
       <!-- (spend) -->
@@ -244,21 +239,25 @@
           class="_bg-metallic-linear _p-5 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-5 _py-5"
         >
           <div class="_flex _justify-center _leading-none _items-center _text-lg">
-            <p class="_text-stroke-2xl">Swap your 🪩 BALL$ for lotto-balls <TicketEmoji /></p>
+            <p class="_text-stroke-2xl">
+              SWAP <span class="_inline-block _animate-wiggle">🪩</span> BALL$ for
+              <TicketEmoji /> lotto-balls!
+            </p>
           </div>
         </section>
         <SwapBalls />
-        <section
-          class="_bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
-        >
-          <div class="_text-em-xs _opacity-50">follow for updates</div>
-
-          <div class="_grid _grid-cols-2 _gap-2">
-            <SocialsButtons />
-          </div>
-        </section>
       </div>
     </transition-group>
+
+    <section
+      class="_mt-8 _bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
+    >
+      <div class="_opacity-30">follow for updates</div>
+
+      <div class="_grid _grid-cols-2 _gap-2">
+        <SocialsButtons />
+      </div>
+    </section>
   </div>
 </template>
 

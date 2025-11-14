@@ -3,8 +3,8 @@
   <a
     v-for="social in [
       platforms.twitter,
-      platforms.discord,
       platforms.farcaster,
+      platforms.discord,
       platforms.telegram
     ]"
     :key="social.label"
@@ -30,7 +30,7 @@
         <img :src="social.icon" class="_w-full" />
       </div>
       <div
-        class="_flex-1 _min-w-0 _truncate _text-center _text-stroke-md _leading-snug _pr-[0.55em]"
+        class="_flex-1 _min-w-0 _truncate _text-center _text-stroke-xl _text-mlg _leading-snug _pr-[0.55em]"
       >
         {{ social.name }}
       </div>

@@ -7,20 +7,22 @@
       leaderboard
     </HubPageHeader>
     <!-- tabs -->
-    <nav class="_gap-[0.45rem] _mt-4 _grid _grid-cols-2 _text-stroke-md _tracking-wide">
+    <nav class="_gap-[0.45rem] _mt-4 _grid _grid-cols-2 _text-stroke-2xl _text-lg _tracking-wide">
       <button
         class="_bubble-btn _px-4.5 _h-16"
+        :class="{ '_animate-wiggle-sm': selectedTab === 'monthly' }"
         @click="selectedTab = 'monthly'"
         :style="selectedTab === 'monthly' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
       >
-        This Week
+        this week
       </button>
       <button
         class="_bubble-btn _px-4.5 _h-16"
+        :class="{ '_animate-wiggle-sm': selectedTab === 'allTime' }"
         @click="selectedTab = 'allTime'"
         :style="selectedTab === 'allTime' ? 'filter: hue-rotate(103deg) saturate(2)' : ''"
       >
-        All Time
+        all time
       </button>
     </nav>
 
@@ -40,7 +42,7 @@
           v-for="(entry, index) in leaderboardData"
           :key="entry.UserId || index"
           @click="openProfile(entry.User?.username || entry.username)"
-          class="_flex _items-center _text-left _gap-2.5 _p-3 _rounded-lg _bg-metallic-linear _shadow-panel _text-mlg _max-w-full _min-w-0 _cursor-pointer mouse:hover:_scale-[1.01] _duration-150 _cursor-pointer"
+          class="_flex _items-center _text-left _gap-2.5 _p-3 _rounded-lg _bg-metallic-linear _shadow-panel _text-lg _text-stroke-3xl _max-w-full _min-w-0 _cursor-pointer mouse:hover:_scale-[1.01] _duration-150 _cursor-pointer"
           aria-label="View Profile"
         >
           <div class="_min-w-[1.4em] _text-center _text-em-xs _opacity-25 _flex-shrink-0">
