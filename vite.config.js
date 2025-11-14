@@ -50,8 +50,9 @@ export default defineConfig({
         '@tanstack/vue-query',
         '@vueuse/core',
         'pinia',
-        'siwe',
-        'tailwindcss' // Usually external
+        'three' // Externalize three
+        // Note: siwe removed - it's part of viem/siwe, not a separate package
+        // Note: tailwindcss removed - it's a build tool, not a runtime dependency
         // Optional: Use regex for broader matching if listing all gets tedious
         // e.g., /^vue/, /^@wagmi\\/.*/, /^@reown\\/appkit/, /^viem/
       ],
@@ -64,7 +65,13 @@ export default defineConfig({
           '@wagmi/vue': 'WagmiVue',
           viem: 'Viem',
           '@reown/appkit': 'ReownAppkit',
-          pinia: 'Pinia'
+          '@reown/appkit-adapter-wagmi': 'ReownAppkitAdapterWagmi',
+          '@reown/appkit-siwe': 'ReownAppkitSiwe',
+          '@tanstack/vue-query': 'TanStackVueQuery',
+          '@farcaster/miniapp-sdk': 'FarcasterMiniappSdk',
+          '@farcaster/miniapp-wagmi-connector': 'FarcasterMiniappWagmiConnector',
+          pinia: 'Pinia',
+          three: 'THREE' // For UMD builds
           // Add other globals if needed for UMD
         }
       }
