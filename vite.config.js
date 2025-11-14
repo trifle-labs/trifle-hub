@@ -2,6 +2,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
+import dts from 'vite-plugin-dts'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -10,7 +11,19 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default defineConfig({
-  plugins: [vue(), cssInjectedByJsPlugin()],
+  plugins: [
+    vue(),
+    cssInjectedByJsPlugin(),
+    dts({
+      include: ['src/**/*.ts', 'src/**/*.js', 'src/**/*.vue'],
+      insertTypesEntry: true,
+      outDir: 'dist',
+      compilerOptions: {
+        allowJs: true,
+        checkJs: false
+      }
+    })
+  ],
   build: {
     lib: {
       // Could also be a dictionary or array of multiple entry points

@@ -13,7 +13,61 @@ const TrifleGuide = () => import('./components/TrifleGuide.vue')
 
 const queryClient = new QueryClient()
 
+/**
+ * @typedef {Object} TrifleHubPluginOptions
+ * @property {Object} reownConfig - Reown AppKit configuration (required)
+ * @property {string} reownConfig.projectId - Reown project ID
+ * @property {Object} [reownConfig.metadata] - App metadata
+ * @property {string} [reownConfig.metadata.name] - App name
+ * @property {string} [reownConfig.metadata.description] - App description
+ * @property {string} [reownConfig.metadata.url] - App URL
+ * @property {string[]} [reownConfig.metadata.icons] - App icons
+ * @property {Array} [reownConfig.networks] - Blockchain networks
+ * @property {Object} [reownConfig.features] - AppKit features configuration
+ * @property {string[]} [reownConfig.featuredWalletIds] - Featured wallet IDs
+ * @property {string} [reownConfig.themeMode] - Theme mode ('light' | 'dark')
+ * @property {Object<string, string>} [reownConfig.themeVariables] - CSS theme variables
+ * @property {Array} [connectors] - Wagmi connectors array
+ * @property {string} [backendUrl] - Backend API URL (default: 'https://bot-staging.trifle.life')
+ * @property {string} [defaultPage] - Default page to show when hub opens (default: 'welcome')
+ * @property {import('pinia').Pinia} [devHookPiniaInstance] - Optional Pinia instance for devtools integration
+ */
+
+/**
+ * TrifleHub Vue Plugin
+ *
+ * A Vue 3 plugin that provides authentication and wallet integration for Trifle Hub.
+ *
+ * @example
+ * ```javascript
+ * import { createApp } from 'vue'
+ * import { TrifleHubVuePlugin } from '@trifle/trifle-hub'
+ *
+ * const app = createApp(App)
+ *
+ * app.use(TrifleHubVuePlugin, {
+ *   reownConfig: {
+ *     projectId: 'your-project-id',
+ *     metadata: {
+ *       name: 'My App',
+ *       description: 'My App Description'
+ *     }
+ *   },
+ *   backendUrl: 'https://api.example.com'
+ * })
+ * ```
+ *
+ * @type {import('vue').Plugin<TrifleHubPluginOptions>}
+ */
 const TrifleHubVuePlugin = {
+  /**
+   * Install the TrifleHub plugin
+   *
+   * @param {import('vue').App} app - Vue application instance
+   * @param {TrifleHubPluginOptions} options - Plugin configuration options
+   * @returns {Promise<void>}
+   * @throws {Error} Throws if reownConfig is not provided
+   */
   install: async (app, options = {}) => {
     console.log('install TrifleHubVuePluginn')
     console.log({ options })
@@ -58,5 +112,10 @@ const TrifleHubVuePlugin = {
   }
 }
 
+/**
+ * TrifleHub main component
+ * @type {import('vue').Component}
+ */
 export { TrifleHubVuePlugin, TrifleHub, TrifleGuide }
+
 // export default TrifleHubVuePlugin
