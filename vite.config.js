@@ -6,9 +6,7 @@ import dts from 'vite-plugin-dts'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-// Helper to get __dirname in ES module
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   plugins: [
@@ -28,39 +26,29 @@ export default defineConfig({
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: path.resolve(__dirname, 'src/index.js'), // Use path.resolve and __dirname
-      name: 'TrifleHub', // Your library's name - used for UMD builds
-      fileName: (format) => `index.${format}.js`, // Generates index.es.js and index.umd.js
-      formats: ['es', 'umd'] // Include ES and UMD formats
+      fileName: () => 'index.es.js', // ES module only
+      formats: ['es'] // ES module format only
     },
     rollupOptions: {
-      // Externalize peer dependencies (consumers interact with these directly)
-      // Bundle internal dependencies (@tanstack/vue-query, @reown/appkit, etc.)
-      external: [
-        'vue',
-        'vue-router',
-        '@wagmi/core',
-        '@wagmi/vue',
-        'viem',
-        '@farcaster/miniapp-sdk',
-        '@farcaster/miniapp-wagmi-connector',
-        'pinia',
-        'three',
-        'siwe', // Part of viem, but listed for completeness
-        'tailwindcss' // Build tool, not runtime
-      ],
+      external: (id) => {
+        const peerDeps = new Set([
+          'vue',
+          'vue-router',
+          '@wagmi/core',
+          '@wagmi/vue',
+          'viem',
+          '@farcaster/miniapp-sdk',
+          '@farcaster/miniapp-wagmi-connector',
+          'pinia',
+          'three',
+          'tailwindcss'
+        ])
+        return peerDeps.has(id) || id.startsWith('viem/')
+      },
       output: {
-        // Provide global variables to use in the UMD build
-        globals: {
-          vue: 'Vue',
-          'vue-router': 'VueRouter',
-          '@wagmi/core': 'WagmiCore',
-          '@wagmi/vue': 'WagmiVue',
-          viem: 'Viem',
-          '@farcaster/miniapp-sdk': 'FarcasterMiniappSdk',
-          '@farcaster/miniapp-wagmi-connector': 'FarcasterMiniappWagmiConnector',
-          pinia: 'Pinia',
-          three: 'THREE'
-        }
+        format: 'es',
+        entryFileNames: '[name].es.js',
+        interop: 'esModule'
       }
     }
     // CSS is now automatically injected by cssInjectedByJsPlugin
