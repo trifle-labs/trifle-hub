@@ -5,9 +5,9 @@
     @submit.prevent="submit"
   >
     <header class="_w-full _flex _justify-between _items-center">
-      <div class="_flex _gap-[0.25em]">
+      <div class="_flex _gap-[0.25em] _min-w-0 _flex-1">
         <img :src="myUser?.avatar" class="_size-[1.2em] _rounded-full" />
-        <div>{{ myUser?.username }}</div>
+        <div class="_min-w-0 _truncate">{{ myUser?.username }}</div>
       </div>
       <button
         type="button"
@@ -96,7 +96,7 @@
     <transition-group name="status" @afterEnter="afterEnter">
       <section v-if="status" class="_w-full" :key="JSON.stringify(status)">
         <div
-          class="_w-full _bg-metallic-linear _p-2.5 _rounded-lg _shadow-panel _text-left _text-stroke-2xl _text-lg _leading-normal _flex _flex-col"
+          class="_w-full _bg-metallic-cone _p-2.5 _rounded-lg _shadow-panel _text-left _text-stroke-2xl _text-lg _leading-normal _flex _flex-col"
           :class="{
             '_animate-scaleup-xs': ['success', 'pending'].includes(status.type),
             '_text-rot': status.type === 'error'

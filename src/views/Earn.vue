@@ -236,9 +236,11 @@
       <!-- (spend) -->
       <div v-if="selectedTab === 'spend'" class="_space-y-3">
         <section
-          class="_bg-metallic-linear _p-5 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-5 _py-5"
+          class="_bg-metallic-linear _px-3 _py-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-5"
         >
-          <div class="_flex _justify-center _leading-none _items-center _text-lg">
+          <div
+            class="_flex _justify-center _leading-none _items-center _text-mlg _animate-scaleup-sm"
+          >
             <p class="_text-stroke-2xl">
               SWAP <span class="_inline-block _animate-wiggle">🪩</span> BALL$ for
               <TicketEmoji /> lotto-balls!
