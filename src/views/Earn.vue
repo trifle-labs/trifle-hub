@@ -164,7 +164,7 @@
                   <!-- title -->
 
                   <div
-                    class="_min-h-[1.7em] _flex _items-center _justify-start _text-left _py-[0.06em] _weight-bold _leading-snug"
+                    class="_min-h-[1.7em] _flex _items-center _justify-start _text-left _py-[0.06em] _text-stroke-xl _leading-snug"
                     :class="{ '_line-through': quest.completed && quest.once }"
                   >
                     {{ quest.name }}
@@ -207,7 +207,7 @@
               <div v-if="quest.description" class="_flex _items-start _gap-3 _pr-3">
                 <div class="_w-[1.7em] _flex-shrink-0"></div>
                 <p
-                  class="_flex-1 _text-sm _text-gray-600 _text-left"
+                  class="_flex-1 _text-md _text-gray-500 _text-stroke-lg _text-left"
                   v-html="quest.description"
                 ></p>
               </div>
