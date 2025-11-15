@@ -8,6 +8,23 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
+// Fix default imports of viem (which doesn't have a default export)
+const fixViemImports = () => ({
+  name: 'fix-viem-imports',
+  generateBundle(options, bundle) {
+    Object.keys(bundle).forEach((fileName) => {
+      const chunk = bundle[fileName]
+      if (chunk.type === 'chunk' && chunk.code) {
+        // Replace default imports with namespace imports
+        chunk.code = chunk.code.replace(
+          /import\s+(\w+)\s+from\s+["']viem["']/g,
+          "import * as $1 from 'viem'"
+        )
+      }
+    })
+  }
+})
+
 export default defineConfig({
   plugins: [
     vue(),
@@ -20,7 +37,8 @@ export default defineConfig({
         allowJs: true,
         checkJs: false
       }
-    })
+    }),
+    fixViemImports()
   ],
   build: {
     lib: {
