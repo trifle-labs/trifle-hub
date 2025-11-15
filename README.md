@@ -12,35 +12,6 @@ npm install @trifle/trifle-hub
 yarn add @trifle/trifle-hub
 ```
 
-## Build Configuration
-
-To optimize bundle size, configure your Vite build to externalize peer dependencies. Add this to your `vite.config.js`:
-
-```js
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-
-export default defineConfig({
-  plugins: [vue()],
-  build: {
-    rollupOptions: {
-      external: [
-        'vue',
-        'vue-router',
-        '@wagmi/core',
-        '@wagmi/vue',
-        'viem',
-        /^viem\//, // Externalize all viem subpath exports
-        '@farcaster/miniapp-sdk',
-        '@farcaster/miniapp-wagmi-connector',
-        'pinia',
-        'three'
-      ]
-    }
-  }
-})
-```
-
 This prevents your bundler from including peer dependencies in your build, reducing bundle size and avoiding version conflicts.
 
 ## Configuration and Setup
