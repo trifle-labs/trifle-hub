@@ -5,9 +5,27 @@
     @submit.prevent="submit"
   >
     <header class="_w-full _flex _justify-between _items-center">
-      <div class="_flex _gap-[0.25em] _min-w-0 _flex-1">
-        <img :src="myUser?.avatar" class="_size-[1.2em] _rounded-full" />
-        <div class="_min-w-0 _truncate">{{ myUser?.username }}</div>
+      <div class="_flex _gap-[0.25em] _min-w-0 _flex-1 _items-center">
+        <template v-if="myUser?.avatar">
+          <img :src="myUser?.avatar" class="_size-[1.2em] _rounded-full" />
+        </template>
+        <template v-else>
+          <div
+            alt="smiley face with dashed outline"
+            class="_size-[1.375em] _flex-shrink-0 _rounded-full _bg-cover _bg-center _opacity-30 _animate-wiggleff"
+            tabindex="-1"
+            :style="{
+              backgroundImage: `url(${smileyFacePng})`,
+              mixBlendMode: 'multiply'
+            }"
+          ></div>
+          <!-- <div
+            class="_size-[1.5em] _bg-metallic-linear _rounded-full _shadow-panel _p-1 _flex _items-stretch"
+          >
+          </div> -->
+        </template>
+        <div v-if="myUser" class="_min-w-0 _truncate">{{ myUser?.username || 'me' }}</div>
+        <div v-else class="_min-w-0 _truncate _opacity-25 _pl-0.5 _text-em-sm">who r u??</div>
       </div>
       <button
         type="button"
@@ -45,7 +63,7 @@
         v-for="percentage in [0.1, 0.25, 0.5, 0.75, 1]"
         :key="percentage"
         type="button"
-        class="_text-em-2xs _text-stroke-3xl _shadow-panel _px-[0.5em] _rounded-full _bg-metallic-cone _leading-none _h-[1.5em] _flex _items-center _gap-[0.15em]"
+        class="_text-em-3xs _text-stroke-3xl _shadow-panel _px-[0.5em] _rounded-full _bg-metallic-cone _leading-none _h-[1.5em] _flex _items-center _gap-[0.15em]"
         @click="setAmountToPercentage(percentage)"
       >
         <template v-if="percentage === 1">MAX</template>
@@ -58,7 +76,7 @@
           type="button"
           class="_flex-1 _bubble-btn _px-6 _h-16 _flex _items-center _justify-center _text-xl _text-stroke-2xl _animate-scaleup-xs"
           style="filter: hue-rotate(-345deg) saturate(2.5)"
-          @click="openBallsHub"
+          @click="getBallsClick"
         >
           <span style="filter: hue-rotate(345deg) saturate(0.9)" class="_tracking-wide">
             🪩 GET BALL$ 🪩
@@ -167,10 +185,11 @@
 </template>
 
 <script setup>
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, ref } from 'vue'
 import TicketEmoji from './TicketEmoji.vue'
+import smileyFacePng from '../assets/imgs/smiley-face-dashed-center-medium.png'
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['getBallsClick'])
 
 const authStore = inject('TrifleHub/store')
 const myUser = computed(() => authStore.user)
@@ -218,6 +237,7 @@ const afterEnter = () => {
 }
 
 async function fetchBallBalance() {
+  if (!authStore.user) return
   try {
     ballsLoading.value = true
     await authStore.fetchUserStatus()
@@ -280,12 +300,8 @@ const submit = async () => {
   }
 }
 
-const hub = inject('hub')
-function openBallsHub() {
-  emit('close')
-  setTimeout(() => {
-    hub.openHub('earn')
-  }, 150)
+function getBallsClick() {
+  emit('getBallsClick')
 }
 </script>
 

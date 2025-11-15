@@ -11,6 +11,7 @@
 
   :root {
     --thub-color-blue: #4100ff;
+    --thub-color-rot: #f43c34;
 
     --thub-color-primary: var(--thub-color-blue);
     --thub-color-primary-75: color-mix(in srgb, var(--thub-color-primary) 75%, transparent);

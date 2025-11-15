@@ -13,9 +13,7 @@
         >
           <div class="_relative _flex _flex-col _gap-2.5">
             <div>
-              <p class="_bodyText">
-                Pachinko Balls 🪩 are Trifle's point system—you might already have some!
-              </p>
+              <p class="_text-mlg">You might have 🪩BALL$ to claim!</p>
             </div>
             <div class="_flex _justify-between _items-center">
               <p class="_italic _text-[#888] _text-em-sm _animate-blink">Login to claim &rarr;</p>
@@ -236,25 +234,31 @@
       <!-- (spend) -->
       <div v-if="selectedTab === 'spend'" class="_space-y-3">
         <section
-          class="_bg-metallic-linear _px-3 _py-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-5"
+          class="_bg-metallic-linearff _p-2.5 _rounded-lg _shadow-panel-insetff _border-4 _border-dashed _border-black/20 _text-center _flex _flex-col _gap-4"
         >
-          <div
-            class="_flex _justify-center _leading-none _items-center _text-mlg _animate-scaleup-sm"
+          <header
+            class="_flex _items-center _gap-[0.75em] _justify-center _leading-none _mt-2 _-mb-1"
           >
-            <p class="_text-stroke-2xl">
-              SWAP <span class="_inline-block _animate-wiggle">🪩</span> BALL$ for
-              <TicketEmoji /> lotto-balls!
+            <div class="_text-[2.5em] _animate-wiggle-sm">🪩</div>
+            <div class="_text-[1.75em]">➡️</div>
+            <TicketEmoji class="_h-[2.5em]" />
+          </header>
+          <div class="_flex _items-center _gap-[0.5em]">
+            <p class="_flex-1 _text-center _text-lg _text-stroke-2xl">
+              Swap BALL$ for <span class="_inline-block">lotto-balls</span><br />
+              in the
+              <button class="_underline" @click="openHub('games')">weekly USDC lottery</button>!
             </p>
           </div>
+          <SwapBalls @getBallsClick="selectedTab = 'earn'" />
         </section>
-        <SwapBalls />
       </div>
     </transition-group>
 
     <section
-      class="_mt-8 _bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
+      class="_mt-6 _bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
     >
-      <div class="_opacity-30">follow for updates</div>
+      <div class="_opacity-30 _animate-wiggle-sm">follow for more BALL$</div>
 
       <div class="_grid _grid-cols-2 _gap-2">
         <SocialsButtons />
@@ -271,6 +275,7 @@ import { possiblePoints } from '../config/pointsConfig'
 import SocialsButtons from '../components/SocialsButtons.vue'
 import SwapBalls from '../components/SwapBalls.vue'
 import TicketEmoji from '../components/TicketEmoji.vue'
+
 const auth = inject('TrifleHub/store')
 const { openHub } = inject('hub')
 const quests = ref([])
