@@ -439,21 +439,21 @@
     neverthrow "^6.1.0"
     viem "^2.29.2"
 
-"@farcaster/miniapp-core@0.3.8":
-  version "0.3.8"
-  resolved "https://registry.yarnpkg.com/@farcaster/miniapp-core/-/miniapp-core-0.3.8.tgz#753aa7dc08b40573914367d4d07550c534c452c3"
-  integrity sha512-LaRG1L3lxHqo5pP/E2CX9hNqusR0C8hX3QTV2+hzmQJz6IGvmSpH6Q9ivlLyDfbdqokiMFo5Y3Z1EX1zBHMEQQ==
+"@farcaster/miniapp-core@0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@farcaster/miniapp-core/-/miniapp-core-0.4.1.tgz#c31c06d5d71bf0411ac342220721f96f7b1863d5"
+  integrity sha512-20FxHTRToYUKx7CQ8PvIy9OoQ6XjdmF1pRMS7dsj37qdqjVDeEkYoK8yXwnoReZoJRcYwIg8P3i6V8bTWNR5mg==
   dependencies:
     "@solana/web3.js" "^1.98.2"
     ox "^0.4.4"
     zod "^3.25.0"
 
-"@farcaster/miniapp-sdk@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@farcaster/miniapp-sdk/-/miniapp-sdk-0.1.9.tgz#b6b1999c3fedbe8a1f2b02e6b3a92bdb2818ecb2"
-  integrity sha512-hn0dlIy0JP2Hx6PgKcn9bjYwyPS/SQgYJ/a0qjzG8ZsDfUdjsMPf3yI/jicBipTml/UUoKcbqXM68fsrsbNMKA==
+"@farcaster/miniapp-sdk@^0.2.0":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@farcaster/miniapp-sdk/-/miniapp-sdk-0.2.1.tgz#a0ca8d16f203e11790979119066f38b1d3aa1452"
+  integrity sha512-2SnDeOtDdlN1lGQt7UyH2jkrZRQDOkmhcrlzNWazYChyPh9XfV8+9fMS+Lr/E2pEws9Q40Xl9POrCzdpUC19lg==
   dependencies:
-    "@farcaster/miniapp-core" "0.3.8"
+    "@farcaster/miniapp-core" "0.4.1"
     "@farcaster/quick-auth" "^0.0.6"
     comlink "^4.4.2"
     eventemitter3 "^5.0.1"
