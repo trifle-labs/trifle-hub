@@ -10,6 +10,7 @@ import { sdk } from '@farcaster/miniapp-sdk'
 
 // Dynamic import for code splitting
 const TrifleGuide = () => import('./components/TrifleGuide.vue')
+const SwapBalls = () => import('./components/SwapBalls.vue')
 
 const queryClient = new QueryClient()
 
@@ -107,8 +108,9 @@ const TrifleHubVuePlugin = {
 
     app.component('TrifleHub', TrifleHub)
 
-    // Register TrifleGuide as an async component for code splitting
+    // Register async components for code splitting
     app.component('TrifleGuide', defineAsyncComponent(TrifleGuide))
+    app.component('SwapBalls', defineAsyncComponent(SwapBalls))
   }
 }
 
@@ -116,6 +118,6 @@ const TrifleHubVuePlugin = {
  * TrifleHub main component
  * @type {import('vue').Component}
  */
-export { TrifleHubVuePlugin, TrifleHub, TrifleGuide }
+export { TrifleHubVuePlugin, TrifleHub, TrifleGuide, SwapBalls }
 
 // export default TrifleHubVuePlugin

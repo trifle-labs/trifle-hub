@@ -1,8 +1,8 @@
 <template>
   <img
     :src="TiltLottoHead"
-    class="inline-block h-[1.1em]"
-    :class="{ '_animate-wiggle': animate }"
+    class="_inline-block _h-[1.1em]"
+    :class="{ '_animate-wiggle': props.animate }"
   />
 </template>
 

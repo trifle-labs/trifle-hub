@@ -3,8 +3,8 @@
   <a
     v-for="social in [
       platforms.twitter,
-      platforms.discord,
       platforms.farcaster,
+      platforms.discord,
       platforms.telegram
     ]"
     :key="social.label"
@@ -19,19 +19,17 @@
     }"
   >
     <div
-      class="_flex _justify-start _items-center _gap-2.5 _h-16"
+      class="_flex _justify-start _items-center _h-16"
       :style="{
         filter: `hue-rotate(${social.bubbleButtonStyle.hueRotate * -1}deg) saturate(${
           1 / social.bubbleButtonStyle.saturate
         })`
       }"
     >
-      <div class="_size-8 _rounded-lg _overflow-hidden">
+      <div class="_size-7 sm:_size-8 _rounded-lg _overflow-hidden">
         <img :src="social.icon" class="_w-full" />
       </div>
-      <div
-        class="_flex-1 _min-w-0 _truncate _text-center _text-stroke-md _leading-snug _pr-[0.55em]"
-      >
+      <div class="_flex-1 _min-w-0 _truncate _text-center _text-stroke-xl _text-mlg _leading-snug">
         {{ social.name }}
       </div>
     </div>

@@ -6,9 +6,24 @@ import dts from 'vite-plugin-dts'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-// Helper to get __dirname in ES module
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// Fix default imports of viem (which doesn't have a default export)
+const fixViemImports = () => ({
+  name: 'fix-viem-imports',
+  generateBundle(options, bundle) {
+    Object.keys(bundle).forEach((fileName) => {
+      const chunk = bundle[fileName]
+      if (chunk.type === 'chunk' && chunk.code) {
+        // Replace default imports with namespace imports
+        chunk.code = chunk.code.replace(
+          /import\s+(\w+)\s+from\s+["']viem["']/g,
+          "import * as $1 from 'viem'"
+        )
+      }
+    })
+  }
+})
 
 export default defineConfig({
   plugins: [
@@ -22,51 +37,36 @@ export default defineConfig({
         allowJs: true,
         checkJs: false
       }
-    })
+    }),
+    fixViemImports()
   ],
   build: {
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: path.resolve(__dirname, 'src/index.js'), // Use path.resolve and __dirname
-      name: 'TrifleHub', // Your library's name - used for UMD builds
-      fileName: (format) => `index.${format}.js`, // Generates index.es.js and index.umd.js
-      formats: ['es', 'umd'] // Include ES and UMD formats
+      fileName: () => 'index.es.js', // ES module only
+      formats: ['es'] // ES module format only
     },
     rollupOptions: {
-      // Externalize peer dependencies so they aren't bundled
-      external: [
-        'vue',
-        'vue-router',
-        '@wagmi/core',
-        '@wagmi/vue',
-        '@reown/appkit',
-        '@reown/appkit/vue', // Externalize deep imports too
-        '@reown/appkit/networks', // Externalize deep imports too
-        '@reown/appkit-adapter-wagmi',
-        '@reown/appkit-siwe',
-        'viem',
-        '@farcaster/miniapp-sdk',
-        '@farcaster/miniapp-wagmi-connector',
-        '@tanstack/vue-query',
-        '@vueuse/core',
-        'pinia',
-        'siwe',
-        'tailwindcss' // Usually external
-        // Optional: Use regex for broader matching if listing all gets tedious
-        // e.g., /^vue/, /^@wagmi\\/.*/, /^@reown\\/appkit/, /^viem/
-      ],
+      external: (id) => {
+        const peerDeps = new Set([
+          'vue',
+          'vue-router',
+          '@wagmi/core',
+          '@wagmi/vue',
+          'viem',
+          '@farcaster/miniapp-sdk',
+          '@farcaster/miniapp-wagmi-connector',
+          'pinia',
+          'three',
+          'tailwindcss'
+        ])
+        return peerDeps.has(id) || id.startsWith('viem/')
+      },
       output: {
-        // Provide global variables to use in the UMD build
-        globals: {
-          vue: 'Vue',
-          'vue-router': 'VueRouter',
-          '@wagmi/core': 'WagmiCore',
-          '@wagmi/vue': 'WagmiVue',
-          viem: 'Viem',
-          '@reown/appkit': 'ReownAppkit',
-          pinia: 'Pinia'
-          // Add other globals if needed for UMD
-        }
+        format: 'es',
+        entryFileNames: '[name].es.js',
+        interop: 'esModule'
       }
     }
     // CSS is now automatically injected by cssInjectedByJsPlugin

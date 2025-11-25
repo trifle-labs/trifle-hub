@@ -12,6 +12,8 @@ npm install @trifle/trifle-hub
 yarn add @trifle/trifle-hub
 ```
 
+This prevents your bundler from including peer dependencies in your build, reducing bundle size and avoiding version conflicts.
+
 ## Configuration and Setup
 
 Import and register the TrifleHub plugin in your Vue application:

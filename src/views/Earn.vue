@@ -13,9 +13,7 @@
         >
           <div class="_relative _flex _flex-col _gap-2.5">
             <div>
-              <p class="_bodyText">
-                Pachinko Balls 🪩 are Trifle's point system—you might already have some!
-              </p>
+              <p class="_text-mlg">You might have 🪩BALL$ to claim!</p>
             </div>
             <div class="_flex _justify-between _items-center">
               <p class="_italic _text-[#888] _text-em-sm _animate-blink">Login to claim &rarr;</p>
@@ -33,36 +31,40 @@
       <template v-if="isAuthenticated">
         <section
           @click="openProfile"
-          class="_px-3 _py-3.5 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none _text-3xl _cursor-pointer"
+          class="_px-3 _py-3 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none _text-3xl _cursor-pointer"
         >
           <div class="_flex _items-center">
             <div
               v-if="auth.user?.avatar"
-              class="_size-[1em] _block _rounded-full _shadow-panel-inset _bg-cover _bg-center"
+              class="_size-[1.125em] _block _rounded-full _shadow-panel-inset _bg-cover _bg-center"
               :style="{ backgroundImage: `url(${auth.user?.avatar})` }"
             />
-            <div class="_opacity-30 _text-base _ml-[0.5em]">Your Balance</div>
+            <div class="_opacity-30 _text-mlg _text-stroke-lg _ml-[0.5em]">Your Balance</div>
           </div>
           <div class="_text-right _flex-1 _whitespace-nowrap _min-w-0 _truncate">
-            <span class="_text-stroke-xl"> {{ totalBalls?.toLocaleString() || '???' }} </span>🪩
+            <span class="_text-stroke-3xl">{{ totalBalls?.toLocaleString() || '???' }}</span> 🪩
           </div>
         </section>
       </template>
     </header>
-    <nav class="_gap-[0.45rem] _mt-6 _grid _grid-cols-2 _text-stroke-md _tracking-wide _mb-3">
+    <nav
+      class="_gap-[0.45rem] _mt-6 _grid _grid-cols-2 _text-stroke-2xl _text-xl _tracking-wide _mb-3"
+    >
       <button
         class="_bubble-btn _px-4.5 _h-16"
+        :class="{ '_animate-wiggle-sm': selectedTab === 'earn' }"
         @click="selectedTab = 'earn'"
         :style="selectedTab === 'earn' ? 'filter: hue-rotate(-70deg) saturate(2.1)' : ''"
       >
-        Earn
+        earn
       </button>
       <button
         class="_bubble-btn _px-4.5 _h-16"
+        :class="{ '_animate-wiggle-sm': selectedTab === 'spend' }"
         @click="selectedTab = 'spend'"
-        :style="selectedTab === 'spend' ? 'filter: hue-rotate(70deg) saturate(2)' : ''"
+        :style="selectedTab === 'spend' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
       >
-        Redeem
+        redeem
       </button>
     </nav>
 
@@ -162,7 +164,7 @@
                   <!-- title -->
 
                   <div
-                    class="_min-h-[1.7em] _flex _items-center _justify-start _text-left _py-[0.06em] _weight-bold _leading-snug"
+                    class="_min-h-[1.7em] _flex _items-center _justify-start _text-left _py-[0.06em] _text-stroke-xl _leading-snug"
                     :class="{ '_line-through': quest.completed && quest.once }"
                   >
                     {{ quest.name }}
@@ -205,7 +207,7 @@
               <div v-if="quest.description" class="_flex _items-start _gap-3 _pr-3">
                 <div class="_w-[1.7em] _flex-shrink-0"></div>
                 <p
-                  class="_flex-1 _text-sm _text-gray-600 _text-left"
+                  class="_flex-1 _text-md _text-gray-500 _text-stroke-lg _text-left"
                   v-html="quest.description"
                 ></p>
               </div>
@@ -227,38 +229,41 @@
             </div>
           </component>
         </div>
-        <section
-          class="_bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
-        >
-          <div class="_text-em-xs _opacity-50">follow for updates</div>
-
-          <div class="_grid _grid-cols-2 _gap-2">
-            <SocialsButtons />
-          </div>
-        </section>
       </div>
 
       <!-- (spend) -->
       <div v-if="selectedTab === 'spend'" class="_space-y-3">
         <section
-          class="_bg-metallic-linear _p-5 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-5 _py-5"
+          class="_bg-metallic-linearff _p-2.5 _rounded-lg _shadow-panel-insetff _border-4 _border-dashed _border-black/20 _text-center _flex _flex-col _gap-4"
         >
-          <div class="_flex _justify-center _leading-none _items-center _text-lg">
-            <p class="_text-stroke-2xl">Swap your 🪩 BALL$ for lotto-balls <TicketEmoji /></p>
+          <header
+            class="_flex _items-center _gap-[0.75em] _justify-center _leading-none _mt-2 _-mb-1"
+          >
+            <div class="_text-[2.5em] _animate-wiggle-sm">🪩</div>
+            <div class="_text-[1.75em]">➡️</div>
+            <TicketEmoji class="_h-[2.5em]" />
+          </header>
+          <div class="_flex _items-center _gap-[0.5em]">
+            <p class="_flex-1 _text-center _text-lg _text-stroke-2xl">
+              Swap BALL$ for <span class="_inline-block">lotto-balls</span><br />
+              in the
+              <button class="_underline" @click="openHub('games')">weekly USDC lottery</button>!
+            </p>
           </div>
-        </section>
-        <SwapBalls />
-        <section
-          class="_bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
-        >
-          <div class="_text-em-xs _opacity-50">follow for updates</div>
-
-          <div class="_grid _grid-cols-2 _gap-2">
-            <SocialsButtons />
-          </div>
+          <SwapBalls @getBallsClick="selectedTab = 'earn'" />
         </section>
       </div>
     </transition-group>
+
+    <section
+      class="_mt-6 _bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
+    >
+      <div class="_opacity-30 _animate-wiggle-sm">follow for more BALL$</div>
+
+      <div class="_grid _grid-cols-2 _gap-2">
+        <SocialsButtons />
+      </div>
+    </section>
   </div>
 </template>
 
@@ -270,6 +275,7 @@ import { possiblePoints } from '../config/pointsConfig'
 import SocialsButtons from '../components/SocialsButtons.vue'
 import SwapBalls from '../components/SwapBalls.vue'
 import TicketEmoji from '../components/TicketEmoji.vue'
+
 const auth = inject('TrifleHub/store')
 const { openHub } = inject('hub')
 const quests = ref([])

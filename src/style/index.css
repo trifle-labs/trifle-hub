@@ -1,5 +1,6 @@
 /* fonts should not be loaded in a layer! */
 @import 'fonts.css';
+@import 'reset.css';
 
 /* other styles in a layer so you can order them in consumer app no matter when they're loaded */
 /* i.e with `@layer trifle-hub, app` */
@@ -10,6 +11,7 @@
 
   :root {
     --thub-color-blue: #4100ff;
+    --thub-color-rot: #f43c34;
 
     --thub-color-primary: var(--thub-color-blue);
     --thub-color-primary-75: color-mix(in srgb, var(--thub-color-primary) 75%, transparent);
@@ -31,11 +33,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  button {
-    font-size: inherit;
-    text-transform: inherit;
-    font-weight: inherit;
-  }
+  
 
   /* typography */
 
@@ -67,6 +65,9 @@
   }
   ._text-stroke-3xl {
     -webkit-text-stroke: 0.075em currentColor;
+  }
+  ._text-stroke-4xl {
+    -webkit-text-stroke: 0.0825em currentColor;
   }
   ._bodyText {
     @apply _text-base _leading-snug;

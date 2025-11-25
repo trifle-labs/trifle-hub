@@ -103,7 +103,9 @@
       <section class="_mx-8 _text-center _flex _flex-col _gap-3.5">
         <div class="_mt-4"></div>
 
-        <div class="_opacity-40 _animate-wiggle _mb-0.5 _text-em-mlg">+ blah blah blah's</div>
+        <div class="_opacity-[0.35] _animate-wiggle-sm _mb-0.5 _text-lg _text-stroke-mdff">
+          + blah blah blah's
+        </div>
         <div class="_grid _grid-cols-2 _gap-2">
           <SocialsButtons />
         </div>
@@ -137,11 +139,12 @@ const games = [
   },
   {
     name: 'gm-game',
-    // title: 'GM GAME',
+    title: 'GM GAME',
     link: 'https://gm.trifle.life',
     description: 'write gm\'s → win BALL$ <span class="_not-italic">🪩</span>',
     bgVideo:
-      'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
+      // 'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
+      'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco,h_480/v1760612566/Screen_Recording_2025-10-16_at_12.58.28_tiytn2.mov',
     bgBlur: 0,
     isNewUntil: new Date('July 15, 2025')
   },

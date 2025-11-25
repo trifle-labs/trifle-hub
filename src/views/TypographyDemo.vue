@@ -153,6 +153,11 @@
       ._text-stroke-3xl
     </li>
     <li
+      class="_text-stroke-4xl sm:_text-stroke-4xl md:_text-stroke-4xl lg:_text-stroke-4xl xl:_text-stroke-4xl 2xl:_text-stroke-4xl"
+    >
+      ._text-stroke-4xl
+    </li>
+    <li
       class="_text-em-2xs _opacity-50 _mt-2 sm:_text-em-2xs md:_text-em-2xs lg:_text-em-2xs xl:_text-em-2xs 2xl:_text-em-2xs"
     >
       (via text-stroke)
