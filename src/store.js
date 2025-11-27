@@ -43,7 +43,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     isFarcaster: false,
-    supportsAddMiniApp: false,
+    isSuperApp: false,
     _appKitInstance: null,
     _wagmiConfigInstance: null,
     notifications: [], // { id, type: 'error'|'success', message }
@@ -210,14 +210,10 @@ export const useAuthStore = defineStore('auth', {
         if (isMiniApp) {
           const context = await sdk.context
           this.isFarcaster = context
-          // Check if the client supports addMiniApp (super app detection)
-          try {
-            const capabilities = await sdk.getCapabilities()
-            this.supportsAddMiniApp = capabilities.includes('actions.addMiniApp')
-          } catch (e) {
-            console.warn('Could not get capabilities:', e)
-            this.supportsAddMiniApp = false
-          }
+          // Check if this is a Trifle super app domain (only allow addFrame on these)
+          const hostname = window.location.hostname
+          this.isSuperApp =
+            hostname === 'like.trifle.life' || hostname === 'trifle.life'
           await this.connectFarcaster()
           console.log({ context })
         }
@@ -432,8 +428,8 @@ export const useAuthStore = defineStore('auth', {
 
     async addFrame() {
       try {
-        // Only attempt to add frame if the client supports it (super app)
-        if (this.isFarcaster && !this.isFarcaster.client.added && this.supportsAddMiniApp) {
+        // Only add frame if this is a Trifle super app domain
+        if (this.isFarcaster && !this.isFarcaster.client.added && this.isSuperApp) {
           await sdk.actions.addFrame()
           this.isFarcaster = await sdk.context
         }
