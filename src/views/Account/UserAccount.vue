@@ -563,8 +563,8 @@
           <AuthButton v-if="!hasFarcasterAuth" platform="farcaster" points="+10" class="_w-full">
             {{ farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster' }}
           </AuthButton>
-          <!-- (add mini-app to farcaster button) -->
-          <template v-if="isFarcaster && !isFarcaster.client.added">
+          <!-- (add mini-app to farcaster button) - only show on super app domains -->
+          <template v-if="isFarcaster && !isFarcaster.client.added && isSuperApp">
             <AuthButton platform="farcaster" points="+10" class="_w-full" @click="addFrame"
               >Add this Mini App</AuthButton
             >
@@ -595,6 +595,7 @@ const auth = inject('TrifleHub/store')
 const { isAuthenticated, backendUrl } = storeToRefs(auth)
 
 const isFarcaster = computed(() => auth.isFarcaster)
+const isSuperApp = computed(() => auth.isSuperApp)
 
 const addFrame = async () => {
   await auth.addFrame()
