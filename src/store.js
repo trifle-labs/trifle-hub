@@ -43,6 +43,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     isFarcaster: false,
+    supportsAddMiniApp: false,
     _appKitInstance: null,
     _wagmiConfigInstance: null,
     notifications: [], // { id, type: 'error'|'success', message }
@@ -209,6 +210,14 @@ export const useAuthStore = defineStore('auth', {
         if (isMiniApp) {
           const context = await sdk.context
           this.isFarcaster = context
+          // Check if the client supports addMiniApp (super app detection)
+          try {
+            const capabilities = await sdk.getCapabilities()
+            this.supportsAddMiniApp = capabilities.includes('actions.addMiniApp')
+          } catch (e) {
+            console.warn('Could not get capabilities:', e)
+            this.supportsAddMiniApp = false
+          }
           await this.connectFarcaster()
           console.log({ context })
         }
@@ -423,7 +432,8 @@ export const useAuthStore = defineStore('auth', {
 
     async addFrame() {
       try {
-        if (this.isFarcaster && !this.isFarcaster.client.added) {
+        // Only attempt to add frame if the client supports it (super app)
+        if (this.isFarcaster && !this.isFarcaster.client.added && this.supportsAddMiniApp) {
           await sdk.actions.addFrame()
           this.isFarcaster = await sdk.context
         }
