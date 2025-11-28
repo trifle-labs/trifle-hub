@@ -823,9 +823,13 @@ export const useAuthStore = defineStore('auth', {
         // Ensure we have a valid chainId for the SIWE message
         let chainId = this.accountChainId
         if (chainId == null && this._wagmiConfigInstance) {
-          chainId = getChainId(this._wagmiConfigInstance)
-          if (chainId != null) {
-            this.accountChainId = chainId
+          try {
+            chainId = getChainId(this._wagmiConfigInstance)
+            if (chainId != null) {
+              this.accountChainId = chainId
+            }
+          } catch (e) {
+            console.warn('Failed to get chain ID from wagmi config:', e)
           }
         }
         if (chainId == null) {
