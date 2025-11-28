@@ -6,7 +6,7 @@ import { defineStore } from 'pinia'
 import { createAppClient, viemConnector } from '@farcaster/auth-client'
 import { isMobile } from './utils'
 import { useAccount } from '@wagmi/vue'
-import { signMessage, watchAccount } from '@wagmi/core'
+import { signMessage, watchAccount, getChainId } from '@wagmi/core'
 import { createSiweMessage } from 'viem/siwe'
 import { sdk } from '@farcaster/miniapp-sdk'
 
@@ -819,13 +819,30 @@ export const useAuthStore = defineStore('auth', {
         }
 
         const { nonce } = await nonceResponse.json()
+
+        // Ensure we have a valid chainId for the SIWE message
+        let chainId = this.accountChainId
+        if (chainId == null && this._wagmiConfigInstance) {
+          try {
+            chainId = getChainId(this._wagmiConfigInstance)
+            if (chainId != null) {
+              this.accountChainId = chainId
+            }
+          } catch (e) {
+            console.warn('Failed to get chain ID from wagmi config:', e)
+          }
+        }
+        if (chainId == null) {
+          throw new Error('Unable to determine chain ID. Please ensure your wallet is connected to a network.')
+        }
+
         const message = createSiweMessage({
           domain: window.location.host,
           address: normalizedAddress,
           statement: 'Sign this message to prove you own this wallet (at no cost to you).',
           uri: window.location.origin,
           version: '1',
-          chainId: this.accountChainId,
+          chainId,
           nonce
         })
 
