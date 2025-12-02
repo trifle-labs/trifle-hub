@@ -6,7 +6,7 @@ import { defineStore } from 'pinia'
 import { createAppClient, viemConnector } from '@farcaster/auth-client'
 import { isMobile } from './utils'
 import { useAccount } from '@wagmi/vue'
-import { signMessage, watchAccount, getChainId } from '@wagmi/core'
+import { signMessage, watchAccount, getChainId, getAccount } from '@wagmi/core'
 import { createSiweMessage } from 'viem/siwe'
 import { sdk } from '@farcaster/miniapp-sdk'
 
@@ -212,8 +212,7 @@ export const useAuthStore = defineStore('auth', {
           this.isFarcaster = context
           // Check if this is a Trifle super app domain (only allow addFrame on these)
           const hostname = window.location.hostname
-          this.isSuperApp =
-            hostname === 'like.trifle.life' || hostname === 'trifle.life'
+          this.isSuperApp = hostname === 'like.trifle.life' || hostname === 'trifle.life'
           await this.connectFarcaster()
           console.log({ context })
         }
@@ -833,7 +832,62 @@ export const useAuthStore = defineStore('auth', {
           }
         }
         if (chainId == null) {
-          throw new Error('Unable to determine chain ID. Please ensure your wallet is connected to a network.')
+          throw new Error(
+            'Unable to determine chain ID. Please ensure your wallet is connected to a network.'
+          )
+        }
+
+        // Detect if Coinbase wallet is being used and adjust chainId to Base if needed
+        let finalChainId = chainId
+        try {
+          let isCoinbaseWallet = false
+
+          // Try to get wallet info from appKit modal (as suggested by user)
+          if (this._appKitInstance && typeof this._appKitInstance.getWalletInfo === 'function') {
+            try {
+              const walletInfo = this._appKitInstance.getWalletInfo()
+              console.log({ walletInfo })
+              if (
+                walletInfo &&
+                (walletInfo.name?.toLowerCase().includes('coinbase') ||
+                  walletInfo.id?.includes('coinbase'))
+              ) {
+                isCoinbaseWallet = true
+              }
+            } catch (e) {
+              console.warn('Could not get wallet info from appKit modal:', e)
+            }
+          }
+
+          // Fallback: Check window.ethereum for Coinbase Wallet
+          if (!isCoinbaseWallet && typeof window !== 'undefined' && window.ethereum) {
+            if (window.ethereum.isCoinbaseWallet) {
+              isCoinbaseWallet = true
+            }
+          }
+
+          // Fallback: Check wagmi connector name
+          if (!isCoinbaseWallet && this._wagmiConfigInstance) {
+            try {
+              const account = getAccount(this._wagmiConfigInstance)
+              if (account.connector) {
+                const connectorName = account.connector.name?.toLowerCase() || ''
+                if (connectorName.includes('coinbase')) {
+                  isCoinbaseWallet = true
+                }
+              }
+            } catch (e) {
+              console.warn('Could not get connector info from wagmi:', e)
+            }
+          }
+
+          // If Coinbase wallet detected, change chainId to Base (8453)
+          if (isCoinbaseWallet) {
+            finalChainId = 8453 // Base network chain ID
+            console.log('Coinbase wallet detected, using Base chainId:', finalChainId)
+          }
+        } catch (e) {
+          console.warn('Error detecting wallet type, using original chainId:', e)
         }
 
         const message = createSiweMessage({
@@ -842,7 +896,7 @@ export const useAuthStore = defineStore('auth', {
           statement: 'Sign this message to prove you own this wallet (at no cost to you).',
           uri: window.location.origin,
           version: '1',
-          chainId,
+          chainId: finalChainId,
           nonce
         })
 
@@ -859,7 +913,6 @@ export const useAuthStore = defineStore('auth', {
         // 3. Verify signature and get token
         this.authSteps.wallet.signing = false
         this.authSteps.wallet.verifying = true
-
         const verifyUrl = `${this.backendUrl}/auth/wallet/${
           this.isAuthenticated ? 'add-verify' : 'verify'
         }`
@@ -869,7 +922,8 @@ export const useAuthStore = defineStore('auth', {
           headers,
           body: JSON.stringify({
             signature,
-            message
+            message,
+            chainId: finalChainId
           })
         })
         console.log({ verifyResponse })
