@@ -51,7 +51,6 @@ export function initializeWagmiConfig(config, connectors = []) {
       ...(config.themeVariables || {})
     }
   }
-  console.log({ finalConfig })
   // const isMiniApp = sdk.context()
   // const miniApp = typeof isMiniApp === Promise ? false : true
 
@@ -64,7 +63,6 @@ export function initializeWagmiConfig(config, connectors = []) {
   //   sdk.context()
   // )
   // const context = await sdk.context
-  console.log({ connectors })
   // Create Wagmi Adapter
   const wagmiAdapterConfig = {
     projectId: finalConfig.projectId,
@@ -79,7 +77,6 @@ export function initializeWagmiConfig(config, connectors = []) {
     ...finalConfig,
     adapters: [wagmiAdapter]
   }
-  console.log({ createAppKitObject })
   // Create modal
   const appKit = createAppKit(createAppKitObject)
 

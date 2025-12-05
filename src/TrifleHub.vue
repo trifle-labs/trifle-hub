@@ -18,10 +18,6 @@ const props = defineProps({
 
 const defaultPage = inject('TrifleHub/defaultPage', 'welcome')
 
-onMounted(() => {
-  console.log('TrifleHub mounted')
-})
-
 /* HUB OPEN/CLOSE */
 const route = useRoute()
 const hubOpen = ref(route.query.hub !== undefined)

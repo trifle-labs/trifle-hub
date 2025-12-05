@@ -145,13 +145,9 @@ export const useAuthStore = defineStore('auth', {
     setInstances(appKit, wagmiConfig) {
       this._appKitInstance = appKit
       this._wagmiConfigInstance = wagmiConfig
-      console.log('AuthStore: appKit and wagmiConfig instances set in store.', {
-        appKit,
-        wagmiConfig
-      })
     },
     async initializeAuth(appKit, wagmiConfig, backendUrl) {
-      console.log('initializeAuth')
+      console.log('initializeAuthhh')
       if (this.initialized) return
       this.backendUrl = backendUrl
       this.setInstances(appKit, wagmiConfig)
@@ -180,6 +176,8 @@ export const useAuthStore = defineStore('auth', {
         if (token) {
           this.setAuthToken(token)
           await this.fetchUserStatus()
+        } else {
+          console.log('no auth token found, not fetching user status')
         }
 
         // Initialize wallet connection state
@@ -231,7 +229,6 @@ export const useAuthStore = defineStore('auth', {
     async handleConnectionChange(isConnected) {
       this.accountConnected = isConnected
       if (!isConnected) {
-        console.log('not connected, setting needsWalletAuth to false')
         this.needsWalletAuth = false
       }
     },
@@ -241,25 +238,15 @@ export const useAuthStore = defineStore('auth', {
         this.accountAddress = newAddress
         // Check if the new address is authenticated
         const hasAuthenticatedWallet = this.user?.linkedAccounts?.wallet?.some(
-          (w) => w.address?.toLowerCase() === newAddress?.toLowerCase()
+          (w) => w.id?.toLowerCase() === newAddress?.toLowerCase()
         )
-
         // If not authenticated and we're logged in, mark as needing auth
         if (!hasAuthenticatedWallet && this.isAuthenticated) {
-          console.log('needs wallet auth, setting needsWalletAuth to true')
           this.needsWalletAuth = true
         } else {
-          console.log('no need for wallet auth, setting needsWalletAuth to false')
           this.needsWalletAuth = false
         }
-
-        this.updateWalletState()
       }
-    },
-
-    updateWalletState() {
-      // The current wallet state is already tracked in accountAddress, accountChainId, and accountConnected
-      this.saveSession()
     },
 
     async connectFarcaster() {
@@ -958,6 +945,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async disconnect() {
+      console.log('disconnecting')
       try {
         if (this.accountConnected) {
           await this._appKitInstance.disconnect()
@@ -1077,11 +1065,6 @@ export const useAuthStore = defineStore('auth', {
                 this.authMethod = firstConnectedPlatform[0]
               }
             }
-          }
-
-          // Update wallet connection state if needed
-          if (this.accountConnected && this.accountAddress) {
-            this.updateWalletState()
           }
 
           this.saveSession()

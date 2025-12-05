@@ -70,8 +70,6 @@ const TrifleHubVuePlugin = {
    * @throws {Error} Throws if reownConfig is not provided
    */
   install: async (app, options = {}) => {
-    console.log('install TrifleHubVuePluginn')
-    console.log({ options })
     if (!options.reownConfig) {
       throw new Error('reownConfig is required when installing TrifleHub')
     }
