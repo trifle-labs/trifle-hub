@@ -342,7 +342,7 @@ const fetchUserPoints = async () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-          // Authorization: `Bearer ${localStorage.getItem('authToken')}`
+          // Authorization: `Bearer ${auth.authToken}`
         },
         body: JSON.stringify({
           userId: auth.user?.id || auth.isFarcaster?.user?.id

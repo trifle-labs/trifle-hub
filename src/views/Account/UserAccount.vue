@@ -791,7 +791,7 @@ const setAvatar = async (platform, platformId) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        Authorization: `Bearer ${auth.authToken}`
       },
       body: JSON.stringify({ platform, platformId })
     })

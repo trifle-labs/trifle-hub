@@ -273,7 +273,7 @@ const submit = async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        Authorization: `Bearer ${authStore.authToken}`
       },
       body: JSON.stringify({
         points: amount.value, // Integer. Required. Number of points to award.

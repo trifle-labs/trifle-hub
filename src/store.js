@@ -26,6 +26,7 @@ export const useAuthStore = defineStore('auth', {
     user: null, // { id, email, linkedAccounts: { discord: [{id, username}], telegram: [{id, username}], wallet: [{address, chainId}] } }
     isAuthenticated: false,
     authMethod: null, // The platform used for initial authentication
+    authToken: null,
     loading: false,
     error: null,
     session: null,
@@ -170,32 +171,20 @@ export const useAuthStore = defineStore('auth', {
       try {
         try {
           // Initialize Farcaster miniapp if present
-          const ready = await sdk.actions.ready()
-          console.log({ ready })
+          await sdk.actions.ready()
         } catch (e) {
           console.warn('error initializing farcaster', e)
         }
 
-        // Check for existing session
-        const savedSession = localStorage.getItem('auth_session')
-        console.log('savedSession', { savedSession })
-        if (savedSession) {
-          const session = JSON.parse(savedSession)
-          console.log('session', { session })
-          await this.restoreSession(session)
-        }
-
-        // Check for Discord JWT token
         const token = localStorage.getItem('authToken')
         if (token) {
-          console.log('initializeAuth')
+          this.setAuthToken(token)
           await this.fetchUserStatus()
         }
 
         // Initialize wallet connection state
         const unsubscribe = watchAccount(this._wagmiConfigInstance, {
           onChange: (data) => {
-            console.log('watchAccount', { data })
             this.accountAddress !== data.address?.toLowerCase() &&
               this.handleWalletChange(data.address?.toLowerCase())
             this.accountChainId !== data.chainId && this.handleChainChange(data.chainId)
@@ -212,10 +201,8 @@ export const useAuthStore = defineStore('auth', {
           this.isFarcaster = context
           // Check if this is a Trifle super app domain (only allow addFrame on these)
           const hostname = window.location.hostname
-          this.isSuperApp =
-            hostname === 'like.trifle.life' || hostname === 'trifle.life'
+          this.isSuperApp = hostname === 'like.trifle.life' || hostname === 'trifle.life'
           await this.connectFarcaster()
-          console.log({ context })
         }
 
         this.initialized = true
@@ -227,15 +214,6 @@ export const useAuthStore = defineStore('auth', {
         })
       } finally {
         this.loading = false
-      }
-
-      if (this.isFarcaster) {
-        if (this.farcasterInterval) {
-          clearInterval(this.farcasterInterval)
-        }
-        this.farcasterInterval = setInterval(async () => {
-          this.isFarcaster = await sdk.context
-        }, 5_000)
       }
     },
     async fetchFarcasterUserInfo() {
@@ -258,7 +236,6 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async handleWalletChange(newAddress) {
-      console.log('handleWalletChange', { newAddress })
       // If we're switching to a new address
       if (newAddress) {
         this.accountAddress = newAddress
@@ -266,11 +243,6 @@ export const useAuthStore = defineStore('auth', {
         const hasAuthenticatedWallet = this.user?.linkedAccounts?.wallet?.some(
           (w) => w.address?.toLowerCase() === newAddress?.toLowerCase()
         )
-
-        console.log({
-          hasAuthenticatedWallet,
-          isAuthenticated: this.isAuthenticated
-        })
 
         // If not authenticated and we're logged in, mark as needing auth
         if (!hasAuthenticatedWallet && this.isAuthenticated) {
@@ -295,7 +267,6 @@ export const useAuthStore = defineStore('auth', {
       if (this.isFarcaster) {
         console.log('connecting farcaster')
         data = await sdk.quickAuth.getToken()
-        console.log({ data })
 
         url = `${this.backendUrl}/farcaster/${
           this.isAuthenticated ? 'add-quick-auth' : 'quick-auth'
@@ -404,7 +375,7 @@ export const useAuthStore = defineStore('auth', {
         'Content-Type': 'application/json'
       }
       if (this.isAuthenticated) {
-        headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
+        headers.Authorization = `Bearer ${this.authToken}`
       }
       const res = await fetch(url, {
         method: 'POST',
@@ -419,11 +390,15 @@ export const useAuthStore = defineStore('auth', {
       }
 
       const jsonRes = await res.json()
-      localStorage.setItem('authToken', jsonRes.token)
-      headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
+      this.setAuthToken(jsonRes.token)
       await this.fetchUserStatus()
       console.log({ isFarcaster: this.isFarcaster })
       this.addFrame()
+    },
+
+    setAuthToken(token) {
+      this.authToken = token
+      localStorage.setItem('authToken', token)
     },
 
     async addFrame() {
@@ -463,7 +438,7 @@ export const useAuthStore = defineStore('auth', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('authToken')}`
+              Authorization: `Bearer ${this.authToken}`
             }
           })
 
@@ -509,7 +484,7 @@ export const useAuthStore = defineStore('auth', {
 
               // Handle successful authentication
               if (event.data.token) {
-                localStorage.setItem('authToken', event.data.token)
+                this.setAuthToken(event.data.token)
                 await this.fetchUserStatus()
                 window.__trifleDiscordPopup = null
                 resolve()
@@ -586,7 +561,7 @@ export const useAuthStore = defineStore('auth', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`
+          Authorization: `Bearer ${this.authToken}`
         }
       })
       if (!res.ok) {
@@ -620,7 +595,7 @@ export const useAuthStore = defineStore('auth', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('authToken')}`
+              Authorization: `Bearer ${this.authToken}`
             }
           })
 
@@ -672,7 +647,7 @@ export const useAuthStore = defineStore('auth', {
 
               // Handle successful authentication
               if (event.data.token) {
-                localStorage.setItem('authToken', event.data.token)
+                this.setAuthToken(event.data.token)
                 await this.fetchUserStatus()
                 window.__trifleTwitterPopup = null
                 resolve()
@@ -748,12 +723,14 @@ export const useAuthStore = defineStore('auth', {
     async connectWallet() {
       try {
         const isConnected = this._appKitInstance.getIsConnectedState()
-        console.log({ isConnected })
+        if (isConnected) {
+          console.log('wallet already connected, no need to connect')
+          return true
+        }
+
         this.authSteps.wallet.connecting = true
         await this.enforceConnection()
         const { address } = useAccount({ config: this._wagmiConfigInstance })
-        console.log({ address })
-        console.log({ isConnected: this.accountConnected })
         if (!address.value) throw new Error('Failed to connect wallet')
 
         // Don't automatically authenticate if user is already logged in with another method
@@ -803,7 +780,7 @@ export const useAuthStore = defineStore('auth', {
         }
 
         if (this.isAuthenticated) {
-          headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
+          headers.Authorization = `Bearer ${this.authToken}`
         }
 
         // 1. Get nonce from server
@@ -812,7 +789,6 @@ export const useAuthStore = defineStore('auth', {
           method: 'POST',
           headers
         })
-        console.log('nonceResponse', { nonceResponse })
 
         if (!nonceResponse.ok) {
           throw new Error('Failed to get nonce')
@@ -833,7 +809,9 @@ export const useAuthStore = defineStore('auth', {
           }
         }
         if (chainId == null) {
-          throw new Error('Unable to determine chain ID. Please ensure your wallet is connected to a network.')
+          throw new Error(
+            'Unable to determine chain ID. Please ensure your wallet is connected to a network.'
+          )
         }
 
         const message = createSiweMessage({
@@ -846,7 +824,6 @@ export const useAuthStore = defineStore('auth', {
           nonce
         })
 
-        console.log('sign the nonce')
         // 2. Sign the nonce message
         // const signature = await signMessage(this._wagmiConfigInstance, {
         //   message: nonce
@@ -854,7 +831,6 @@ export const useAuthStore = defineStore('auth', {
         const signature = await signMessage(this._wagmiConfigInstance, {
           message
         })
-        console.log({ signature })
 
         // 3. Verify signature and get token
         this.authSteps.wallet.signing = false
@@ -863,7 +839,6 @@ export const useAuthStore = defineStore('auth', {
         const verifyUrl = `${this.backendUrl}/auth/wallet/${
           this.isAuthenticated ? 'add-verify' : 'verify'
         }`
-        console.log({ verifyUrl })
         const verifyResponse = await fetch(verifyUrl, {
           method: 'POST',
           headers,
@@ -872,20 +847,17 @@ export const useAuthStore = defineStore('auth', {
             message
           })
         })
-        console.log({ verifyResponse })
         if (!verifyResponse.ok) {
           throw new Error('Failed to verify signature')
         }
         const verifyResponse_ = await verifyResponse.json()
         if (verifyResponse_.token) {
           const { token } = verifyResponse_
-          console.log('set authToken from wallet auth', { token })
-          localStorage.setItem('authToken', token)
+          this.setAuthToken(token)
         }
 
         this.needsWalletAuth = false
         // Fetch updated user status which will include the new authenticated wallet
-        console.log('authenticateWithWallet')
         await this.fetchUserStatus()
         return true
       } catch (error) {
@@ -944,10 +916,6 @@ export const useAuthStore = defineStore('auth', {
         return
       }
 
-      if (platform === 'discord') {
-        localStorage.removeItem('authToken')
-      }
-
       if (this.user?.linkedAccounts) {
         delete this.user.linkedAccounts[platform]
       }
@@ -990,9 +958,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async disconnect() {
-      console.log('disconnect')
       try {
-        console.log({ accountConnected: this.accountConnected })
         if (this.accountConnected) {
           await this._appKitInstance.disconnect()
           const connected = this._appKitInstance.getIsConnectedState()
@@ -1001,6 +967,7 @@ export const useAuthStore = defineStore('auth', {
 
         // Clear Discord auth
         localStorage.removeItem('authToken')
+        this.authToken = null
 
         // Cleanup any ongoing Telegram authentication
         this.cleanupTelegramAuth()
@@ -1023,13 +990,10 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    // TODO: make sure that everywhere that an authenticated call is being made it's using session data from the store rather than reading directly from local storage.
-    // TODO: saveSession should be used with in tandem with authenticated requests to use the current session data effectively.
     saveSession() {
       const session = {
         user: this.user,
         authMethod: this.authMethod,
-        // Save current wallet state
         wallet: this.accountConnected
           ? {
               address: this.accountAddress,
@@ -1037,41 +1001,8 @@ export const useAuthStore = defineStore('auth', {
             }
           : null
       }
-      console.log('save session', { session })
       localStorage.setItem('auth_session', JSON.stringify(session))
       this.session = session
-    },
-
-    async restoreSession(session) {
-      console.log('restoreSession', { session })
-      if (!session?.user) return false
-
-      this.user = session.user
-      this.authMethod = session.authMethod
-
-      // Restore wallet state if it was connected
-      if (session.wallet) {
-        this.accountAddress = session.wallet.address
-        this.accountChainId = session.wallet.chainId
-        this.accountConnected = true
-      }
-
-      this.isAuthenticated = true
-
-      // TODO: this seems strange. I think it's trying to confirm whether the discord connection is still valid with discord, meaning we can use the token stored in the database to do things for the user within discord.
-      // // I don't think this is necessary since we're just using discord to authenticate the user on our server.
-      // If we have a Discord connection, verify it's still valid
-      if (this.user?.linkedAccounts?.discord?.length) {
-        try {
-          console.log('restore session')
-          await this.fetchUserStatus()
-        } catch (error) {
-          console.warn('Failed to restore Discord session:', error)
-          // Don't throw the error, just log it
-        }
-      }
-
-      return true
     },
 
     waitForConnection() {
@@ -1094,23 +1025,22 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async fetchUserStatus() {
-      console.log('fetchUserStatus')
       try {
         const response = await fetch(`${this.backendUrl}/auth/status`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            Authorization: `Bearer ${this.authToken}`
           }
         })
 
         if (!response.ok) {
           if (response.status == 401) {
+            console.log('401, disconnecting')
             this.disconnect()
           }
           throw new Error('Failed to fetch user status')
         }
 
         const json = await response.json()
-        console.log({ json })
 
         const user = json.user
         if (user) {
@@ -1168,7 +1098,7 @@ export const useAuthStore = defineStore('auth', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            Authorization: `Bearer ${this.authToken}`
           },
           body: JSON.stringify({ username: newUsername })
         })
@@ -1205,7 +1135,7 @@ export const useAuthStore = defineStore('auth', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            Authorization: `Bearer ${this.authToken}`
           },
           body: JSON.stringify({
             platform,
@@ -1273,7 +1203,7 @@ export const useAuthStore = defineStore('auth', {
           'Content-Type': 'application/json'
         }
         if (this.isAuthenticated) {
-          headers.Authorization = `Bearer ${localStorage.getItem('authToken')}`
+          headers.Authorization = `Bearer ${this.authToken}`
         }
 
         const nonceResponse = await fetch(url, {
