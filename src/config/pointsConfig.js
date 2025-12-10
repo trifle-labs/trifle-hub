@@ -11,10 +11,8 @@ import { sdk } from '@farcaster/miniapp-sdk'
 
 const discordLink = platforms.discord.url
 
-const gmLink = 'https://gm.trifle.life'
-const anybodyLink = sdk.context
-  ? 'https://farcaster.xyz/miniapps/pKtDvlLtJ-iI/anybody-problem'
-  : 'https://anybody.gg'
+const gmLink = 'https://like.trifle.life/gm'
+const anybodyLink = 'https://like.trifle.life/anybody'
 const kudzuLink = 'https://kudzu.rodeo'
 
 export const possiblePoints = [

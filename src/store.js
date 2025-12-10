@@ -150,39 +150,46 @@ export const useAuthStore = defineStore('auth', {
       // href.includes('farcaster.xyz/miniapps/') ||
       // miniAppURLs.some((url) => href.endsWith(url.url))
       // console.log({ href, link, location: window.location })
-      // console.log({
-      //   isFarcasterProfile,
-      //   fid,
-      //   isFarcasterPost,
-      //   isFarcasterMiniApp,
-      //   linkMatchesDomain
-      // })
+      console.log({
+        isFarcasterProfile,
+        fid,
+        isFarcasterPost,
+        isFarcasterMiniApp,
+        linkMatchesDomain
+      })
       if (this.isFarcaster && isFarcasterProfile && fid) {
+        console.log(
+          'View profile because isFarcaster is not null and isFarcasterProfile is not null and fid is not null'
+        )
         e.preventDefault()
         sdk.actions.viewProfile({
           fid
         })
       } else if (this.isFarcaster && isFarcasterPost) {
+        console.log('View cast because isFarcaster is not null and isFarcasterPost is not null')
         e.preventDefault()
         sdk.actions.viewCast({
           hash: href.split('/')[4]
         })
       } else if (linkMatchesDomainExactly) {
+        console.log('Close hub because linkMatchesDomainExactly is true')
         e.preventDefault()
         this.closeHub()
       } else if (this.isFarcaster && isFarcasterMiniApp) {
+        console.log('Open mini app because isFarcaster is not null and isFarcasterMiniApp is true')
         e.preventDefault()
-
         sdk.actions.openMiniApp({ url: href })
       } else if (this.isFarcaster && !linkMatchesDomain) {
+        console.log('Open URL because isFarcaster is not null and linkMatchesDomain is false')
         e.preventDefault()
         sdk.actions.openUrl(link.href)
       } else if (this.isFarcaster && linkMatchesDomain) {
+        console.log('Do nothing because isFarcaster is not null and linkMatchesDomain is true')
         // e.preventDefault()
         // console.log('WOULD CLOSE HUB')
         // this.closeHub()
       } else {
-        // console.log('WOULD DO NOTHING')
+        console.log('Do nothing because isFarcaster is null')
       }
     },
     setInstances(appKit, wagmiConfig) {

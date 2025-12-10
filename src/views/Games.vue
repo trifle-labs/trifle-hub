@@ -121,10 +121,6 @@ import SocialsButtons from '../components/SocialsButtons.vue'
 // import { sdk } from '@farcaster/miniapp-sdk'
 const today = new Date()
 
-// const anybodyLink = sdk.context
-//   ? 'https://farcaster.xyz/miniapps/pKtDvlLtJ-iI/anybody-problem'
-//   : 'https://anybody.gg'
-
 // use https://gm-trifle.b-cdn.net for videos so they're cached across domains for users
 const games = [
   {
