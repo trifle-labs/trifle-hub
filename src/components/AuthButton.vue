@@ -6,6 +6,7 @@
         platform.bubbleButtonStyle.saturate
       }) brightness(${platform.bubbleButtonStyle.brightness || 1})`
     }"
+    :disabled="props.disabled"
     @click="props.click || handleConnect(props.platform)"
   >
     <div
@@ -51,6 +52,10 @@ const props = defineProps({
   points: {
     type: String,
     default: undefined
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 })
 

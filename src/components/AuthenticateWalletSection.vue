@@ -35,7 +35,7 @@
         }) brightness(${platform.bubbleButtonStyle.brightness || 1})`
       }"
       @click="authenticate"
-      :disabled="authenticating"
+      :disabled="authenticating || disabled"
     >
       <div class="_flex-1 _min-w-0 _truncate _text-center _text-stroke-md _leading-snug">
         <span v-if="authenticating" class="_animate-pulse-deep">Confirm in your wallet...</span>
@@ -55,12 +55,24 @@ const props = defineProps({
   walletAddress: String,
   walletAvatar: String,
   displayName: String,
-  points: String
+  points: String,
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 })
 const auth = inject('TrifleHub/store')
 const authenticating = ref(false)
 
 const disconnect = async () => {
+  if (props.disabled || auth.isSimulationMode) {
+    auth.addNotification({
+      message: 'Cannot disconnect wallet in simulation mode',
+      type: 'error'
+    })
+    return
+  }
+
   try {
     await auth.disconnect()
     auth.addNotification({ message: 'Wallet disconnected' })
@@ -79,6 +91,14 @@ const openAccountModal = async () => {
 }
 
 const authenticate = async () => {
+  if (props.disabled || auth.isSimulationMode) {
+    auth.addNotification({
+      message: 'Cannot authenticate wallet in simulation mode',
+      type: 'error'
+    })
+    return
+  }
+
   authenticating.value = true
   try {
     await auth.authenticateWithWallet(props.walletAddress)

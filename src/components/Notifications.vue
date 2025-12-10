@@ -1,6 +1,6 @@
 <template>
   <div
-    class="_absolute _top-0 _left-0 _p-5 _z-50 _flex _flex-col _gap-1 _items-start _w-full _pointer-events-auto _pr-16 _overflow-y-auto _no-scrollbar _fineprint"
+    class="_absolute _top-0 _left-0 _p-5 _z-50 _flex _flex-col _gap-1 _items-start _w-full _pointer-events-none _pr-16 _overflow-y-auto _no-scrollbar _fineprint"
     style="transform: translateX(0%)"
   >
     <transition-group name="notif">

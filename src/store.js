@@ -19,6 +19,10 @@ const PLATFORMS = {
   TWITTER: 'twitter'
 }
 
+// Admin configuration
+const ADMIN_FIDS = ['832276', '21472', '832276', '5874', '1052077'] // bugyum, okwme, idiotsdelight
+const ADMIN_USERNAMES = ['bugyum', 'okwme', 'idiotsdelight', 'gigi', 'trifle']
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     backendUrl: null,
@@ -51,7 +55,11 @@ export const useAuthStore = defineStore('auth', {
     closeHubCallback: null,
     currentProfileUsername: null,
     // Telegram polling cleanup
-    telegramPollingCleanup: null
+    telegramPollingCleanup: null,
+    // Admin mode
+    isSimulationMode: false,
+    simulatedUser: null, // stores the simulated user data
+    originalUser: null // stores the original user data when in simulation mode
   }),
 
   getters: {
@@ -82,7 +90,20 @@ export const useAuthStore = defineStore('auth', {
         (w) => w.id?.toLowerCase() === state.accountAddress?.toLowerCase()
       )
     },
-    currentWalletAddress: (state) => state.accountAddress
+    currentWalletAddress: (state) => state.accountAddress,
+    // Admin getter - checks if current user is an admin
+    isAdmin: (state) => {
+      if (!state.user) return false
+
+      // Check if username is in admin list
+      if (state.user.username && ADMIN_USERNAMES.includes(state.user.username)) {
+        return true
+      }
+
+      // Check if user has a Farcaster auth with admin FID
+      const farcasterAuths = state.user.linkedAccounts?.farcaster || []
+      return farcasterAuths.some((auth) => ADMIN_FIDS.includes(auth.id))
+    }
   },
 
   actions: {
@@ -1104,6 +1125,93 @@ export const useAuthStore = defineStore('auth', {
         console.error('Failed to update username:', error)
         throw error
       }
+    },
+
+    // Admin mode methods
+    async enterSimulationMode(usernameOrId) {
+      if (!this.isAdmin) {
+        throw new Error('Only admins can enter simulation mode')
+      }
+
+      try {
+        // Store original user data
+        this.originalUser = { ...this.user }
+
+        // Determine if input is userId or username
+        const isNumeric = /^\d+$/.test(usernameOrId)
+        const queryParam = isNumeric ? `userId=${usernameOrId}` : `username=${usernameOrId}`
+
+        // Fetch simulated user data
+        const response = await fetch(`${this.backendUrl}/auth/admin-status?${queryParam}`, {
+          headers: {
+            Authorization: `Bearer ${this.authToken}`
+          }
+        })
+
+        if (!response.ok) {
+          const error = await response.json()
+          throw new Error(error.error || 'Failed to fetch user data')
+        }
+
+        const json = await response.json()
+        const user = json.user
+
+        if (!user) {
+          throw new Error('User not found')
+        }
+
+        // Update user state with simulated user data
+        this.simulatedUser = {
+          id: user.id,
+          avatar: user.avatar,
+          username: user.username,
+          totalBalls: user.totalBalls,
+          linkedAccounts: {}
+        }
+
+        // Map platforms array to linkedAccounts structure
+        Object.values(PLATFORMS).forEach((platform) => {
+          this.simulatedUser.linkedAccounts[platform] = user.platforms
+            .filter((p) => p.type === platform)
+            .map((p) => ({
+              id: p.id,
+              username: p.username,
+              avatar: p.avatar,
+              lastUsed: p.lastUsed,
+              metadata: p.metadata
+            }))
+        })
+
+        // Set the simulated user as the current user
+        this.user = this.simulatedUser
+        this.isSimulationMode = true
+
+        return this.simulatedUser
+      } catch (error) {
+        console.error('Failed to enter simulation mode:', error)
+        // Restore original user if there was an error
+        if (this.originalUser) {
+          this.user = this.originalUser
+          this.originalUser = null
+        }
+        throw error
+      }
+    },
+
+    exitSimulationMode() {
+      if (!this.isSimulationMode) {
+        return
+      }
+
+      // Restore original user data
+      if (this.originalUser) {
+        this.user = this.originalUser
+      }
+
+      // Clear simulation state
+      this.isSimulationMode = false
+      this.simulatedUser = null
+      this.originalUser = null
     },
 
     async disconnectPlatformInstance(platform, instanceId) {

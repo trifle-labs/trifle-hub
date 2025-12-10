@@ -1,5 +1,91 @@
 <template>
   <AccountLayout>
+    <!-- Admin controls (gear icon) -->
+    <template #admin-controls>
+      <div v-if="auth.isAdmin" class="_flex _flex-col _gap-2">
+        <!-- Gear icon button -->
+        <button
+          v-if="!showAdminPanel && !auth.isSimulationMode"
+          class="_p-2 _bg-metallic-linear _shadow-panel _rounded-full _cursor-pointer mouse:hover:_scale-110 _duration-150"
+          @click="showAdminPanel = true"
+          title="Admin Mode"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="_size-5 _opacity-60"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            style="pointer-events: none"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              style="pointer-events: none"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              style="pointer-events: none"
+            />
+          </svg>
+        </button>
+
+        <!-- Admin panel -->
+        <div
+          v-if="showAdminPanel || auth.isSimulationMode"
+          class="_bg-metallic-linear _shadow-panel _rounded-lg _p-3 _space-y-2 _min-w-[200px]"
+        >
+          <!-- Simulation mode indicator -->
+          <div
+            v-if="auth.isSimulationMode"
+            class="_text-xs _font-semibold _text-center _bg-yellow-500/20 _border _border-yellow-500/40 _rounded _py-1"
+          >
+            SIMULATION MODE
+          </div>
+
+          <!-- Input for username/userId -->
+          <div v-if="!auth.isSimulationMode" class="_space-y-2">
+            <input
+              v-model="adminTargetInput"
+              type="text"
+              placeholder="Username or ID"
+              autocomplete="off"
+              data-1p-ignore
+              class="_w-full _px-2 _py-1 _text-sm _font-normal _rounded _bg-black/20 _border _border-white/10 _outline-none focus:_border-white/30"
+              @keyup.enter="enterSimulation"
+            />
+            <button
+              class="_w-full _px-3 _py-1 _text-sm _bg-blue-500/80 _rounded mouse:hover:_bg-blue-500 _duration-150"
+              :disabled="!adminTargetInput || adminLoading"
+              @click="enterSimulation"
+            >
+              {{ adminLoading ? 'Loading...' : 'Simulate User' }}
+            </button>
+            <button
+              class="_w-full _px-3 _py-1 _text-xs _bg-white/10 _rounded mouse:hover:_bg-white/20 _duration-150"
+              @click="showAdminPanel = false"
+            >
+              Cancel
+            </button>
+          </div>
+
+          <!-- Exit simulation button -->
+          <button
+            v-if="auth.isSimulationMode"
+            class="_w-full _px-3 _py-1.5 _text-sm _bg-red-500/80 _rounded mouse:hover:_bg-red-500 _duration-150 _font-semibold"
+            @click="exitSimulation"
+          >
+            Exit Simulation
+          </button>
+        </div>
+      </div>
+    </template>
+
     <template #avatar>
       <div
         class="_size-full _flex _items-center _justify-center _rounded-full _duration-150 _delay-50"
@@ -211,13 +297,16 @@
             :wallet-address="auth.accountAddress"
             :wallet-avatar="currentWallet?.avatar"
             :display-name="currentWallet?.username || accountAddress"
-            >Authenticate {{ truncateAddress(auth.accountAddress) }}</SplitWalletButton
+            :disabled="auth.isSimulationMode"
           >
+            Authenticate {{ truncateAddress(auth.accountAddress) }}
+          </SplitWalletButton>
           <!-- (link wallet button) -->
           <AuthButton
             v-if="isAuthenticated && !auth.accountConnected"
             platform="wallet"
             :points="!walletAuths.length ? '+10' : undefined"
+            :disabled="auth.isSimulationMode"
             class="_w-full"
           >
             {{ walletAuths.length > 0 ? 'Link another Wallet' : 'Link Wallet' }}
@@ -304,7 +393,13 @@
               </button>
             </template>
           </li>
-          <AuthButton v-if="!hasDiscordAuth" platform="discord" points="+10" class="_w-full">
+          <AuthButton
+            v-if="!hasDiscordAuth"
+            platform="discord"
+            points="+10"
+            :disabled="auth.isSimulationMode"
+            class="_w-full"
+          >
             {{ discordAuths.length > 0 ? 'Link Another Discord' : 'Link Discord' }}
           </AuthButton>
         </ul>
@@ -390,7 +485,13 @@
               </button>
             </template>
           </li>
-          <AuthButton v-if="!hasTwitterAuth" platform="twitter" points="+10" class="_w-full">
+          <AuthButton
+            v-if="!hasTwitterAuth"
+            platform="twitter"
+            points="+10"
+            :disabled="auth.isSimulationMode"
+            class="_w-full"
+          >
             {{ twitterAuths.length > 0 ? 'Link Another TwitterX' : 'Link TwitterX' }}
           </AuthButton>
         </ul>
@@ -471,7 +572,13 @@
               </button>
             </template>
           </li>
-          <AuthButton v-if="!hasTelegramAuth" platform="telegram" points="+10" class="_w-full">
+          <AuthButton
+            v-if="!hasTelegramAuth"
+            platform="telegram"
+            points="+10"
+            :disabled="auth.isSimulationMode"
+            class="_w-full"
+          >
             {{ telegramAuths.length > 0 ? 'Link Another Telegram' : 'Link Telegram' }}
           </AuthButton>
         </ul>
@@ -560,14 +667,26 @@
               </template>
             </div>
           </li>
-          <AuthButton v-if="!hasFarcasterAuth" platform="farcaster" points="+10" class="_w-full">
+          <AuthButton
+            v-if="!hasFarcasterAuth"
+            platform="farcaster"
+            points="+10"
+            :disabled="auth.isSimulationMode"
+            class="_w-full"
+          >
             {{ farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster' }}
           </AuthButton>
           <!-- (add mini-app to farcaster button) - only show on super app domains -->
           <template v-if="isFarcaster && !isFarcaster.client.added && isSuperApp">
-            <AuthButton platform="farcaster" points="+10" class="_w-full" @click="addFrame"
-              >Add this Mini App</AuthButton
+            <AuthButton
+              platform="farcaster"
+              points="+10"
+              :disabled="auth.isSimulationMode"
+              class="_w-full"
+              @click="addFrame"
             >
+              Add this Mini App
+            </AuthButton>
           </template>
         </ul>
       </section>
@@ -641,6 +760,16 @@ const aboutToDisconnect = ref({ platform: null, id: null })
 
 const handleDisconnectPlatform = async (platform, instanceId, event) => {
   event.stopPropagation() // Prevent the window listener from firing immediately
+
+  // Prevent disconnecting in simulation mode
+  if (auth.isSimulationMode) {
+    auth.addNotification({
+      message: 'Cannot disconnect platforms in simulation mode',
+      type: 'error'
+    })
+    return
+  }
+
   if (aboutToDisconnect.value.platform === platform && aboutToDisconnect.value.id === instanceId) {
     try {
       await auth.disconnectPlatformInstance(platform, instanceId)
@@ -679,6 +808,43 @@ const usernameError = ref('')
 const isCheckingUsername = ref(false)
 const usernameAvailable = ref(true)
 let usernameCheckTimeout
+
+// Admin mode state
+const showAdminPanel = ref(false)
+const adminTargetInput = ref('')
+const adminLoading = ref(false)
+
+// Admin mode methods
+const enterSimulation = async () => {
+  if (!adminTargetInput.value) return
+
+  adminLoading.value = true
+  try {
+    await auth.enterSimulationMode(adminTargetInput.value)
+    showAdminPanel.value = false
+    adminTargetInput.value = ''
+    auth.addNotification({
+      message: `Entered simulation mode for user: ${auth.user?.username}`,
+      type: 'success'
+    })
+  } catch (error) {
+    auth.addNotification({
+      message: error.message || 'Failed to enter simulation mode',
+      type: 'error'
+    })
+  } finally {
+    adminLoading.value = false
+  }
+}
+
+const exitSimulation = () => {
+  auth.exitSimulationMode()
+  showAdminPanel.value = false
+  auth.addNotification({
+    message: 'Exited simulation mode',
+    type: 'success'
+  })
+}
 
 const checkUsername = async (username) => {
   if (!username) {
@@ -733,6 +899,15 @@ const handleUsernameInput = (event) => {
 }
 
 const startEditingUsername = async () => {
+  // Prevent editing username in simulation mode
+  if (auth.isSimulationMode) {
+    auth.addNotification({
+      message: 'Cannot edit username in simulation mode',
+      type: 'error'
+    })
+    return
+  }
+
   usernameError.value = ''
   newUsername.value = auth.user?.username || ''
   isEditingUsername.value = true
@@ -786,6 +961,15 @@ const handleLogout = async () => {
 }
 
 const setAvatar = async (platform, platformId) => {
+  // Prevent setting avatar in simulation mode
+  if (auth.isSimulationMode) {
+    auth.addNotification({
+      message: 'Cannot set avatar in simulation mode',
+      type: 'error'
+    })
+    return
+  }
+
   try {
     const response = await fetch(`${backendUrl.value}/auth/update-avatar`, {
       method: 'POST',

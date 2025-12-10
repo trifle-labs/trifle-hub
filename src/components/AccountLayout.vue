@@ -1,7 +1,12 @@
 <template>
   <div
-    class="_p-5 _w-full _flex _flex-col _gap-6 _items-center _overflow-y-scroll-masked _no-scrollbar"
+    class="_p-5 _w-full _flex _flex-col _gap-6 _items-center _overflow-y-scroll-masked _no-scrollbar _relative"
   >
+    <!-- Admin controls slot (top left) -->
+    <div class="_absolute _top-4 _left-4 _z-10">
+      <slot name="admin-controls" />
+    </div>
+
     <header class="_mt-8 _w-full _text-center">
       <div class="_size-24 _rounded-full _mx-auto">
         <slot name="avatar" />
