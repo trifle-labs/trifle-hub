@@ -122,22 +122,41 @@ export const useAuthStore = defineStore('auth', {
 
       const linkMatchesDomainExactly = href == window.location.href.replace(/\/$/, '')
 
-      const miniAppURLs = [
-        'gm.trifle.life',
-        'anybody.gg',
-        'like.trifle.life',
-        'like.trifle.life/lottery'
-      ]
-      const isFarcasterMiniApp =
-        href.includes('farcaster.xyz/miniapps/') || miniAppURLs.some((url) => href.endsWith(url))
-      console.log({ href, link, location: window.location })
-      console.log({
-        isFarcasterProfile,
-        fid,
-        isFarcasterPost,
-        isFarcasterMiniApp,
-        linkMatchesDomain
-      })
+      // const miniAppURLs = [
+      //   'gm.trifle.life',
+      //   'anybody.gg',
+      //   'like.trifle.life',
+      //   'like.trifle.life/lottery'
+      // ]
+      // const miniAppURLs = [
+      //   {
+      //     url: 'gm.trifle.life',
+      //     superAppLink: 'https://like.trifle.life/gm'
+      //   },
+      //   {
+      //     url: 'anybody.gg',
+      //     superAppLink: 'https://like.trifle.life/anybody'
+      //   },
+      //   {
+      //     url: 'like.trifle.life',
+      //     superAppLink: 'https://like.trifle.life/lottery'
+      //   },
+      //   {
+      //     url: 'like.trifle.life/lottery',
+      //     superAppLink: 'https://like.trifle.life/lottery'
+      //   }
+      // ]
+      const isFarcasterMiniApp = false
+      // href.includes('farcaster.xyz/miniapps/') ||
+      // miniAppURLs.some((url) => href.endsWith(url.url))
+      // console.log({ href, link, location: window.location })
+      // console.log({
+      //   isFarcasterProfile,
+      //   fid,
+      //   isFarcasterPost,
+      //   isFarcasterMiniApp,
+      //   linkMatchesDomain
+      // })
       if (this.isFarcaster && isFarcasterProfile && fid) {
         e.preventDefault()
         sdk.actions.viewProfile({
@@ -159,8 +178,11 @@ export const useAuthStore = defineStore('auth', {
         e.preventDefault()
         sdk.actions.openUrl(link.href)
       } else if (this.isFarcaster && linkMatchesDomain) {
-        e.preventDefault()
-        this.closeHub()
+        // e.preventDefault()
+        // console.log('WOULD CLOSE HUB')
+        // this.closeHub()
+      } else {
+        // console.log('WOULD DO NOTHING')
       }
     },
     setInstances(appKit, wagmiConfig) {

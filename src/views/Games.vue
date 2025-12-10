@@ -118,12 +118,12 @@
 import HubPageHeader from '../components/HubPageHeader.vue'
 import anybodyTitleImg from '../assets/imgs/anybody-title.png'
 import SocialsButtons from '../components/SocialsButtons.vue'
-import { sdk } from '@farcaster/miniapp-sdk'
+// import { sdk } from '@farcaster/miniapp-sdk'
 const today = new Date()
 
-const anybodyLink = sdk.context
-  ? 'https://farcaster.xyz/miniapps/pKtDvlLtJ-iI/anybody-problem'
-  : 'https://anybody.gg'
+// const anybodyLink = sdk.context
+//   ? 'https://farcaster.xyz/miniapps/pKtDvlLtJ-iI/anybody-problem'
+//   : 'https://anybody.gg'
 
 // use https://gm-trifle.b-cdn.net for videos so they're cached across domains for users
 const games = [
@@ -140,7 +140,8 @@ const games = [
   {
     name: 'gm-game',
     title: 'GM GAME',
-    link: 'https://gm.trifle.life',
+    // link: 'https://gm.trifle.life',
+    link: 'https://like.trifle.life/gm',
     description: 'write gm\'s → win BALL$ <span class="_not-italic">🪩</span>',
     bgVideo:
       // 'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
@@ -151,7 +152,8 @@ const games = [
   {
     name: 'anybody',
     description: 'daily puzzle-shooter, fully onchain',
-    link: anybodyLink,
+    // link: anybodyLink,
+    link: 'https://like.trifle.life/anybody',
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/c_scale,f_auto,q_auto:eco,w_400/v1748287290/anybody-gameplay-clip-2_cf6p3x.mov',
     titleImg: anybodyTitleImg,
