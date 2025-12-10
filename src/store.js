@@ -111,7 +111,9 @@ export const useAuthStore = defineStore('auth', {
       const link = e.target.closest('a')
       if (!link) return
       const href = link.href.replace(/\/$/, '')
-      const linkMatchesDomain = href.includes(window.location.host)
+      const windowLocationHost = window.location.host
+      const windowLocationHref = window.location.href
+      const linkMatchesDomain = href.includes(windowLocationHost)
 
       const linkMatchesFarcaster = href.includes('farcaster.xyz/') || href.includes('warpcast.com/')
 
@@ -120,7 +122,7 @@ export const useAuthStore = defineStore('auth', {
 
       const isFarcasterPost = linkMatchesFarcaster && href.split('/').length == 5
 
-      const linkMatchesDomainExactly = href == window.location.href.replace(/\/$/, '')
+      const linkMatchesDomainExactly = href == windowLocationHref.replace(/\/$/, '')
 
       // const miniAppURLs = [
       //   'gm.trifle.life',
@@ -151,11 +153,15 @@ export const useAuthStore = defineStore('auth', {
       // miniAppURLs.some((url) => href.endsWith(url.url))
       // console.log({ href, link, location: window.location })
       console.log({
+        href,
+        windowLocationHost,
+        windowLocationHref,
         isFarcasterProfile,
         fid,
         isFarcasterPost,
         isFarcasterMiniApp,
-        linkMatchesDomain
+        linkMatchesDomain,
+        linkMatchesDomainExactly
       })
       if (this.isFarcaster && isFarcasterProfile && fid) {
         console.log(
