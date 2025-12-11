@@ -6,7 +6,6 @@ import { initializeWagmiConfig } from './config/wagmiConfig'
 import { createPinia } from 'pinia'
 import { useAuthStore } from './store'
 import { defineAsyncComponent } from 'vue'
-import { sdk } from '@farcaster/miniapp-sdk'
 
 // Dynamic import for code splitting
 const TrifleGuide = () => import('./components/TrifleGuide.vue')

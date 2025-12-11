@@ -7,6 +7,9 @@ import { createAppClient, viemConnector } from '@farcaster/auth-client'
 import { isMobile } from './utils'
 import { useAccount } from '@wagmi/vue'
 import { signMessage, watchAccount, getChainId } from '@wagmi/core'
+// import { mainnet, base } from '@wagmi/core/chains'
+import { mainnet, base } from '@reown/appkit/networks'
+
 import { createSiweMessage } from 'viem/siwe'
 import { sdk } from '@farcaster/miniapp-sdk'
 
@@ -839,6 +842,10 @@ export const useAuthStore = defineStore('auth', {
 
         const { nonce } = await nonceResponse.json()
 
+        const isBaseACcount = this._appKitInstance.getWalletProvider().isBaseAccount
+
+        let targetChainId = isBaseACcount ? base.id : mainnet.id
+
         // Ensure we have a valid chainId for the SIWE message
         let chainId = this.accountChainId
         if (chainId == null && this._wagmiConfigInstance) {
@@ -856,6 +863,16 @@ export const useAuthStore = defineStore('auth', {
             'Unable to determine chain ID. Please ensure your wallet is connected to a network.'
           )
         }
+
+        const chain =
+          base.id === targetChainId ? base : mainnet.id === targetChainId ? mainnet : null
+        if (!chain) {
+          throw new Error('Invalid chain ID')
+        }
+        await this._appKitInstance.switchNetwork(chain)
+
+        chainId = getChainId(this._wagmiConfigInstance)
+        this.accountChainId = chainId
 
         const message = createSiweMessage({
           domain: window.location.host,
@@ -887,7 +904,8 @@ export const useAuthStore = defineStore('auth', {
           headers,
           body: JSON.stringify({
             signature,
-            message
+            message,
+            chainId
           })
         })
         if (!verifyResponse.ok) {
@@ -1003,6 +1021,7 @@ export const useAuthStore = defineStore('auth', {
     async disconnect() {
       console.log('disconnecting')
       try {
+        console.log('disconnecting account', this.accountConnected)
         if (this.accountConnected) {
           await this._appKitInstance.disconnect()
           const connected = this._appKitInstance.getIsConnectedState()

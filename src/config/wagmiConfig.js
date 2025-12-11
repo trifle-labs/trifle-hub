@@ -1,8 +1,6 @@
 import { createAppKit } from '@reown/appkit/vue'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { mainnet, base } from '@reown/appkit/networks'
-import { farcasterFrame as miniAppConnector } from '@farcaster/miniapp-wagmi-connector'
-import { sdk } from '@farcaster/miniapp-sdk'
 // Default configuration
 const defaultConfig = {
   projectId: '',
