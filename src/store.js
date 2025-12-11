@@ -155,17 +155,20 @@ export const useAuthStore = defineStore('auth', {
       // href.includes('farcaster.xyz/miniapps/') ||
       // miniAppURLs.some((url) => href.endsWith(url.url))
       // console.log({ href, link, location: window.location })
-      console.log({
-        href,
-        windowLocationHost,
-        windowLocationHref,
-        isFarcasterProfile,
-        fid,
-        isFarcasterPost,
-        isFarcasterMiniApp,
-        linkMatchesDomain,
-        linkMatchesDomainExactly
-      })
+      console.dir(
+        {
+          href,
+          windowLocationHost,
+          windowLocationHref,
+          isFarcasterProfile,
+          fid,
+          isFarcasterPost,
+          isFarcasterMiniApp,
+          linkMatchesDomain,
+          linkMatchesDomainExactly
+        },
+        { depth: null }
+      )
       if (this.isFarcaster && isFarcasterProfile && fid) {
         console.log(
           'View profile because isFarcaster is not null and isFarcasterProfile is not null and fid is not null'
