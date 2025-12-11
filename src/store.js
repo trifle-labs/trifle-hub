@@ -155,8 +155,8 @@ export const useAuthStore = defineStore('auth', {
       // href.includes('farcaster.xyz/miniapps/') ||
       // miniAppURLs.some((url) => href.endsWith(url.url))
       // console.log({ href, link, location: window.location })
-      console.dir(
-        {
+      console.log(
+        JSON.stringify({
           href,
           windowLocationHost,
           windowLocationHref,
@@ -166,8 +166,7 @@ export const useAuthStore = defineStore('auth', {
           isFarcasterMiniApp,
           linkMatchesDomain,
           linkMatchesDomainExactly
-        },
-        { depth: null }
+        })
       )
       if (this.isFarcaster && isFarcasterProfile && fid) {
         console.log(
