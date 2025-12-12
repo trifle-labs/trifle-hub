@@ -32,7 +32,7 @@
           class="_text-xl _shadow-panel _pl-[0.3em] _pr-[0.5em] _rounded-full _bg-metallic-cone _leading-none _py-[0.25em] _flex _gap-[0.2em] _cursor-pointer"
         >
           <span>🪩</span>
-          <span class="_text-stroke-xl">{{ user?.totalPoints?.toLocaleString() || 0 }}</span>
+          <span class="_text-stroke-xl">{{ user?.totalBalls?.toLocaleString() || 0 }}</span>
         </span>
       </div>
     </template>
