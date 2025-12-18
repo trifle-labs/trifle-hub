@@ -1545,7 +1545,7 @@ export const useAuthStore = defineStore('auth', {
               // Handle successful authentication
               if (data.token) {
                 console.log('data.token present')
-                localStorage.setItem('authToken', data.token)
+                this.setAuthToken(data.token)
                 await this.fetchUserStatus()
                 this.addNotification({
                   type: 'success',
