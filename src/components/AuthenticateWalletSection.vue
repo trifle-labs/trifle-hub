@@ -47,7 +47,6 @@
 
 <script setup>
 import { platforms } from '../config/socialsConfig'
-console.log({ platforms })
 const platform = platforms.wallet
 
 import { inject, ref } from 'vue'

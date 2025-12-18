@@ -440,7 +440,6 @@ export const useAuthStore = defineStore('auth', {
       const jsonRes = await res.json()
       this.setAuthToken(jsonRes.token)
       await this.fetchUserStatus()
-      console.log({ isFarcaster: this.isFarcaster })
       this.addFrame()
     },
 
@@ -477,6 +476,22 @@ export const useAuthStore = defineStore('auth', {
         window.__trifleDiscordPopup = null
       }
 
+      // For non-Farcaster environments, try to open a blank window immediately
+      // while we're still in the original click handler call stack. This keeps
+      // the new window clearly user-initiated so mobile Safari and other
+      // browsers are less likely to treat it as a blocked popup.
+      let discordWindow = null
+      if (!this.isFarcaster) {
+        try {
+          discordWindow = window.open('', '_blank', 'width=500,height=800')
+          if (discordWindow) {
+            window.__trifleDiscordPopup = discordWindow
+          }
+        } catch (e) {
+          console.warn('Unable to pre-open Discord window:', e)
+        }
+      }
+
       try {
         // const hasDiscordAuth = this.user?.linkedAccounts?.discord?.length > 0
         let url = `${this.backendUrl}/auth/discord`
@@ -506,15 +521,25 @@ export const useAuthStore = defineStore('auth', {
           console.log({ discordAuthBeforeFarcaster: this.discordAuthBeforeFarcaster })
           await sdk.actions.openUrl(url)
         } else {
-          // Open Discord auth window
-          window.__trifleDiscordPopup = window.open(url, '_blank', 'width=500,height=800')
+          // If we successfully opened a window synchronously, navigate it now.
+          // Otherwise, fall back to opening a new window (which may be blocked
+          // by strict popup settings, but at least gives us a best-effort path).
+          if (discordWindow && !discordWindow.closed) {
+            discordWindow.location.href = url
+          } else {
+            window.__trifleDiscordPopup = window.open(url, '_blank', 'width=500,height=800')
+            discordWindow = window.__trifleDiscordPopup
+          }
 
           // If window failed to open
-          if (!window.__trifleDiscordPopup) {
+          if (!discordWindow) {
             throw new Error(
               'Could not open Discord authentication window. Please check your popup blocker settings.'
             )
           }
+
+          // Ensure the global reference is in sync for polling/cleanup logic
+          window.__trifleDiscordPopup = discordWindow
         }
         const authPromise = new Promise((resolve, reject) => {
           let checkClosedInterval
@@ -633,6 +658,27 @@ export const useAuthStore = defineStore('auth', {
         }
         window.__trifleTwitterPopup = null
       }
+
+      // For non-Farcaster environments, try to open a blank window immediately
+      // while we're still in the original click handler call stack. This keeps
+      // the new window clearly user-initiated so mobile Safari and other
+      // browsers are less likely to treat it as a blocked popup.
+      let twitterWindow = null
+      if (!this.isFarcaster) {
+        try {
+          twitterWindow = window.open(
+            '',
+            '_blank',
+            'width=600,height=600,scrollbars=yes,resizable=yes'
+          )
+          if (twitterWindow) {
+            window.__trifleTwitterPopup = twitterWindow
+          }
+        } catch (e) {
+          console.warn('Unable to pre-open TwitterX window:', e)
+        }
+      }
+
       await this.cancelTwitterAuth()
 
       try {
@@ -663,20 +709,30 @@ export const useAuthStore = defineStore('auth', {
           console.log({ twitterAuthBeforeFarcaster: this.twitterAuthBeforeFarcaster })
           await sdk.actions.openUrl(url)
         } else {
-          // Open TwitterX auth window
-          window.__trifleTwitterPopup = window.open(
-            url,
-            '_blank',
-            'width=600,height=600,scrollbars=yes,resizable=yes'
-          )
+          // If we successfully opened a window synchronously, navigate it now.
+          // Otherwise, fall back to opening a new window (which may be blocked
+          // by strict popup settings, but at least gives us a best-effort path).
+          if (twitterWindow && !twitterWindow.closed) {
+            twitterWindow.location.href = url
+          } else {
+            window.__trifleTwitterPopup = window.open(
+              url,
+              '_blank',
+              'width=600,height=600,scrollbars=yes,resizable=yes'
+            )
+            twitterWindow = window.__trifleTwitterPopup
+          }
 
           // If window failed to open
-          if (!window.__trifleTwitterPopup) {
-            this.cancelTwitterAuth()
+          if (!twitterWindow) {
+            await this.cancelTwitterAuth()
             throw new Error(
               'Could not open TwitterX authentication window. Please check your popup blocker settings.'
             )
           }
+
+          // Ensure the global reference is in sync for polling/cleanup logic
+          window.__trifleTwitterPopup = twitterWindow
         }
 
         const authPromise = new Promise((resolve, reject) => {
@@ -704,7 +760,7 @@ export const useAuthStore = defineStore('auth', {
 
               // Handle authentication error
               if (event.data.error) {
-                this.cancelTwitterAuth()
+                await this.cancelTwitterAuth()
                 console.error('TwitterX authentication error:', event.data.error)
                 window.__trifleTwitterPopup = null
                 reject(event.data.error)
@@ -757,7 +813,7 @@ export const useAuthStore = defineStore('auth', {
 
         await authPromise
       } catch (error) {
-        this.cancelTwitterAuth()
+        await this.cancelTwitterAuth()
         console.error('TwitterX authentication error:', error)
         this.addNotification({
           type: 'error',
@@ -1343,6 +1399,26 @@ export const useAuthStore = defineStore('auth', {
       // Cleanup any previous Telegram authentication
       this.cleanupTelegramAuth()
 
+      // For non-Farcaster environments, try to open a blank window immediately
+      // while we're still in the original click handler call stack. This keeps
+      // the new window clearly user-initiated so mobile Safari and other
+      // browsers are less likely to treat it as a blocked popup.
+      let telegramWindow = null
+      if (!this.isFarcaster) {
+        try {
+          telegramWindow = window.open(
+            '',
+            '_blank',
+            'width=500,height=700,scrollbars=yes,resizable=yes'
+          )
+          if (telegramWindow) {
+            window.__trifleTelegramPopup = telegramWindow
+          }
+        } catch (e) {
+          console.warn('Unable to pre-open Telegram window:', e)
+        }
+      }
+
       try {
         // Get nonce
         let url = `${this.backendUrl}/telegram/nonce${this.isAuthenticated ? '-login' : ''}`
@@ -1379,24 +1455,35 @@ export const useAuthStore = defineStore('auth', {
           throw new Error('Failed to get bot information')
         }
 
-        // Open Telegram in popup window
+        // Build Telegram deep link
         const telegramUrl = `https://t.me/${botUsername}?start=${nonce}`
 
         if (this.isFarcaster) {
           await sdk.actions.openUrl(telegramUrl)
         } else {
-          window.__trifleTelegramPopup = window.open(
-            telegramUrl,
-            '_blank',
-            'width=500,height=700,scrollbars=yes,resizable=yes'
-          )
+          // If we successfully opened a window synchronously, navigate it now.
+          // Otherwise, fall back to opening a new window (which may be blocked
+          // by strict popup settings, but at least gives us a best-effort path).
+          if (telegramWindow && !telegramWindow.closed) {
+            telegramWindow.location.href = telegramUrl
+          } else {
+            window.__trifleTelegramPopup = window.open(
+              telegramUrl,
+              '_blank',
+              'width=500,height=700,scrollbars=yes,resizable=yes'
+            )
+            telegramWindow = window.__trifleTelegramPopup
+          }
 
           // If window failed to open
-          if (!window.__trifleTelegramPopup) {
+          if (!telegramWindow) {
             throw new Error(
               'Could not open Telegram authentication window. Please check your popup blocker settings.'
             )
           }
+
+          // Ensure the global reference is in sync for polling/cleanup logic
+          window.__trifleTelegramPopup = telegramWindow
         }
 
         // Start polling for completion (store cleanup function)
