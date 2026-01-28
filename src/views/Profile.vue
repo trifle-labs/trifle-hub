@@ -218,7 +218,8 @@ onMounted(async () => {
   await fetchCategories()
   await fetchPoints()
 })
-watch(page, fetchPoints)
+// this is duplicating the prev/next methods
+// watch(page, fetchPoints)
 
 // TODO: retrieve from global or provided from parent hub <transition>
 const doneAnimating = ref(false)
