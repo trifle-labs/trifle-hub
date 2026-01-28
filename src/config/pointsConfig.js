@@ -7,7 +7,7 @@ import anybodyIcon from '../assets/imgs/anybody-icon.png'
 import kudzuIcon from '../assets/imgs/kudzu-icon.gif'
 import gmIcon from '../assets/imgs/gm.svg'
 import { platforms } from './socialsConfig'
-import { sdk } from '@farcaster/miniapp-sdk'
+// import { sdk } from '@farcaster/miniapp-sdk'
 
 const discordLink = platforms.discord.url
 
@@ -200,18 +200,18 @@ export const possiblePoints = [
   //   fid: 832276,
   //   link: platforms.farcaster.url
   // },
-  // {
-  //   name: 'Swap Balls',
-  //   id: 'award-pending',
-  //   icon: farcasterIcon,
-  //   description: 'Swap unlimited 🪩 BALL$ for lotto-balls.',
-  //   pachinkoBalls: '1+',
-  //   lottoBalls: '1+',
-  //   claimed: false,
-  //   once: false,
-  //   enabled: true,
-  //   link: { to: 'spend' }
-  // },
+  {
+    name: 'Swap BALL$',
+    id: 'award-pending',
+    // icon: farcasterIcon,
+    // description: 'Swap unlimited 🪩 BALL$ for lotto-balls.',
+    // pachinkoBalls: '1+',
+    // lottoBalls: '1+',
+    // claimed: false,
+    // once: false,
+    // enabled: true,
+    link: 'https://like.trifle.life/lotteries'
+  },
   {
     name: 'Cast your GM with mini app link',
     id: 'gm-cast',
@@ -283,7 +283,7 @@ export const possiblePoints = [
     once: false,
     enabled: true,
     link: kudzuLink
-  }
+  },
   // {
   //   name: 'Nuke to 1st on Kudzus',
   //   id: 'kudzu-nuke',
@@ -342,5 +342,17 @@ export const possiblePoints = [
   //   once: false,
   //   enabled: false,
   //   link: discordLink
-  // }
+  // },
+  {
+    name: 'Snake winnings',
+    id: 'snake-winnings',
+  },
+  {
+    name: 'Snake vote',
+    id: 'snake-vote',
+  },
+  {
+    name: 'Snake refund',
+    id: 'snake-refund',
+  }
 ]
