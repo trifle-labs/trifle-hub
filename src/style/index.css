@@ -33,7 +33,9 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  
+  ._truncate {
+    @apply _pointer-events-none;
+  }
 
   /* typography */
 
