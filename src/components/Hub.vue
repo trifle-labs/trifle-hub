@@ -26,7 +26,26 @@
       @keydown.enter="hubOpen = !hubOpen"
       :aria-label="hubOpen ? 'close trifle hub' : 'open trifle hub'"
     >
+      <!-- 2d avatar fallback -->
+      <button
+        v-if="!props.avatar3d || trifleBallVisible"
+        class="_absolute _inset-0 _flex _items-center _justify-center"
+        :class="{ '_pointer-events-auto _cursor-pointer': !trifleBallVisible || !props.avatar3d }"
+        @click="hubOpen = !hubOpen"
+        :disabled="trifleBallVisible"
+      >
+        <img
+          :src="auth.user ? authUserAvatar || smileyFaceSvg : trifleBallStill"
+          :style="{
+            width: 'calc(100% / 3.15 * 2)',
+            height: 'calc(100% / 3.15 * 2)'
+          }"
+          class="_rounded-full"
+          :class="{ '_shadow-panel': auth.user }"
+        />
+      </button>
       <TrifleBall
+        v-if="props.avatar3d"
         ref="trifleBall"
         :key="authUserAvatar || 'default'"
         :mode="authUserAvatar ? 'glass-inner-wall' : 'metal'"
@@ -35,6 +54,7 @@
         :animate="!hubOpen"
         class="_cursor-pointer _pointer-events-auto"
         @click="hubOpen = !hubOpen"
+        @isVisible="trifleBallVisible = true"
         tabindex="-1"
       />
     </div>
@@ -198,12 +218,14 @@ import borderImg from '../assets/imgs/metal-bubble-border.png'
 import TrifleBall from './TrifleBall/TrifleBall.vue'
 import Notifications from './Notifications.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
+import trifleBallStill from '../assets/imgs/trifle-ball-w-fidget.png'
 
 const hubOpen = defineModel('hubOpen')
 
 const props = defineProps({
   hubPageKey: { type: String, required: true },
-  position: { type: String, default: 'bottom-left', required: true }
+  position: { type: String, default: 'bottom-left', required: true },
+  avatar3d: { type: Boolean, default: true }
 })
 
 const hubPage = computed(() => hubPages[props.hubPageKey] || hubPages.account)
@@ -214,10 +236,11 @@ const auth = inject('TrifleHub/store')
 const authUserAvatar = computed(() => auth.user?.avatar || auth.isFarcaster?.user?.avatar)
 
 const trifleBall = ref(null)
+const trifleBallVisible = ref(false)
 watch(hubOpen, async (open) => {
   if (!open) {
     await new Promise((resolve) => setTimeout(resolve, 150)) // wait for the animation to complete
-    trifleBall.value.spinFast()
+    return trifleBall.value?.spinFast()
   }
 })
 </script>

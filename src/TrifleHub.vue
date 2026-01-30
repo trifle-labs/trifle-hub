@@ -1,10 +1,15 @@
 <template>
   <slot />
-  <Hub v-model:hubOpen="hubOpen" :hubPageKey="hubPageKey" :position="props.position" />
+  <Hub
+    v-model:hubOpen="hubOpen"
+    :hubPageKey="hubPageKey"
+    :position="props.position"
+    :avatar3d="props.avatar3d"
+  />
 </template>
 
 <script setup>
-import { provide, ref, watch, inject, computed, onMounted } from 'vue'
+import { provide, ref, watch, inject, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import hubPages from './routes'
 import Hub from './components/Hub.vue'
@@ -13,6 +18,10 @@ const props = defineProps({
   position: {
     type: String,
     default: 'bottom-left'
+  },
+  avatar3d: {
+    type: Boolean,
+    default: true
   }
 })
 

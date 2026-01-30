@@ -110,7 +110,7 @@ export class BallVisualizer {
 
     // Camera setup
     const ballRadius = size / 3.4375 // Increased by additional 10% (3.125 * 1.1 = 3.4375)
-    const cameraDistance = size / 1.0
+    const cameraDistance = size
     this.camera = new PerspectiveCamera(50, 1, 1, cameraDistance * 2)
     this.updateCameraPosition(cameraDistance)
 

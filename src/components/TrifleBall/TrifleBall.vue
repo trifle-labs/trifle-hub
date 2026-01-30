@@ -45,7 +45,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['click'])
+const emit = defineEmits(['click', 'isVisible'])
 
 const container = ref(null)
 const visualizer = ref(null)
@@ -89,7 +89,12 @@ const initVisualizer = () => {
       console.log('clicked')
       emit('click')
     },
-    onReady: () => (isReady.value = true)
+    onReady: () => {
+      isReady.value = true
+      setTimeout(() => {
+        emit('isVisible')
+      }, 300) // after css opacity transition
+    }
   })
   visualizer.value.init()
 }
