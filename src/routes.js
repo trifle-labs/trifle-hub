@@ -1,18 +1,34 @@
-import Welcome from './views/Welcome.vue'
-import Games from './views/Games.vue'
-import Leaderboard from './views/Leaderboard.vue'
-import Earn from './views/Earn.vue'
-import Account from './views/Account/AccountIndex.vue'
-import Theme from './views/Theme.vue'
+import { defineAsyncComponent } from 'vue'
 import bgImg from './assets/imgs/metal-gradient-conical.png'
-import Profile from './views/Profile.vue'
 
 export default {
-  welcome: { menuItem: false, component: Welcome, bgImg: bgImg },
-  games: { menuItem: true, component: Games },
-  leaderboard: { menuItem: true, component: Leaderboard },
-  earn: { menuItem: true, component: Earn },
-  account: { menuItem: true, component: Account },
-  theme: { menuItem: false, component: Theme },
-  profile: { menuItem: false, component: Profile }
+  welcome: { 
+    menuItem: false, 
+    component: defineAsyncComponent(() => import('./views/Welcome.vue')), 
+    bgImg: bgImg 
+  },
+  games: { 
+    menuItem: true, 
+    component: defineAsyncComponent(() => import('./views/Games.vue'))
+  },
+  leaderboard: { 
+    menuItem: true, 
+    component: defineAsyncComponent(() => import('./views/Leaderboard.vue'))
+  },
+  earn: { 
+    menuItem: true, 
+    component: defineAsyncComponent(() => import('./views/Earn.vue'))
+  },
+  account: { 
+    menuItem: true, 
+    component: defineAsyncComponent(() => import('./views/Account/AccountIndex.vue'))
+  },
+  theme: { 
+    menuItem: false, 
+    component: defineAsyncComponent(() => import('./views/Theme.vue'))
+  },
+  profile: { 
+    menuItem: false, 
+    component: defineAsyncComponent(() => import('./views/Profile.vue'))
+  }
 }

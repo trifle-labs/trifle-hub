@@ -702,12 +702,12 @@
 </template>
 
 <script setup>
-import { computed, ref, inject, onMounted, nextTick, watch } from 'vue'
+import { computed, ref, inject, onMounted, nextTick, watch, defineAsyncComponent } from 'vue'
 import { storeToRefs } from 'pinia'
 import smileyFaceSvg from '../../assets/imgs/smiley-face-dashed-outline.svg'
 import AuthButton from '../../components/AuthButton.vue'
 import AccountLayout from '../../components/AccountLayout.vue'
-import TrifleBall from '../../components/TrifleBall/TrifleBall.vue'
+const TrifleBall = defineAsyncComponent(() => import('../../components/TrifleBall/TrifleBall.vue'))
 import SplitWalletButton from '../../components/AuthenticateWalletSection.vue'
 
 const auth = inject('TrifleHub/store')

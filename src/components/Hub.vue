@@ -32,7 +32,7 @@
         class="_absolute _inset-0 _flex _items-center _justify-center"
         :class="{ '_pointer-events-auto _cursor-pointer': !trifleBallVisible || !props.avatar3d }"
         @click="hubOpen = !hubOpen"
-        :disabled="trifleBallVisible"
+        :disabled="trifleBallVisible && props.avatar3d !== false"
       >
         <img
           :src="auth.user ? authUserAvatar || smileyFaceSvg : trifleBallStill"
@@ -212,10 +212,10 @@
 </template>
 
 <script setup>
-import { computed, inject, nextTick, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, inject, nextTick, ref, watch } from 'vue'
 import hubPages from '../routes'
 import borderImg from '../assets/imgs/metal-bubble-border.png'
-import TrifleBall from './TrifleBall/TrifleBall.vue'
+const TrifleBall = defineAsyncComponent(() => import('./TrifleBall/TrifleBall.vue'))
 import Notifications from './Notifications.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 import trifleBallStill from '../assets/imgs/trifle-ball-w-fidget.png'

@@ -87,12 +87,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, inject, computed } from 'vue'
+import { ref, onMounted, watch, inject, computed, defineAsyncComponent } from 'vue'
 import { storeToRefs } from 'pinia'
 import AccountLayout from '../components/AccountLayout.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 import PointCard from '../components/PointCard.vue'
-import TrifleBall from '../components/TrifleBall/TrifleBall.vue'
+const TrifleBall = defineAsyncComponent(() => import('../components/TrifleBall/TrifleBall.vue'))
 const hub = inject('hub')
 const auth = inject('TrifleHub/store')
 const { currentProfileUsername, backendUrl } = storeToRefs(auth)
