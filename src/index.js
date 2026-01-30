@@ -6,6 +6,8 @@ import { initializeWagmiConfig } from './config/wagmiConfig'
 import { createPinia } from 'pinia'
 import { useAuthStore } from './store'
 import { defineAsyncComponent } from 'vue'
+// import smileyFacePng from './assets/imgs/marble-no-face.jpg'
+import smileyFacePng from './assets/imgs/smiley-face-dashed-inside-noShadow.png'
 
 // Dynamic import for code splitting
 const TrifleGuide = () => import('./components/TrifleGuide.vue')
@@ -92,7 +94,9 @@ const TrifleHubVuePlugin = {
     app.provide('TrifleHub/appKit', appKit)
 
     // Provide defaultPage if specified
-    app.provide('TrifleHub/defaultPage', options.defaultPage || 'welcome')
+    app.provide('TrifleHub/defaultPage', options.defaultPage || 'account')
+
+    app.provide('TrifleHub/defaultAvatar', smileyFacePng)
 
     store.initializeAuth(appKit, wagmiConfig, options.backendUrl)
 

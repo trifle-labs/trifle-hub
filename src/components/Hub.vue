@@ -35,13 +35,17 @@
         :disabled="trifleBallVisible && props.avatar3d !== false"
       >
         <img
-          :src="auth.user ? authUserAvatar || smileyFaceSvg : trifleBallStill"
+          :src="
+            auth.user
+              ? auth.user?.avatar || auth.isFarcaster?.user?.avatar || defaultAvatar
+              : trifleBallStill
+          "
           :style="{
             width: 'calc(100% / 3.15 * 2)',
             height: 'calc(100% / 3.15 * 2)'
           }"
           class="_rounded-full"
-          :class="{ '_shadow-panel': auth.user }"
+          :class="{ '_shadow-panel': auth.user && authUserAvatar }"
         />
       </button>
       <TrifleBall
@@ -212,12 +216,13 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, inject, nextTick, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, inject, ref, watch } from 'vue'
 import hubPages from '../routes'
 import borderImg from '../assets/imgs/metal-bubble-border.png'
 const TrifleBall = defineAsyncComponent(() => import('./TrifleBall/TrifleBall.vue'))
 import Notifications from './Notifications.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
+// import defaultAvatar from '../assets/imgs/marble-no-face.jpg'
 import trifleBallStill from '../assets/imgs/trifle-ball-w-fidget.png'
 
 const hubOpen = defineModel('hubOpen')
@@ -233,7 +238,9 @@ const hubPage = computed(() => hubPages[props.hubPageKey] || hubPages.account)
 const { openHub } = inject('hub')
 const auth = inject('TrifleHub/store')
 
-const authUserAvatar = computed(() => auth.user?.avatar || auth.isFarcaster?.user?.avatar)
+const authUserAvatar = computed(() =>
+  !auth.user ? undefined : auth.user?.avatar || auth.isFarcaster?.user?.avatar || smileyFaceSvg
+)
 
 const trifleBall = ref(null)
 const trifleBallVisible = ref(false)
@@ -243,6 +250,8 @@ watch(hubOpen, async (open) => {
     return trifleBall.value?.spinFast()
   }
 })
+
+const defaultAvatar = inject('TrifleHub/defaultAvatar')
 </script>
 
 <style>
