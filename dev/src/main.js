@@ -8,7 +8,7 @@ import '../../src/style/index.css'
 
 // Initialize wagmi config for dev
 const reownConfig = {
-  projectId: '8e5ec9e73068bb361965380989cde68c', // Replace with your dev project ID
+  projectId: '5000c12d150037d017e32b99b86e0e07', // Replace with your dev project ID
   metadata: {
     name: 'Balls Hub Dev',
     description: 'Balls Hub Development Environment',
