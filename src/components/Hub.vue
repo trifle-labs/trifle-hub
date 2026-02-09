@@ -255,11 +255,6 @@ const defaultAvatar = inject('TrifleHub/defaultAvatar')
 </script>
 
 <style>
-#trifle-hub,
-#trifle-hub * {
-  overscroll-behavior: contain;
-}
-
 #trifle-hub {
   &[data-position='bottom-left'] {
     & .trifle-hub-position {
@@ -338,6 +333,7 @@ const defaultAvatar = inject('TrifleHub/defaultAvatar')
     transparent 97%
   );
   overflow-y: scroll;
+  overscroll-behavior: contain;
   padding-top: var(--mask-top);
   padding-bottom: var(--mask-bottom);
   mask-image: var(--mask);
