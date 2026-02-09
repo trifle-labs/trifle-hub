@@ -322,6 +322,10 @@ const defaultAvatar = inject('TrifleHub/defaultAvatar')
   }
 }
 
+.trifle-hub-ui ._overflow-y-scroll {
+  overscroll-behavior: contain;
+}
+
 ._overflow-y-scroll-masked {
   --mask-top: 0.75rem;
   --mask-bottom: 5.5rem;
