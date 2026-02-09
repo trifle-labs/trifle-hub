@@ -127,31 +127,39 @@ export const useAuthStore = defineStore('auth', {
 
       const linkMatchesDomainExactly = href == windowLocationHref.replace(/\/$/, '')
 
-      // const miniAppURLs = [
-      //   'gm.trifle.life',
-      //   'anybody.gg',
-      //   'like.trifle.life',
-      //   'like.trifle.life/lottery'
-      // ]
-      // const miniAppURLs = [
-      //   {
-      //     url: 'gm.trifle.life',
-      //     superAppLink: 'https://like.trifle.life/gm'
-      //   },
-      //   {
-      //     url: 'anybody.gg',
-      //     superAppLink: 'https://like.trifle.life/anybody'
-      //   },
-      //   {
-      //     url: 'like.trifle.life',
-      //     superAppLink: 'https://like.trifle.life/lottery'
-      //   },
-      //   {
-      //     url: 'like.trifle.life/lottery',
-      //     superAppLink: 'https://like.trifle.life/lottery'
-      //   }
-      // ]
-      const isFarcasterMiniApp = false
+      const miniAppURLs = [
+        {
+          url: 'snake.rodeo',
+          superAppLink: 'https://like.trifle.life/snake'
+        },
+        {
+          url: 'gm.trifle.life',
+          superAppLink: 'https://like.trifle.life/gm'
+        },
+        {
+          url: 'anybody.gg',
+          superAppLink: 'https://like.trifle.life/anybody'
+        },
+        {
+          url: 'like.trifle.life',
+          superAppLink: 'https://like.trifle.life/'
+        },
+        {
+          url: 'like.trifle.life/lottery',
+          superAppLink: 'https://like.trifle.life/lottery'
+        }
+      ]
+      let host
+      let path = ''
+      try {
+        const url = new URL(href)
+        host = url.host
+        path = url.pathname
+      } catch (e) {
+        console.error('error getting url from href', e)
+        host = null
+      }
+      const matchedFarcasterMiniApp = host && miniAppURLs.find((url) => url.url === host)
       // href.includes('farcaster.xyz/miniapps/') ||
       // miniAppURLs.some((url) => href.endsWith(url.url))
       // console.log({ href, link, location: window.location })
@@ -163,20 +171,21 @@ export const useAuthStore = defineStore('auth', {
           isFarcasterProfile,
           fid,
           isFarcasterPost,
-          isFarcasterMiniApp,
+          matchedFarcasterMiniApp,
           linkMatchesDomain,
           linkMatchesDomainExactly
         })
       )
-      if (this.isFarcaster && isFarcasterProfile && fid) {
-        console.log(
-          'View profile because isFarcaster is not null and isFarcasterProfile is not null and fid is not null'
-        )
+      if (!this.isFarcaster) {
+        console.log('Do nothing because isFarcaster is null')
+        return
+      }
+      if (matchedFarcasterMiniApp) {
+        console.log('Open mini app because matchedFarcasterMiniApp is true')
         e.preventDefault()
-        sdk.actions.viewProfile({
-          fid
-        })
-      } else if (this.isFarcaster && isFarcasterPost) {
+        const url = matchedFarcasterMiniApp.superAppLink + path
+        sdk.actions.openMiniApp({ url })
+      } else if (isFarcasterProfile && fid) {
         console.log('View cast because isFarcaster is not null and isFarcasterPost is not null')
         e.preventDefault()
         sdk.actions.viewCast({
@@ -186,21 +195,15 @@ export const useAuthStore = defineStore('auth', {
         console.log('Close hub because linkMatchesDomainExactly is true')
         e.preventDefault()
         this.closeHub()
-      } else if (this.isFarcaster && isFarcasterMiniApp) {
-        console.log('Open mini app because isFarcaster is not null and isFarcasterMiniApp is true')
-        e.preventDefault()
-        sdk.actions.openMiniApp({ url: href })
-      } else if (this.isFarcaster && !linkMatchesDomain) {
+      } else if (!linkMatchesDomain) {
         console.log('Open URL because isFarcaster is not null and linkMatchesDomain is false')
         e.preventDefault()
         sdk.actions.openUrl(link.href)
-      } else if (this.isFarcaster && linkMatchesDomain) {
+      } else if (linkMatchesDomain) {
         console.log('Do nothing because isFarcaster is not null and linkMatchesDomain is true')
         // e.preventDefault()
         // console.log('WOULD CLOSE HUB')
         // this.closeHub()
-      } else {
-        console.log('Do nothing because isFarcaster is null')
       }
     },
     setInstances(appKit, wagmiConfig) {

@@ -124,9 +124,21 @@ const today = new Date()
 // use https://gm-trifle.b-cdn.net for videos so they're cached across domains for users
 const games = [
   {
+    name: 'snake',
+    title: 'SNAKE.rodeo',
+    link: 'https://snake.rodeo',
+    description: 'playtest for <span class="_not-italic">🪩🪩🪩</span> + Airdrop!',
+    bgVideo:
+      // 'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
+      `https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco,h_480/v1770644193/chomp-combined-2-titled-end-4frames__110spd_nobxlw.mp4`,
+    bgBlur: 0,
+    scale: 1,
+    isNewUntil: new Date('March 15, 2026')
+  },
+  {
     name: 'like-lottery',
     title: 'LIKE LOTTERY',
-    link: 'https://like.trifle.life/lotteries',
+    link: 'https://trifle.life/lotteries',
     description: 'follow → like → win $1K',
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1757079745/lottery-gif-loop-better-shorter__16-9__240p-400br_f5bx63.mp4',
@@ -137,7 +149,7 @@ const games = [
     name: 'gm-game',
     title: 'GM GAME',
     // link: 'https://gm.trifle.life',
-    link: 'https://like.trifle.life/gm',
+    link: 'https://gm.trifle.life',
     description: 'write gm\'s → win BALL$ <span class="_not-italic">🪩</span>',
     bgVideo:
       // 'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
@@ -149,7 +161,7 @@ const games = [
     name: 'anybody',
     description: 'daily puzzle-shooter, fully onchain',
     // link: anybodyLink,
-    link: 'https://like.trifle.life/anybody',
+    link: 'https://anybody.gg',
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/c_scale,f_auto,q_auto:eco,w_400/v1748287290/anybody-gameplay-clip-2_cf6p3x.mov',
     titleImg: anybodyTitleImg,
