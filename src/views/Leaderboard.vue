@@ -14,7 +14,7 @@
         @click="selectedCategory = 'balls'"
         :style="selectedCategory === 'balls' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
       >
-        balls 🪩
+        BALL$ 🪩
       </button>
       <button
         class="_bubble-btn _px-4.5 _h-16"
@@ -22,22 +22,26 @@
         @click="selectedCategory = 'airdrop'"
         :style="selectedCategory === 'airdrop' ? 'filter: hue-rotate(103deg) saturate(2)' : ''"
       >
-        airdrop 🪂
+        <span
+          :style="selectedCategory === 'airdrop' ? 'filter: hue-rotate(-103deg) saturate(0.5)' : ''"
+          >Airdrop 🪂</span
+        >
       </button>
     </nav>
     <!-- time filter tabs (balls only) -->
-    <nav v-if="selectedCategory === 'balls'" class="_gap-[0.45rem] _mt-2 _grid _grid-cols-2 _text-stroke-2xl _text-base _tracking-wide">
+    <nav
+      v-if="selectedCategory === 'balls'"
+      class="_gap-[0.45rem] _mt-2.5 _grid _grid-cols-2 _text-stroke-2xl _text-mlg _tracking-wide _bg-metallic-linear _rounded-lg _shadow-panel-inset _p-3"
+    >
       <button
-        class="_bubble-btn _px-4 _h-12"
-        :class="{ '_animate-wiggle-sm': selectedTimeFilter === 'weekly' }"
+        class="_bubble-btn _py-[0.625em]"
         @click="selectedTimeFilter = 'weekly'"
         :style="selectedTimeFilter === 'weekly' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
       >
         this week
       </button>
       <button
-        class="_bubble-btn _px-4 _h-12"
-        :class="{ '_animate-wiggle-sm': selectedTimeFilter === 'allTime' }"
+        class="_bubble-btn _py-[0.625em]"
         @click="selectedTimeFilter = 'allTime'"
         :style="selectedTimeFilter === 'allTime' ? 'filter: hue-rotate(103deg) saturate(2)' : ''"
       >
@@ -46,7 +50,7 @@
     </nav>
 
     <!-- Loading State -->
-    <div v-if="loading" class="_text-center _py-10">Loading leaderboard...</div>
+    <div v-if="loading" class="_text-center _py-10 _animate-scaleup-sm">Loading leaderboard...</div>
 
     <!-- Error State -->
     <div v-else-if="error" class="_p-4 _bg-red-100 _text-red-700 _rounded-lg _mt-4">
@@ -58,31 +62,38 @@
       <div
         v-if="selectedCategory === 'airdrop' && currentUserEntry"
         @click="openProfile(currentUserEntry.username)"
-        class="_flex _items-center _text-left _gap-2.5 _p-3 _rounded-lg _shadow-panel _text-lg _text-stroke-3xl _max-w-full _min-w-0 _cursor-pointer mouse:hover:_scale-[1.01] _duration-150 _mb-3"
-        style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+        class="_relative _flex _items-center _text-left _gap-2.5 _p-3 _rounded-lg _shadow-panel _text-lg _text-stroke-3xl _max-w-full _min-w-0 _cursor-pointer mouse:hover:_scale-[1.01] _duration-150 _mb-3 _bg-metallic-linear"
         aria-label="Your Position"
       >
-        <div class="_min-w-[1.4em] _text-center _text-em-xs _flex-shrink-0 _weight-black">
-          #{{ currentUserEntry.rank }}
+        <div
+          class="_absolute _top-0 _left-0 _w-full _h-full _rounded-lg _opacity-75"
+          style="background: linear-gradient(135deg, #d4e5e5 0%, #fed6e3 100%); mix-blend-mode: hue"
+        ></div>
+        <div class="_relative _min-w-[1.4em] _text-center _text-em-xs _opacity-25 _flex-shrink-0">
+          {{ currentUserEntry.rank }}
         </div>
-        <div class="_flex _items-center _gap-2.5 _flex-1 _min-w-0">
+        <div class="_relative _flex _items-center _gap-2.5 _flex-1 _min-w-0">
           <div
             v-if="currentUserEntry.avatar"
             class="_size-[2em] _-my-0.5 _flex-shrink-0 _rounded-full _bg-zinc-400 _bg-cover _bg-center"
             :style="{ backgroundImage: `url(${currentUserEntry.avatar})` }"
-            style="box-shadow: inset 0 1px 2px rgba(0,0,0,0.75), inset 0 -1px 2px rgba(255,255,255,0.75)"
+            style="
+              box-shadow:
+                inset 0 1px 2px rgba(0, 0, 0, 0.75),
+                inset 0 -1px 2px rgba(255, 255, 255, 0.75);
+            "
           ></div>
           <div
             v-else
-            class="_size-[2em] _-my-0.5 _flex-shrink-0 _rounded-full _bg-cover _bg-center _opacity-40"
+            class="_relative _size-[2em] _-my-0.5 _flex-shrink-0 _rounded-full _bg-cover _bg-center _opacity-40"
             tabindex="-1"
             :style="{ backgroundImage: `url(${smileyFacePng})`, mixBlendMode: 'multiply' }"
           ></div>
-          <div class="_flex-1 _weight-semibold _truncate _min-w-0">
+          <div class="_relative _flex-1 _weight-semibold _truncate _min-w-0">
             {{ currentUserEntry.username || 'N/A' }} <span class="_opacity-50 _text-sm">(you)</span>
           </div>
         </div>
-        <div class="_weight-black _whitespace-nowrap _flex _gap-[0.15em]">
+        <div class="_relative _weight-black _whitespace-nowrap _flex _gap-[0.15em]">
           <div>{{ currentUserEntry.totalBalls?.toLocaleString('en-us') ?? '0' }}</div>
           <div>🪂</div>
         </div>
@@ -108,7 +119,8 @@
                 backgroundImage: `url(${entry.avatar})`
               }"
               style="
-                box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.75),
+                box-shadow:
+                  inset 0 1px 2px rgba(0, 0, 0, 0.75),
                   inset 0 -1px 2px rgba(255, 255, 255, 0.75);
               "
             >

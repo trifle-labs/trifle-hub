@@ -36,6 +36,7 @@ export default {
         4.5: '1.125rem',
         5.5: '1.375rem',
         13: '3.25rem',
+        14: '3.5rem',
         18: '4.5rem',
         ...emSizing
       },
