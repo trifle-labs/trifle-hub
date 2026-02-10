@@ -239,7 +239,11 @@ export const useAuthStore = defineStore('auth', {
         const token = localStorage.getItem('authToken')
         if (token) {
           this.setAuthToken(token)
-          await this.fetchUserStatus()
+          try {
+            await this.fetchUserStatus()
+          } catch (e) {
+            console.warn('Failed to restore session:', e.message)
+          }
         } else {
           console.log('no auth token found, not fetching user status')
         }
@@ -831,7 +835,15 @@ export const useAuthStore = defineStore('auth', {
       try {
         const isConnected = this._appKitInstance.getIsConnectedState()
         if (isConnected) {
-          console.log('wallet already connected, no need to connect')
+          console.log('wallet already connected')
+          const { address } = useAccount({ config: this._wagmiConfigInstance })
+          if (address.value) {
+            this.accountConnected = true
+            this.accountAddress = address.value.toLowerCase()
+            if (!this.isAuthenticated) {
+              return this.authenticateWithWallet(address.value)
+            }
+          }
           return true
         }
 
