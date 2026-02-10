@@ -141,12 +141,12 @@ export const useAuthStore = defineStore('auth', {
           superAppLink: 'https://like.trifle.life/anybody'
         },
         {
-          url: 'like.trifle.life',
-          superAppLink: 'https://like.trifle.life/'
+          url: 'trifle.life',
+          superAppLink: 'https://like.trifle.life'
         },
         {
-          url: 'like.trifle.life/lottery',
-          superAppLink: 'https://like.trifle.life/lottery'
+          url: 'like.trifle.life',
+          superAppLink: 'https://like.trifle.life'
         }
       ]
       let host
