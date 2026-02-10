@@ -222,7 +222,7 @@ export const possiblePoints = [
     claimed: false,
     once: false,
     enabled: true,
-    link: 'https://farcaster.xyz/miniapps/gBsKvLYGQnEE/gm-game'
+    link: 'https://farcaster.xyz/?launchFrameUrl=https%3A%2F%2Flike.trifle.life%2Fgm'
   },
   {
     name: 'Solve Daily Anybody Problem',
