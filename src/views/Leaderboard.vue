@@ -29,9 +29,9 @@
     <nav v-if="selectedCategory === 'balls'" class="_gap-[0.45rem] _mt-2 _grid _grid-cols-2 _text-stroke-2xl _text-base _tracking-wide">
       <button
         class="_bubble-btn _px-4 _h-12"
-        :class="{ '_animate-wiggle-sm': selectedTimeFilter === 'monthly' }"
-        @click="selectedTimeFilter = 'monthly'"
-        :style="selectedTimeFilter === 'monthly' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
+        :class="{ '_animate-wiggle-sm': selectedTimeFilter === 'weekly' }"
+        @click="selectedTimeFilter = 'weekly'"
+        :style="selectedTimeFilter === 'weekly' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
       >
         this week
       </button>
@@ -151,7 +151,7 @@ import HubPageHeader from '../components/HubPageHeader.vue'
 import smileyFacePng from '../assets/imgs/smiley-face-dashed-inside-noShadow.png'
 
 const selectedCategory = ref('balls') // 'balls' or 'airdrop'
-const selectedTimeFilter = ref('monthly') // 'monthly' for This Week, 'allTime' for All Time
+const selectedTimeFilter = ref('weekly') // 'weekly' for This Week, 'allTime' for All Time
 const leaderboardData = ref([])
 const currentUserEntry = ref(null)
 const loading = ref(false)
@@ -194,7 +194,7 @@ const fetchLeaderboardData = async () => {
         sortDir: 'desc',
         limit: '25'
       })
-      if (selectedTimeFilter.value === 'monthly') {
+      if (selectedTimeFilter.value === 'weekly') {
         params.append('duration', '7d') // 7 days for "This Week"
       }
       url = `${backendUrl.value}/balls/leaderboard?${params.toString()}`
