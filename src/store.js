@@ -689,7 +689,8 @@ export const useAuthStore = defineStore('auth', {
       await this.cancelTwitterAuth()
 
       try {
-        let url = `${this.backendUrl}/auth/twitter`
+        // Add cache-busting param to prevent in-app browsers from caching the OAuth redirect
+        let url = `${this.backendUrl}/auth/twitter?_t=${Date.now()}`
         if (this.isAuthenticated) {
           // authenticated users need a nonce to connect the accounts
           const nonceResponse = await fetch(`${this.backendUrl}/auth/twitter-nonce`, {
@@ -705,7 +706,7 @@ export const useAuthStore = defineStore('auth', {
           }
 
           const { nonce } = await nonceResponse.json()
-          url += `?nonce=${encodeURIComponent(nonce)}`
+          url += `&nonce=${encodeURIComponent(nonce)}`
         }
 
         if (this.isFarcaster) {
