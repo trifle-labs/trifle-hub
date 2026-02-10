@@ -29,7 +29,9 @@
             <span v-if="point.gmMessage" class="_weight-semiboldff">"{{ point.gmMessage }}"</span>
             <template v-else>your gm</template>
           </template>
-          <template v-else>{{ pointConfig?.name || point.name }}</template>
+          <template v-else>{{
+            pointConfig?.activityText || pointConfig?.name || point.name
+          }}</template>
           <!-- date -->
         </div>
         <div v-if="sourceURL" class="_text-em-2xs _opacity-25 _leading-none _flex _gap-[0.35em]">

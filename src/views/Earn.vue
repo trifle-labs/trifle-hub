@@ -30,20 +30,23 @@
       </template>
       <template v-if="isAuthenticated">
         <section
+          class="_px-3 _py-3 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none _text-3xl _cursor-pointer _whitespace-nowrap"
           @click="openProfile"
-          class="_px-3 _py-3 _bg-metallic-cone _rounded-lg _shadow-panel _flex _justify-between _items-center _flex-wrap _gap-2 _leading-none _text-3xl _cursor-pointer"
         >
-          <div class="_flex _items-center">
+          <div class="_flex _items-center _min-w-0 _flex-1">
             <div
               v-if="auth.user?.avatar"
               class="_size-[1.125em] _block _rounded-full _shadow-panel-inset _bg-cover _bg-center"
               :style="{ backgroundImage: `url(${auth.user?.avatar})` }"
             />
-            <div class="_opacity-30 _text-mlg _text-stroke-lg _ml-[0.5em]">Your Balance</div>
+            <div class="_opacity-30 _text-mlg _text-stroke-lg _ml-[0.37em] _min-w-0 _truncate">
+              Your Balance
+            </div>
           </div>
-          <div class="_text-right _flex-1 _whitespace-nowrap _min-w-0 _truncate">
-            <span class="_text-stroke-3xl">{{ totalBalls?.toLocaleString() || '???' }}</span> 🪩
+          <div class="_text-right _min-w-0 _truncate _text-stroke-3xl">
+            {{ totalBalls?.toLocaleString() || '???' }}
           </div>
+          <div class="_flex-shrink-0">🪩</div>
         </section>
       </template>
     </header>
@@ -301,14 +304,15 @@ const openProfile = () => {
 // Compute filtered quests based on the selected filter
 const filteredQuests = computed(() => {
   let questsToDisplay = []
+  const visibleQuests = quests.value.filter((quest) => !quest.hiddenFromQuests)
   if (filter.value === 'all') {
-    questsToDisplay = quests.value
+    questsToDisplay = visibleQuests
   } else if (filter.value === 'once') {
-    questsToDisplay = quests.value.filter((quest) => quest.once)
+    questsToDisplay = visibleQuests.filter((quest) => quest.once)
   } else if (filter.value === 'ongoing') {
-    questsToDisplay = quests.value.filter((quest) => !quest.once)
+    questsToDisplay = visibleQuests.filter((quest) => !quest.once)
   } else {
-    questsToDisplay = quests.value
+    questsToDisplay = visibleQuests
   }
 
   return questsToDisplay.slice().sort((a, b) => {
@@ -316,18 +320,15 @@ const filteredQuests = computed(() => {
     if (a.enabled && !b.enabled) return -1
     if (!a.enabled && b.enabled) return 1
 
-    // If both have the same enabled status (i.e., both are enabled, as disabled ones are handled above)
-    // or if both are disabled (their order amongst themselves doesn't matter by completion)
-    // then, sort by completion status (uncompleted quests on top)
+    // For enabled quests, push completed .once quests to the bottom
     if (a.enabled && b.enabled) {
-      if (a.completed && !b.completed) return 1
-      if (!a.completed && b.completed) return -1
-      // This condition ensures we only sort by completion for enabled quests
-      if (!(a.completed && a.once) && b.completed && b.once) return -1
-      if (a.completed && a.once && !(b.completed && b.once)) return 1
+      const aCompletedOnce = a.completed && a.once
+      const bCompletedOnce = b.completed && b.once
+      if (aCompletedOnce && !bCompletedOnce) return 1
+      if (!aCompletedOnce && bCompletedOnce) return -1
     }
 
-    return 0 // Keep original order if all criteria are the same
+    return 0 // Keep original array order for everything else
   })
 })
 

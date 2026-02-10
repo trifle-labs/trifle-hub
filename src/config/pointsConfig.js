@@ -6,14 +6,18 @@ import farcasterIcon from '../assets/imgs/farcaster-logo.svg'
 import anybodyIcon from '../assets/imgs/anybody-icon.png'
 import kudzuIcon from '../assets/imgs/kudzu-icon.gif'
 import gmIcon from '../assets/imgs/gm.svg'
+import snakeIcon from '../assets/imgs/snake-hub-icon.png'
+import lotteryIcon from '../assets/imgs/lottery-icon.png'
 import { platforms } from './socialsConfig'
 // import { sdk } from '@farcaster/miniapp-sdk'
 
 const discordLink = platforms.discord.url
 
-const gmLink = 'https://like.trifle.life/gm'
-const anybodyLink = 'https://like.trifle.life/anybody'
+const gmLink = 'https://gm.trifle.life'
+const anybodyLink = 'https://anybody.gg'
 const kudzuLink = 'https://kudzu.rodeo'
+const snakeLink = 'https://snake.rodeo'
+const lotteryLink = 'https://trifle.life/lotteries'
 
 export const possiblePoints = [
   {
@@ -135,6 +139,33 @@ export const possiblePoints = [
   //   link: 'https://kudzu.rodeo'
   // },
   {
+    name: 'Play Snake.rodeo',
+    id: 'snake-winnings',
+    icon: snakeIcon,
+    description: 'Win 🪩 in our MMO-Snake game',
+    activityText: 'Snake winnings!',
+    pachinkoBalls: '∞',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: snakeLink
+  },
+  {
+    name: 'Bribed Snake',
+    id: 'snake-vote',
+    icon: snakeIcon,
+    hiddenFromQuests: true,
+    link: snakeLink
+  },
+  {
+    name: 'Snake refund (stalemate)',
+    id: 'snake-refund',
+    icon: snakeIcon,
+    hiddenFromQuests: true,
+    link: snakeLink
+  },
+  {
     name: 'Play the GM Game',
     id: 'gm',
     icon: gmIcon,
@@ -151,7 +182,7 @@ export const possiblePoints = [
     name: "Likes on your GM's",
     id: 'gm-react',
     icon: gmIcon,
-    description: 'Every time someone likes your GM, you earn +1🪩',
+    description: '+1🪩 when someone likes your GM',
     pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
@@ -201,16 +232,17 @@ export const possiblePoints = [
   //   link: platforms.farcaster.url
   // },
   {
-    name: 'Swap BALL$',
+    name: 'Swap 🪩 to lotto-balls',
     id: 'award-pending',
-    // icon: farcasterIcon,
+    icon: lotteryIcon,
+    hiddenFromQuests: true,
     // description: 'Swap unlimited 🪩 BALL$ for lotto-balls.',
     // pachinkoBalls: '1+',
     // lottoBalls: '1+',
     // claimed: false,
     // once: false,
     // enabled: true,
-    link: 'https://like.trifle.life/lotteries'
+    link: lotteryLink
   },
   {
     name: 'Cast your GM with mini app link',
@@ -283,7 +315,7 @@ export const possiblePoints = [
     once: false,
     enabled: true,
     link: kudzuLink
-  },
+  }
   // {
   //   name: 'Nuke to 1st on Kudzus',
   //   id: 'kudzu-nuke',
@@ -343,16 +375,4 @@ export const possiblePoints = [
   //   enabled: false,
   //   link: discordLink
   // },
-  {
-    name: 'Snake winnings',
-    id: 'snake-winnings',
-  },
-  {
-    name: 'Snake vote',
-    id: 'snake-vote',
-  },
-  {
-    name: 'Snake refund',
-    id: 'snake-refund',
-  }
 ]
