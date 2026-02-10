@@ -125,9 +125,13 @@ export const useAuthStore = defineStore('auth', {
 
       const isFarcasterPost = linkMatchesFarcaster && href.split('/').length == 5
 
-      const linkMatchesDomainExactly = href == windowLocationHref.replace(/\/$/, '')
+      const linkMatchesHrefExactly = href == windowLocationHref.replace(/\/$/, '')
 
       const miniAppURLs = [
+        {
+          url: 'ev.trifle.zone',
+          superAppLink: 'https://ev.trifle.zone'
+        },
         {
           url: 'snake.rodeo',
           superAppLink: 'https://like.trifle.life/snake'
@@ -173,37 +177,57 @@ export const useAuthStore = defineStore('auth', {
           isFarcasterPost,
           matchedFarcasterMiniApp,
           linkMatchesDomain,
-          linkMatchesDomainExactly
+          linkMatchesHrefExactly
         })
       )
       if (!this.isFarcaster) {
         console.log('Do nothing because isFarcaster is null')
         return
       }
-      if (matchedFarcasterMiniApp) {
-        console.log('Open mini app because matchedFarcasterMiniApp is true')
+      // in farcaster...
+      if (this.isFarcaster && isFarcasterProfile && fid) {
+        console.log(
+          'View profile because isFarcaster is not null and isFarcasterProfile is not null and fid is not null'
+        )
         e.preventDefault()
-        const url = matchedFarcasterMiniApp.superAppLink + path
-        sdk.actions.openMiniApp({ url })
-      } else if (isFarcasterProfile && fid) {
+        sdk.actions.viewProfile({
+          fid
+        })
+      } else if (this.isFarcaster && isFarcasterPost) {
         console.log('View cast because isFarcaster is not null and isFarcasterPost is not null')
         e.preventDefault()
         sdk.actions.viewCast({
           hash: href.split('/')[4]
         })
-      } else if (linkMatchesDomainExactly) {
-        console.log('Close hub because linkMatchesDomainExactly is true')
+      } else if (linkMatchesHrefExactly) {
+        console.log('Close hub because linkMatchesHrefExactly is true')
         e.preventDefault()
         this.closeHub()
-      } else if (!linkMatchesDomain) {
-        console.log('Open URL because isFarcaster is not null and linkMatchesDomain is false')
-        e.preventDefault()
-        sdk.actions.openUrl(link.href)
       } else if (linkMatchesDomain) {
         console.log('Do nothing because isFarcaster is not null and linkMatchesDomain is true')
         // e.preventDefault()
         // console.log('WOULD CLOSE HUB')
         // this.closeHub()
+      } else if (matchedFarcasterMiniApp && !linkMatchesDomain) {
+        console.log(
+          'open mini app page via openUrl because isFarcaster and matchedFarcasterMiniApp is true'
+        )
+        e.preventDefault()
+        console.log('open url', matchedFarcasterMiniApp.superAppLink + path)
+        // use vanilla to open url in same farcaster miniapp window
+        window.location.href = matchedFarcasterMiniApp.superAppLink + path
+        // sdk.actions.openUrl(matchedFarcasterMiniApp.superAppLink + path)
+        // =====
+        // console.log(
+        //   'Open mini app because matchedFarcasterMiniApp is true and linkMatchesDomain is false'
+        // )
+        // e.preventDefault()
+        // const url = matchedFarcasterMiniApp.superAppLink + path
+        // sdk.actions.openMiniApp({ url })
+      } else if (!linkMatchesDomain) {
+        console.log('Open URL because isFarcaster is not null and linkMatchesDomain is false')
+        e.preventDefault()
+        sdk.actions.openUrl(link.href)
       }
     },
     setInstances(appKit, wagmiConfig) {
