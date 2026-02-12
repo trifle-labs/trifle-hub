@@ -260,6 +260,24 @@ export const useAuthStore = defineStore('auth', {
           console.warn('error initializing farcaster', e)
         }
 
+        // Check for auth token in URL hash (redirect fallback from in-app browsers
+        // where window.opener.postMessage doesn't work, e.g. Twitter/X in-app browser)
+        const hash = window.location.hash
+        if (hash.includes('trifle_auth_token=')) {
+          const hashParams = new URLSearchParams(hash.substring(1))
+          const hashToken = hashParams.get('trifle_auth_token')
+          if (hashToken) {
+            this.setAuthToken(hashToken)
+            // Clean the token from the URL immediately
+            window.history.replaceState(null, '', window.location.pathname + window.location.search)
+            try {
+              await this.fetchUserStatus()
+            } catch (e) {
+              console.warn('Failed to fetch user status from redirect token:', e.message)
+            }
+          }
+        }
+
         const token = localStorage.getItem('authToken')
         if (token) {
           this.setAuthToken(token)
@@ -525,7 +543,7 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         // const hasDiscordAuth = this.user?.linkedAccounts?.discord?.length > 0
-        let url = `${this.backendUrl}/auth/discord`
+        let url = `${this.backendUrl}/auth/discord?origin=${encodeURIComponent(window.location.href)}`
         if (this.isAuthenticated) {
           // For additional auth, get a nonce first
           const nonceResponse = await fetch(`${this.backendUrl}/auth/discord-nonce`, {
@@ -714,7 +732,9 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         // Add cache-busting param to prevent in-app browsers from caching the OAuth redirect
-        let url = `${this.backendUrl}/auth/twitter?_t=${Date.now()}`
+        // Pass origin so the backend can redirect back here if window.opener is unavailable
+        // (e.g. Twitter/X in-app browser where postMessage doesn't work)
+        let url = `${this.backendUrl}/auth/twitter?_t=${Date.now()}&origin=${encodeURIComponent(window.location.href)}`
         if (this.isAuthenticated) {
           // authenticated users need a nonce to connect the accounts
           const nonceResponse = await fetch(`${this.backendUrl}/auth/twitter-nonce`, {
