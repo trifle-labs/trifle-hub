@@ -1,0 +1,90 @@
+name: Update downstream repos
+
+on:
+  push:
+    branches: [main]
+    paths: [package.json]
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.check.outputs.changed }}
+      new_version: ${{ steps.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check if version changed
+        id: check
+        run: |
+          OLD_VERSION=$(git show HEAD~1:package.json | jq -r '.version')
+          NEW_VERSION=$(jq -r '.version' package.json)
+          if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+            echo "Version bumped: $OLD_VERSION -> $NEW_VERSION"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No version change"
+          fi
+
+  update-repos:
+    needs: check-version
+    if: needs.check-version.outputs.version_changed == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo:
+          - trifle-labs/eden-plays-snake
+          - trifle-labs/trifle-super-app
+          - trifle-labs/gm-game-app
+    steps:
+      - name: Checkout downstream repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.repo }}
+          token: ${{ secrets.DOWNSTREAM_PAT }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Detect package manager
+        id: pm
+        run: |
+          if [ -f "yarn.lock" ]; then
+            echo "manager=yarn" >> "$GITHUB_OUTPUT"
+            echo "install_cmd=yarn add" >> "$GITHUB_OUTPUT"
+          elif [ -f "pnpm-lock.yaml" ]; then
+            echo "manager=pnpm" >> "$GITHUB_OUTPUT"
+            echo "install_cmd=pnpm add" >> "$GITHUB_OUTPUT"
+          else
+            echo "manager=npm" >> "$GITHUB_OUTPUT"
+            echo "install_cmd=npm install" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install pnpm if needed
+        if: steps.pm.outputs.manager == 'pnpm'
+        run: npm install -g pnpm
+
+      - name: Update @trifle/trifle-hub
+        env:
+          NEW_VERSION: ${{ needs.check-version.outputs.new_version }}
+        run: |
+          ${{ steps.pm.outputs.install_cmd }} @trifle/trifle-hub@$NEW_VERSION
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.DOWNSTREAM_PAT }}
+          commit-message: "chore: bump @trifle/trifle-hub to ${{ needs.check-version.outputs.new_version }}"
+          title: "chore: bump @trifle/trifle-hub to ${{ needs.check-version.outputs.new_version }}"
+          body: |
+            Automated PR to update `@trifle/trifle-hub` to version `${{ needs.check-version.outputs.new_version }}`.
+
+            Triggered by [trifle-hub release](https://github.com/trifle-labs/trifle-hub/commit/${{ github.sha }}).
+          branch: "chore/bump-trifle-hub-${{ needs.check-version.outputs.new_version }}"
+          delete-branch: true
