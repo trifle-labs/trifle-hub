@@ -36,10 +36,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repo:
-          - trifle-labs/eden-plays-snake
-          - trifle-labs/trifle-super-app
-          - trifle-labs/gm-game-app
+        include:
+          - repo: trifle-labs/eden-plays-snake
+            directory: frontend
+          - repo: trifle-labs/trifle-super-app
+            directory: .
+          - repo: trifle-labs/gm-game-app
+            directory: .
     steps:
       - name: Checkout downstream repo
         uses: actions/checkout@v4
@@ -54,6 +57,7 @@ jobs:
 
       - name: Detect package manager
         id: pm
+        working-directory: ${{ matrix.directory }}
         run: |
           if [ -f "yarn.lock" ]; then
             echo "manager=yarn" >> "$GITHUB_OUTPUT"
@@ -71,6 +75,7 @@ jobs:
         run: npm install -g pnpm
 
       - name: Update @trifle/trifle-hub
+        working-directory: ${{ matrix.directory }}
         env:
           NEW_VERSION: ${{ needs.check-version.outputs.new_version }}
         run: |
