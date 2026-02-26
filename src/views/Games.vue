@@ -139,7 +139,7 @@ const games = [
     name: 'like-lottery',
     title: 'LIKE LOTTERY',
     link: 'https://trifle.life/lotteries',
-    description: 'follow → like → win $1K',
+    description: 'follow → like → win $$$',
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1757079745/lottery-gif-loop-better-shorter__16-9__240p-400br_f5bx63.mp4',
     bgBlur: 0,
