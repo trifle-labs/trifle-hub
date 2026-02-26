@@ -53,6 +53,8 @@ jobs:
             directory: .
           - repo: trifle-labs/gm-game-app
             directory: .
+          - repo: trifle-labs/trifle-profile
+            directory: .
     steps:
       - name: Checkout downstream repo
         uses: actions/checkout@v4
