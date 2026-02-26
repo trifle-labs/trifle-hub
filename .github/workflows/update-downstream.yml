@@ -7,7 +7,23 @@ on:
   workflow_dispatch:
 
 jobs:
+  log-trigger:
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Log trigger conditions
+        run: |
+          echo "=== Update downstream repos: trigger info ==="
+          echo "Event name:                  ${{ github.event_name }}"
+          echo "Upstream workflow conclusion: ${{ github.event.workflow_run.conclusion }}"
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ "${{ github.event.workflow_run.conclusion }}" != "success" ]; then
+            echo "SKIP REASON: Upstream 'Publish to npm' workflow did not succeed (conclusion: ${{ github.event.workflow_run.conclusion }}). This workflow only runs after a successful publish."
+          else
+            echo "Conditions met — check-version job will run."
+          fi
+
   check-version:
+    needs: log-trigger
     if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
@@ -36,7 +52,7 @@ jobs:
               echo "Version bumped: $OLD_VERSION -> $NEW_VERSION"
             else
               echo "changed=false" >> "$GITHUB_OUTPUT"
-              echo "No version change"
+              echo "SKIP REASON: Version unchanged ($NEW_VERSION). Bump the version in package.json to trigger downstream updates."
             fi
           fi
 

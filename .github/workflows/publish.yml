@@ -6,7 +6,26 @@ on:
     branches: [main]
 
 jobs:
+  check-conditions:
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Log trigger conditions
+        run: |
+          echo "=== Publish to npm: condition check ==="
+          echo "PR merged:           ${{ github.event.pull_request.merged }}"
+          echo "PR labels:           ${{ join(github.event.pull_request.labels.*.name, ', ') }}"
+          echo "Has 'release' label: ${{ contains(github.event.pull_request.labels.*.name, 'release') }}"
+          if [ "${{ github.event.pull_request.merged }}" != "true" ]; then
+            echo "SKIP REASON: PR was closed without merging."
+          elif [ "${{ contains(github.event.pull_request.labels.*.name, 'release') }}" != "true" ]; then
+            echo "SKIP REASON: PR does not have the 'release' label. Add the 'release' label to trigger publishing."
+          else
+            echo "All conditions met — publish job will run."
+          fi
+
   publish:
+    needs: check-conditions
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release')
     runs-on: ubuntu-latest
     permissions:
