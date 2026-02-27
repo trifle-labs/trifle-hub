@@ -13,10 +13,10 @@
       aria-label="close hub"
     ></button>
     <!-- menu button / labels -->
-    <Teleport :to="props.buttonTarget" :disabled="!props.buttonTarget">
+    <Teleport :to="props.buttonTarget" :disabled="!props.buttonTarget" :defer="true">
     <div
       id="trifle-hub__menu-button"
-      :class="[props.buttonTarget ? '' : '_fixed trifle-hub-position', '_z-10 focus-visible:_ring-4 _rounded-full']"
+      :class="[props.buttonTarget ? '_relative' : '_fixed trifle-hub-position', '_z-10 focus-visible:_ring-4 _rounded-full']"
       :style="menuButtonStyle"
       tabindex="0"
       @keydown.space="hubOpen = !hubOpen"
