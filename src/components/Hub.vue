@@ -240,7 +240,8 @@ const menuButtonStyle = computed(() => {
   return {
     width: size,
     height: size,
-    margin: props.buttonTarget ? '0' : 'var(--thub-menu-button-margin)'
+    margin: props.buttonTarget ? '0' : 'var(--thub-menu-button-margin)',
+    position: props.buttonTarget ? 'relative' : undefined
   }
 })
 
