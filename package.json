@@ -20,6 +20,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js"
     },
+    "./dist/config/pointsConfig": {
+      "types": "./dist/config/pointsConfig.d.ts",
+      "import": "./dist/index.es.js"
+    },
     "./dist/*": "./dist/*"
   },
   "main": "dist/index.es.js",
