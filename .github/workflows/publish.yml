@@ -24,17 +24,6 @@ jobs:
             echo "All conditions met — publish job will run."
           fi
 
-      - name: Check required secrets
-        if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release')
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        run: |
-          if [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo "ERROR: NODE_AUTH_TOKEN secret is not set. npm publishing will fail without it."
-            exit 1
-          fi
-          echo "NODE_AUTH_TOKEN is configured."
-
   publish:
     needs: check-conditions
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release')
