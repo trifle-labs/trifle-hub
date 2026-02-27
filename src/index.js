@@ -119,7 +119,10 @@ const TrifleHubVuePlugin = {
  * TrifleHub main component
  * @type {import('vue').Component}
  */
-export { TrifleHubVuePlugin, TrifleHub, TrifleGuide, SwapBalls }
+const TrifleBall = () => import('./components/TrifleBall/TrifleBall.vue')
+
+export { TrifleHubVuePlugin, TrifleHub, TrifleGuide, SwapBalls, TrifleBall }
 export { possiblePoints } from './config/pointsConfig'
+export { trifleTheme } from './config/tailwindTheme'
 
 // export default TrifleHubVuePlugin
