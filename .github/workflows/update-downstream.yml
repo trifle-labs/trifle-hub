@@ -22,6 +22,17 @@ jobs:
             echo "Conditions met — check-version job will run."
           fi
 
+      - name: Check required secrets
+        if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+        env:
+          DOWNSTREAM_PAT: ${{ secrets.DOWNSTREAM_PAT }}
+        run: |
+          if [ -z "$DOWNSTREAM_PAT" ]; then
+            echo "ERROR: DOWNSTREAM_PAT secret is not set. Downstream repo updates will fail without it."
+            exit 1
+          fi
+          echo "DOWNSTREAM_PAT is configured."
+
   check-version:
     needs: log-trigger
     if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
