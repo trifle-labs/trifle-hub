@@ -120,5 +120,6 @@ const TrifleHubVuePlugin = {
  * @type {import('vue').Component}
  */
 export { TrifleHubVuePlugin, TrifleHub, TrifleGuide, SwapBalls }
+export { possiblePoints } from './config/pointsConfig'
 
 // export default TrifleHubVuePlugin

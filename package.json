@@ -1,6 +1,6 @@
 {
   "name": "@trifle/trifle-hub",
-  "version": "1.0.154",
+  "version": "1.0.155",
   "description": "Vue component library for Trifle Hub",
   "keywords": [
     "vue",
@@ -18,6 +18,10 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js"
+    },
+    "./dist/config/pointsConfig": {
+      "types": "./dist/config/pointsConfig.d.ts",
       "import": "./dist/index.es.js"
     },
     "./dist/*": "./dist/*"
