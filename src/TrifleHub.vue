@@ -5,6 +5,8 @@
     :hubPageKey="hubPageKey"
     :position="props.position"
     :avatar3d="props.avatar3d"
+    :buttonSize="props.buttonSize"
+    :buttonTarget="props.buttonTarget"
   />
 </template>
 
@@ -22,6 +24,14 @@ const props = defineProps({
   avatar3d: {
     type: Boolean,
     default: true
+  },
+  buttonSize: {
+    type: String,
+    default: undefined
+  },
+  buttonTarget: {
+    type: String,
+    default: undefined
   }
 })
 

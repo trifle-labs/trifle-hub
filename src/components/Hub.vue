@@ -13,14 +13,11 @@
       aria-label="close hub"
     ></button>
     <!-- menu button / labels -->
+    <Teleport :to="props.buttonTarget" :disabled="!props.buttonTarget">
     <div
       id="trifle-hub__menu-button"
-      class="_fixed _z-10 trifle-hub-position focus-visible:_ring-4 _rounded-full"
-      style="
-        width: var(--thub-menu-button-size);
-        height: var(--thub-menu-button-size);
-        margin: var(--thub-menu-button-margin);
-      "
+      :class="[props.buttonTarget ? '' : '_fixed trifle-hub-position', '_z-10 focus-visible:_ring-4 _rounded-full']"
+      :style="menuButtonStyle"
       tabindex="0"
       @keydown.space="hubOpen = !hubOpen"
       @keydown.enter="hubOpen = !hubOpen"
@@ -62,6 +59,7 @@
         tabindex="-1"
       />
     </div>
+    </Teleport>
     <!-- (hub panel) -->
     <transition name="thub-fade-in-scale-up">
       <aside
@@ -230,10 +228,21 @@ const hubOpen = defineModel('hubOpen')
 const props = defineProps({
   hubPageKey: { type: String, required: true },
   position: { type: String, default: 'bottom-left', required: true },
-  avatar3d: { type: Boolean, default: true }
+  avatar3d: { type: Boolean, default: true },
+  buttonSize: { type: String, default: undefined },
+  buttonTarget: { type: String, default: undefined }
 })
 
 const hubPage = computed(() => hubPages[props.hubPageKey] || hubPages.account)
+
+const menuButtonStyle = computed(() => {
+  const size = props.buttonSize || 'var(--thub-menu-button-size)'
+  return {
+    width: size,
+    height: size,
+    margin: props.buttonTarget ? '0' : 'var(--thub-menu-button-margin)'
+  }
+})
 
 const { openHub } = inject('hub')
 const auth = inject('TrifleHub/store')
