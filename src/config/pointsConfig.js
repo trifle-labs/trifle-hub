@@ -82,6 +82,41 @@ export const possiblePoints = [
     link: { to: 'account' }
   },
   {
+    name: 'Follow Trifle on X',
+    id: 'follow-trifle-twitter',
+    icon: twitterIcon,
+    pachinkoBalls: 100,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: platforms.twitter.url
+  },
+  {
+    name: 'Like Featured Tweet',
+    id: 'twitter-like-tweet',
+    icon: twitterIcon,
+    description: 'Like the latest tweet from @triflelife',
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: platforms.twitter.url
+  },
+  {
+    name: 'Reply to Featured Tweet',
+    id: 'twitter-reply-tweet',
+    icon: twitterIcon,
+    description: 'Reply to the latest tweet from @triflelife',
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: platforms.twitter.url
+  },
+  {
     name: 'Join Trifle Discord',
     id: 'trifler',
     icon: discordIcon,
