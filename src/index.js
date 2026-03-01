@@ -31,6 +31,7 @@ const queryClient = new QueryClient()
  * @property {Object<string, string>} [reownConfig.themeVariables] - CSS theme variables
  * @property {Array} [connectors] - Wagmi connectors array
  * @property {string} [backendUrl] - Backend API URL (default: 'https://bot-staging.trifle.life')
+ * @property {string} [cookieDomain] - Shared parent domain for cross-subdomain cookie auth (e.g. '.trifle.life'). When set, the auth token is stored in a cookie scoped to this domain so all its subdomains share the session without requiring a link handoff.
  * @property {string} [defaultPage] - Default page to show when hub opens (default: 'welcome')
  * @property {import('pinia').Pinia} [devHookPiniaInstance] - Optional Pinia instance for devtools integration
  */
@@ -98,7 +99,7 @@ const TrifleHubVuePlugin = {
 
     app.provide('TrifleHub/defaultAvatar', smileyFacePng)
 
-    store.initializeAuth(appKit, wagmiConfig, options.backendUrl)
+    store.initializeAuth(appKit, wagmiConfig, options.backendUrl, options.cookieDomain)
 
     app.use(WagmiPlugin, { config: wagmiConfig })
 

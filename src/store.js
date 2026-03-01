@@ -29,6 +29,7 @@ const ADMIN_USERNAMES = ['bugyum', 'okwme', 'idiotsdelight', 'gigi', 'trifle']
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     backendUrl: null,
+    cookieDomain: null, // e.g. '.trifle.life' — enables shared cookie auth across subdomains
     initialized: false,
     user: null, // { id, email, linkedAccounts: { discord: [{id, username}], telegram: [{id, username}], wallet: [{address, chainId}] } }
     isAuthenticated: false,
@@ -234,10 +235,15 @@ export const useAuthStore = defineStore('auth', {
       this._appKitInstance = appKit
       this._wagmiConfigInstance = wagmiConfig
     },
-    async initializeAuth(appKit, wagmiConfig, backendUrl) {
+    async initializeAuth(appKit, wagmiConfig, backendUrl, cookieDomain) {
       console.log('initializeAuthhh')
       if (this.initialized) return
       this.backendUrl = backendUrl
+      this.cookieDomain = cookieDomain || null
+      if (cookieDomain && !/^\.?[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/.test(cookieDomain)) {
+        console.warn('TrifleHub: cookieDomain contains invalid characters and will be ignored.')
+        this.cookieDomain = null
+      }
       this.setInstances(appKit, wagmiConfig)
       if (!this._wagmiConfigInstance || !this._appKitInstance) {
         console.warn('AuthStore: initializeAuth called before appKit/wagmiConfig were set.')
@@ -301,7 +307,7 @@ export const useAuthStore = defineStore('auth', {
         }
 
         const urlToken = queryToken || hashToken
-        const token = localStorage.getItem('authToken')
+        const token = localStorage.getItem('authToken') || (cookieDomain ? this._getAuthCookie() : null)
         if (token && !urlToken) {
           this.setAuthToken(token)
           try {
@@ -518,6 +524,31 @@ export const useAuthStore = defineStore('auth', {
     setAuthToken(token) {
       this.authToken = token
       localStorage.setItem('authToken', token)
+      if (this.cookieDomain) {
+        this._setAuthCookie(token)
+      }
+    },
+
+    _setAuthCookie(token) {
+      const maxAge = 60 * 60 * 24 * 30 // 30 days in seconds
+      let cookie = `trifle_auth_token=${encodeURIComponent(token)}; path=/; max-age=${maxAge}; SameSite=Lax`
+      if (window.location.protocol === 'https:') {
+        cookie += '; Secure'
+      }
+      cookie += `; domain=${this.cookieDomain}`
+      document.cookie = cookie
+    },
+
+    _clearAuthCookie() {
+      if (!this.cookieDomain) return
+      document.cookie = `trifle_auth_token=; path=/; max-age=0; domain=${this.cookieDomain}`
+    },
+
+    _getAuthCookie() {
+      const match = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('trifle_auth_token='))
+      return match ? decodeURIComponent(match.split('=').slice(1).join('=')) : null
     },
 
     getCrossOriginAuthUrl(url) {
@@ -1181,8 +1212,9 @@ export const useAuthStore = defineStore('auth', {
           if (connected) throw new Error('Failed to disconnect')
         }
 
-        // Clear Discord auth
+        // Clear auth token from storage and cookie
         localStorage.removeItem('authToken')
+        this._clearAuthCookie()
         this.authToken = null
 
         // Cleanup any ongoing Telegram authentication
