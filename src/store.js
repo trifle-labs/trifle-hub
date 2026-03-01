@@ -260,12 +260,34 @@ export const useAuthStore = defineStore('auth', {
           console.warn('error initializing farcaster', e)
         }
 
+        // Check for auth token in URL query params (cross-domain auth handoff)
+        const searchParams = new URLSearchParams(window.location.search)
+        const queryToken = searchParams.get('trifle_auth_token')
+        if (queryToken) {
+          this.setAuthToken(queryToken)
+          // Clean the token from the URL immediately
+          searchParams.delete('trifle_auth_token')
+          const newSearch = searchParams.toString()
+          window.history.replaceState(
+            null,
+            '',
+            window.location.pathname + (newSearch ? '?' + newSearch : '') + window.location.hash
+          )
+          try {
+            await this.fetchUserStatus()
+          } catch (e) {
+            console.warn('Failed to fetch user status from cross-domain token:', e.message)
+          }
+        }
+
         // Check for auth token in URL hash (redirect fallback from in-app browsers
-        // where window.opener.postMessage doesn't work, e.g. Twitter/X in-app browser)
+        // where window.opener.postMessage doesn't work, e.g. Twitter/X in-app browser).
+        // Skipped when a query token is already present to avoid redundant processing.
+        let hashToken = null
         const hash = window.location.hash
-        if (hash.includes('trifle_auth_token=')) {
+        if (!queryToken && hash.includes('trifle_auth_token=')) {
           const hashParams = new URLSearchParams(hash.substring(1))
-          const hashToken = hashParams.get('trifle_auth_token')
+          hashToken = hashParams.get('trifle_auth_token')
           if (hashToken) {
             this.setAuthToken(hashToken)
             // Clean the token from the URL immediately
@@ -278,15 +300,16 @@ export const useAuthStore = defineStore('auth', {
           }
         }
 
+        const urlToken = queryToken || hashToken
         const token = localStorage.getItem('authToken')
-        if (token) {
+        if (token && !urlToken) {
           this.setAuthToken(token)
           try {
             await this.fetchUserStatus()
           } catch (e) {
             console.warn('Failed to restore session:', e.message)
           }
-        } else {
+        } else if (!token && !urlToken) {
           console.log('no auth token found, not fetching user status')
         }
 
@@ -495,6 +518,18 @@ export const useAuthStore = defineStore('auth', {
     setAuthToken(token) {
       this.authToken = token
       localStorage.setItem('authToken', token)
+    },
+
+    getCrossOriginAuthUrl(url) {
+      if (!this.authToken) return url
+      try {
+        const parsed = new URL(url)
+        parsed.searchParams.set('trifle_auth_token', this.authToken)
+        return parsed.toString()
+      } catch (e) {
+        console.warn('getCrossOriginAuthUrl: invalid URL provided', e)
+        return url
+      }
     },
 
     async addFrame() {
