@@ -25,7 +25,10 @@
         </span>
       </div>
     </template>
-    <template #description>
+    <template
+      #description
+      v-if="primaryDiscord || primaryTwitter || primaryTelegram || primaryFarcaster"
+    >
       <div class="_flex _justify-center _gap-2 _h-10 _items-center">
         <a
           v-if="primaryDiscord"
@@ -111,6 +114,7 @@
     >
       <section
         class="_inline-flex _flex-col _mr-2 _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
+        @click="hub.openHub('leaderboard')"
       >
         <header class="_flex _justify-between _items-center _opacity-30 _text-base _leading-snug">
           <h3 class="_weight-black">rank</h3>
@@ -150,7 +154,7 @@
     <section class="_w-full _max-w-2xl">
       <section class="_bg-metallic-linear _shadow-panel _p-4 _space-y-2 _rounded-lg">
         <div class="_flex _items-center _justify-between _-mt-1.5">
-          <h3 class="_text-xl _weight-bold">activity</h3>
+          <h3 class="_text-mlg _opacity-30 _weight-bold">activity</h3>
           <div v-if="totalPages > 1" class="_flex _items-center _gap-2">
             <div v-if="page > 1" class="_text-xs _opacity-30 _tracking-wide">
               Page {{ page }}<span v-if="totalCount"> of {{ totalPages }}</span>
@@ -212,7 +216,7 @@ import PointCard from '../components/PointCard.vue'
 const TrifleBall = defineAsyncComponent(() => import('../components/TrifleBall/TrifleBall.vue'))
 const hub = inject('hub')
 const auth = inject('TrifleHub/store')
-const { currentProfileUsername, backendUrl } = storeToRefs(auth)
+const { currentProfileUsername, backendUrl, user: authUser } = storeToRefs(auth)
 const user = ref(null)
 const loading = ref(true)
 const error = ref(null)
@@ -252,17 +256,37 @@ const airdropPointsDisplay = computed(() =>
   Number(airdropPoints.value || 0).toLocaleString('en-us')
 )
 
-const walletAuths = computed(() => auth.getPlatformData('wallet') || [])
-const discordAuths = computed(() =>
-  (auth.getPlatformData('discord') || []).filter((d) => d.username)
-)
-const twitterAuths = computed(() =>
-  (auth.getPlatformData('twitter') || []).filter((t) => t.username)
-)
-const telegramAuths = computed(() =>
-  (auth.getPlatformData('telegram') || []).filter((t) => t.username)
-)
-const farcasterAuths = computed(() => auth.getPlatformData('farcaster') || [])
+const isOwnProfile = computed(() => {
+  if (!authUser.value?.username || !currentProfileUsername.value) return false
+  return authUser.value.username === currentProfileUsername.value
+})
+
+// For the profile view, we want socials belonging to the profile user.
+// If you're viewing your own profile, we reuse the authenticated user's linked accounts.
+// If you're viewing another player, we rely on any linkedAccounts returned from /auth/by-username;
+// if none are present we intentionally show no socials instead of the logged-in user's.
+const discordAuths = computed(() => {
+  const list = isOwnProfile.value
+    ? auth.getPlatformData('discord') || []
+    : user.value?.linkedAccounts?.discord || []
+  return list.filter((d) => d.username)
+})
+const twitterAuths = computed(() => {
+  const list = isOwnProfile.value
+    ? auth.getPlatformData('twitter') || []
+    : user.value?.linkedAccounts?.twitter || []
+  return list.filter((t) => t.username)
+})
+const telegramAuths = computed(() => {
+  const list = isOwnProfile.value
+    ? auth.getPlatformData('telegram') || []
+    : user.value?.linkedAccounts?.telegram || []
+  return list.filter((t) => t.username)
+})
+const farcasterAuths = computed(() => {
+  if (isOwnProfile.value) return auth.getPlatformData('farcaster') || []
+  return user.value?.linkedAccounts?.farcaster || []
+})
 
 const primaryDiscord = computed(() => discordAuths.value[0] || null)
 const primaryTwitter = computed(() => twitterAuths.value[0] || null)

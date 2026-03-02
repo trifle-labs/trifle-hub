@@ -15,7 +15,9 @@
         <h2 class="_text-5xl _tracking-wide _w-full _text-center _min-w-0">
           <slot name="title" />
         </h2>
-        <slot name="description" />
+        <template v-if="$slots.description">
+          <slot name="description" />
+        </template>
       </div>
     </header>
 
