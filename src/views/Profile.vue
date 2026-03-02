@@ -36,51 +36,60 @@
         </span>
       </div>
     </template>
-    <section class="_w-full _max-w-2xl _mt-6ff">
-      <h3 class="_weight-boldff _text-xs _opacity-30 _text-left _ml-2 _-mt-6 _mb-1">activity</h3>
-      <!-- <h3 class="_text-xl _weight-bold _mb-2">Pachinko Ball History</h3>
-      <div class="_flex _gap-2 _mb-4 _flex-wrap">
-        <button
-          v-for="cat in categories"
-          :key="cat"
-          class="_bubble-btn _px-3 _py-1 _text-xs _rounded-full"
-          :class="{ '_bg-metallic-cone _text-black': selectedCategory === cat }"
-          @click="selectCategory(cat)"
-        >
-          {{ cat }}
-        </button>
-      </div> -->
-      <!--  -->
-      <div v-if="loading" class="_text-center _py-10">Loading profile...</div>
-      <div v-else-if="error" class="_p-4 _bg-red-100 _text-red-700 _rounded-lg _mt-4">
-        {{ error }}
-      </div>
-      <section v-else class="_flex _flex-col _gap-4">
-        <div v-if="pointsLoading" class="_text-center _py-6">Loading points...</div>
-        <div v-else-if="pointsError" class="_p-2 _bg-red-100 _text-red-700 _rounded-lg">
-          {{ pointsError }}
-        </div>
-        <template v-else>
-          <ul class="_space-y-2">
-            <!-- point rows... -->
-            <li v-for="point in points" :key="point.id">
-              <PointCard :point="point" />
-            </li>
-          </ul>
-          <template v-if="totalPages > 1">
-            <nav class="_grid _grid-cols-2 _gap-1">
-              <button class="_flex-1 _bubble-btn _p-4.5" @click="prevPage" :disabled="page === 1">
-                <span :class="{ '_opacity-30': page === 1 }">Prev</span>
-              </button>
-              <button class="_flex-1 _bubble-btn _p-4.5" @click="nextPage" :disabled="!hasMore">
-                Next
-              </button>
-            </nav>
-            <div class="_text-center _text-xs _opacity-50 _-mt-2">
+    <section class="_w-full _max-w-2xl">
+      <section class="_bg-metallic-linear _shadow-panel _p-4 _space-y-2 _rounded-lg">
+        <div class="_flex _items-center _justify-between _-mt-1.5">
+          <h3 class="_text-xl _weight-bold">activity</h3>
+          <div v-if="totalPages > 1" class="_flex _items-center _gap-2">
+            <div
+              v-if="page > 1"
+              class="_text-xs _opacity-60 _tracking-wide"
+            >
               Page {{ page }}<span v-if="totalCount"> of {{ totalPages }}</span>
             </div>
+            <div class="_flex _items-center _gap-1">
+              <button
+                class="_size-8 _flex _items-center _justify-center _rounded-lg _bg-metallic-cone _shadow-panel _text-xl mouse:hover:_scale-[1.05] _duration-150"
+                @click="prevPage"
+                :disabled="page === 1"
+                :class="{ '_opacity-30 _cursor-default': page === 1 }"
+                aria-label="Previous page"
+              >
+                ←
+              </button>
+              <button
+                class="_size-8 _flex _items-center _justify-center _rounded-lg _bg-metallic-cone _shadow-panel _text-xl mouse:hover:_scale-[1.05] _duration-150"
+                @click="nextPage"
+                :disabled="!hasMore"
+                :class="{ '_opacity-30 _cursor-default': !hasMore }"
+                aria-label="Next page"
+              >
+                →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="loading" class="_text-center _py-10">Loading profile...</div>
+        <div v-else-if="error" class="_p-4 _bg-red-100 _text-red-700 _rounded-lg _mt-4">
+          {{ error }}
+        </div>
+        <section v-else class="_flex _flex-col _gap-4">
+          <div v-if="pointsLoading" class="_text-center _py-6">Loading points...</div>
+          <div v-else-if="pointsError" class="_p-2 _bg-red-100 _text-red-700 _rounded-lg">
+            {{ pointsError }}
+          </div>
+          <template v-else>
+            <ul class="_space-y-0.5">
+              <!-- point rows... -->
+              <li v-for="point in points" :key="point.id">
+                <PointCard :point="point" />
+              </li>
+            </ul>
           </template>
-        </template>
+        </section>
+
+        <!-- page indicator moved into header next to arrows -->
       </section>
     </section>
   </AccountLayout>
@@ -104,7 +113,7 @@ const points = ref([])
 const pointsLoading = ref(false)
 const pointsError = ref(null)
 const page = ref(1)
-const pageSize = 10
+const pageSize = 5
 const hasMore = ref(false)
 const totalCount = ref(0)
 const categories = ref([])
