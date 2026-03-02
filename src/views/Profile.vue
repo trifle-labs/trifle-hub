@@ -1,5 +1,85 @@
 <template>
   <AccountLayout>
+    <!-- Admin controls (own profile only) -->
+    <template #admin-controls>
+      <div v-if="isOwnProfile && auth.isAdmin" class="_flex _flex-col _gap-2">
+        <button
+          v-if="!showAdminPanel && !auth.isSimulationMode"
+          class="_p-2 _bg-metallic-linear _shadow-panel _rounded-full _cursor-pointer mouse:hover:_scale-110 _duration-150"
+          @click="showAdminPanel = true"
+          title="Admin Mode"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="_size-5 _opacity-60"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            style="pointer-events: none"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              style="pointer-events: none"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              style="pointer-events: none"
+            />
+          </svg>
+        </button>
+
+        <div
+          v-if="showAdminPanel || auth.isSimulationMode"
+          class="_bg-metallic-linear _shadow-panel _rounded-lg _p-3 _space-y-2 _min-w-[200px]"
+        >
+          <div
+            v-if="auth.isSimulationMode"
+            class="_text-xs _font-semibold _text-center _bg-yellow-500/20 _border _border-yellow-500/40 _rounded _py-1"
+          >
+            SIMULATION MODE
+          </div>
+
+          <div v-if="!auth.isSimulationMode" class="_space-y-2">
+            <input
+              v-model="adminTargetInput"
+              type="text"
+              placeholder="Username or ID"
+              autocomplete="off"
+              data-1p-ignore
+              class="_w-full _px-2 _py-1 _text-sm _font-normal _rounded _bg-black/20 _border _border-white/10 _outline-none focus:_border-white/30"
+              @keyup.enter="enterSimulation"
+            />
+            <button
+              class="_w-full _px-3 _py-1 _text-sm _bg-blue-500/80 _rounded mouse:hover:_bg-blue-500 _duration-150"
+              :disabled="!adminTargetInput || adminLoading"
+              @click="enterSimulation"
+            >
+              {{ adminLoading ? 'Loading...' : 'Simulate User' }}
+            </button>
+            <button
+              class="_w-full _px-3 _py-1 _text-xs _bg-white/10 _rounded mouse:hover:_bg-white/20 _duration-150"
+              @click="showAdminPanel = false"
+            >
+              Cancel
+            </button>
+          </div>
+
+          <button
+            v-if="auth.isSimulationMode"
+            class="_w-full _px-3 _py-1.5 _text-sm _bg-red-500/80 _rounded mouse:hover:_bg-red-500 _duration-150 _font-semibold"
+            @click="exitSimulation"
+          >
+            Exit Simulation
+          </button>
+        </div>
+      </div>
+    </template>
     <template #avatar>
       <div
         class="_size-full _flex _items-center _justify-center _rounded-full _duration-150 _delay-50"
@@ -17,17 +97,59 @@
       </div>
     </template>
     <template #title>
+      <!-- Other users' profile title -->
       <div
+        v-if="!isOwnProfile"
         class="_h-12 _flex _items-center _gap-1 _w-full _justify-center _border _border-transparent"
       >
         <span class="_text-stroke-2xl _min-w-0 _px-0.5">
           {{ user?.username || '...' }}
         </span>
       </div>
+      <!-- Own profile: editable username -->
+      <div
+        v-else
+        class="_h-12 _flex _items-center _gap-1 _w-full _justify-center _pl-[1em] _border _border-transparent"
+      >
+        <div v-show="!isEditingUsername" class="_flex _items-center _gap-1 _w-full _justify-center">
+          <span class="_text-stroke-2xl _min-w-0 _truncate _px-0.5">
+            {{ authUser?.username || 'Not set' }}
+          </span>
+          <button
+            class="_p-1 _-m-0.5 _leading-none _flex-shrink-0 _block mouse:hover:_scale-[1.2] _duration-150 _rounded-md"
+            @click="startEditingUsername"
+          >
+            <img
+              src="../assets/imgs/pencil-icon.png"
+              class="_h-[0.72em] _opacity-20 _pointer-events-none"
+            />
+          </button>
+        </div>
+        <div
+          v-show="isEditingUsername"
+          class="_relative _h-12 _flex _items-stretch _gap-0.5 _px-1 _rounded-lg _shadow-panel-inset _text-center _bg-metallic-linear"
+        >
+          <input
+            ref="usernameInput"
+            v-model="newUsername"
+            type="text"
+            maxlength="22"
+            autocomplete="off"
+            data-1p-ignore
+            class="_flex-1 _text-stroke-2xl _bg-transparent _text-center _w-full _outline-none"
+            :class="{ '_border-red-500': !usernameAvailable && newUsername }"
+            placeholder="Enter new username"
+            @input="handleUsernameInput"
+            @keyup.enter="saveUsername"
+          />
+        </div>
+      </div>
     </template>
     <template
       #description
-      v-if="primaryDiscord || primaryTwitter || primaryTelegram || primaryFarcaster"
+      v-if="
+        !isOwnProfile && (primaryDiscord || primaryTwitter || primaryTelegram || primaryFarcaster)
+      "
     >
       <div class="_flex _justify-center _gap-2 _h-10 _items-center">
         <a
@@ -128,8 +250,8 @@
         class="_inline-flex _flex-col _mr-2 _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
       >
         <header class="_flex _justify-between _items-center _opacity-30 _text-base _leading-snug">
-          <h3 class="_weight-black">airdrop</h3>
-          <button class="_text-em-xs">ⓘ</button>
+          <h3 class="_weight-black">airdrop points</h3>
+          <!-- <button class="_text-em-xs">ⓘ</button> -->
         </header>
         <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-6">
           <span class="_text-stroke-xl">
@@ -154,7 +276,9 @@
     <section class="_w-full _max-w-2xl">
       <section class="_bg-metallic-linear _shadow-panel _p-4 _space-y-2 _rounded-lg">
         <div class="_flex _items-center _justify-between _-mt-1.5">
-          <h3 class="_text-mlg _opacity-30 _weight-bold">activity</h3>
+          <h3 class="_text-mlg _opacity-30 _weight-bold">
+            {{ pointsLoading ? 'loading activity...' : pointsError ? 'error loading activity' : 'activity' }}
+          </h3>
           <div v-if="totalPages > 1" class="_flex _items-center _gap-2">
             <div v-if="page > 1" class="_text-xs _opacity-30 _tracking-wide">
               Page {{ page }}<span v-if="totalCount"> of {{ totalPages }}</span>
@@ -182,35 +306,31 @@
           </div>
         </div>
 
-        <div v-if="loading" class="_text-center _py-10">Loading profile...</div>
-        <div v-else-if="error" class="_p-4 _bg-red-100 _text-red-700 _rounded-lg _mt-4">
-          {{ error }}
-        </div>
-        <section v-else class="_flex _flex-col _gap-4">
-          <div v-if="pointsLoading" class="_text-center _py-6">Loading points...</div>
-          <div v-else-if="pointsError" class="_p-2 _bg-red-100 _text-red-700 _rounded-lg">
-            {{ pointsError }}
-          </div>
-          <template v-else>
-            <ul class="_space-y-0.5">
-              <!-- point rows... -->
-              <li v-for="point in points" :key="point.id">
-                <PointCard :point="point" />
-              </li>
-            </ul>
-          </template>
+        <section
+          v-if="!pointsLoading && !pointsError"
+          class="_flex _flex-col _gap-4"
+        >
+          <ul class="_space-y-0.5">
+            <!-- point rows... -->
+            <li v-for="point in points" :key="point.id">
+              <PointCard :point="point" />
+            </li>
+          </ul>
         </section>
 
         <!-- page indicator moved into header next to arrows -->
       </section>
     </section>
+
+    <AccountSettings v-if="isOwnProfile" class="_w-full _max-w-2xl" />
   </AccountLayout>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, inject, computed, defineAsyncComponent } from 'vue'
+import { ref, onMounted, watch, inject, computed, defineAsyncComponent, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import AccountLayout from '../components/AccountLayout.vue'
+import AccountSettings from '../components/AccountSettings.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 import PointCard from '../components/PointCard.vue'
 const TrifleBall = defineAsyncComponent(() => import('../components/TrifleBall/TrifleBall.vue'))
@@ -225,15 +345,13 @@ const points = ref([])
 const pointsLoading = ref(false)
 const pointsError = ref(null)
 const page = ref(1)
-const pageSize = 5
+const pageSize = 3
 const hasMore = ref(false)
 const totalCount = ref(0)
-const categories = ref([])
-const selectedCategory = ref(null)
-const openEarn = () => {
-  auth.setProfileUsername(null)
-  hub.openHub('earn')
-}
+// const openEarn = () => {
+//   auth.setProfileUsername(null)
+//   hub.openHub('earn')
+// }
 
 const totalPages = computed(() => Math.max(1, Math.ceil(totalCount.value / pageSize)))
 
@@ -306,14 +424,14 @@ const farcasterUrl = computed(() =>
   primaryFarcaster.value ? `https://warpcast.com/${primaryFarcaster.value.username}` : '#'
 )
 
-const formatPoints = (points) => {
-  points = Number(points)
-  // remove the decimal if it's 0
-  if (points % 1 === 0) {
-    return points
-  }
-  return points.toFixed(2)
-}
+// const formatPoints = (points) => {
+//   points = Number(points)
+//   // remove the decimal if it's 0
+//   if (points % 1 === 0) {
+//     return points
+//   }
+//   return points.toFixed(2)
+// }
 
 const fetchUser = async () => {
   loading.value = true
@@ -357,21 +475,6 @@ const fetchAirdropInfo = async () => {
   }
 }
 
-const fetchCategories = async () => {
-  try {
-    const response = await fetch(`${backendUrl.value}/balls/point-categories-with-counts`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: user.value.id })
-    })
-    if (!response.ok) throw new Error('Failed to fetch categories')
-    const data = await response.json()
-    categories.value = (data.balls?.data || []).map((c) => c.name)
-  } catch (e) {
-    categories.value = []
-  }
-}
-
 const fetchPoints = async () => {
   pointsLoading.value = true
   pointsError.value = null
@@ -379,9 +482,6 @@ const fetchPoints = async () => {
     let url = `${backendUrl.value}/balls/list?page=${
       page.value
     }&limit=${pageSize}&username=${encodeURIComponent(currentProfileUsername.value)}`
-    if (selectedCategory.value) {
-      url += `&ballName=${encodeURIComponent(selectedCategory.value)}`
-    }
     const res = await fetch(url)
     if (!res.ok) throw new Error('Failed to fetch points')
     const data = await res.json()
@@ -408,30 +508,30 @@ const nextPage = () => {
   }
 }
 
-const selectCategory = (cat) => {
-  selectedCategory.value = cat === selectedCategory.value ? null : cat
-  page.value = 1
-  fetchPoints()
-}
+// const formatDate = (date) => {
+//   if (!date) return ''
+//   return new Date(date).toLocaleString()
+// }
 
-const formatDate = (date) => {
-  if (!date) return ''
-  return new Date(date).toLocaleString()
+const loadProfileData = async () => {
+  if (!currentProfileUsername.value) {
+    loading.value = false
+    return
+  }
+  await fetchUser()
+  await Promise.all([fetchAirdropInfo(), fetchPoints()])
 }
 
 onMounted(async () => {
   console.log('onMounted', currentProfileUsername.value)
-  if (!currentProfileUsername.value) {
-    hub.openHub('account')
-    return
-  }
-  await fetchUser()
-  await fetchAirdropInfo()
-  await fetchCategories()
-  await fetchPoints()
+  await loadProfileData()
 })
-// this is duplicating the prev/next methods
-// watch(page, fetchPoints)
+
+watch(currentProfileUsername, async (newVal, oldVal) => {
+  if (!newVal || newVal === oldVal) return
+  page.value = 1
+  await loadProfileData()
+})
 
 // TODO: retrieve from global or provided from parent hub <transition>
 const doneAnimating = ref(false)
@@ -440,6 +540,156 @@ onMounted(() => {
     doneAnimating.value = true
   }, 350) // need to wait for hub open animation otherwise webgl 0px error
 })
+
+// Admin + username editing state (own profile only)
+const showAdminPanel = ref(false)
+const adminTargetInput = ref('')
+const adminLoading = ref(false)
+
+const enterSimulation = async () => {
+  if (!adminTargetInput.value) return
+
+  adminLoading.value = true
+  try {
+    await auth.enterSimulationMode(adminTargetInput.value)
+    showAdminPanel.value = false
+    adminTargetInput.value = ''
+    auth.addNotification({
+      message: `Entered simulation mode for user: ${auth.user?.username}`,
+      type: 'success'
+    })
+  } catch (error) {
+    auth.addNotification({
+      message: error.message || 'Failed to enter simulation mode',
+      type: 'error'
+    })
+  } finally {
+    adminLoading.value = false
+  }
+}
+
+const exitSimulation = () => {
+  auth.exitSimulationMode()
+  showAdminPanel.value = false
+  auth.addNotification({
+    message: 'Exited simulation mode',
+    type: 'success'
+  })
+}
+
+const usernameInput = ref(null)
+const isEditingUsername = ref(false)
+const newUsername = ref('')
+const usernameLoading = ref(false)
+const usernameError = ref('')
+const isCheckingUsername = ref(false)
+const usernameAvailable = ref(true)
+let usernameCheckTimeout
+
+const checkUsername = async (username) => {
+  if (!username) {
+    usernameAvailable.value = true
+    usernameError.value = ''
+    return
+  }
+  if (username === authUser.value?.username) {
+    usernameAvailable.value = true
+    usernameError.value = ''
+    return
+  }
+
+  const isAlphaNumeric = /^(?!.*--)[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/.test(username)
+  if (!isAlphaNumeric) {
+    usernameError.value = 'Username must be alphanumeric'
+    return
+  }
+
+  if (username.length > 22) {
+    usernameError.value = 'Username must be 22 characters or less'
+    return
+  }
+
+  isCheckingUsername.value = true
+  try {
+    const response = await fetch(
+      `${backendUrl.value}/auth/username/check?username=${encodeURIComponent(username)}`
+    )
+    if (!response.ok) throw new Error('Failed to check username availability')
+    const data = await response.json()
+    usernameAvailable.value = data.available
+    usernameError.value = data.available ? '' : 'This username is already taken'
+  } catch (err) {
+    console.error('Failed to check username:', err)
+    usernameError.value = 'Error checking username'
+  } finally {
+    isCheckingUsername.value = false
+  }
+}
+
+const handleUsernameInput = (event) => {
+  const username = event.target.value.trim()
+  newUsername.value = username
+  usernameError.value = ''
+  if (usernameCheckTimeout) clearTimeout(usernameCheckTimeout)
+  if (username) {
+    usernameCheckTimeout = setTimeout(() => checkUsername(username), 500)
+  } else {
+    usernameAvailable.value = true
+  }
+}
+
+const startEditingUsername = async () => {
+  if (!isOwnProfile.value) return
+  if (auth.isSimulationMode) {
+    auth.addNotification({
+      message: 'Cannot edit username in simulation mode',
+      type: 'error'
+    })
+    return
+  }
+
+  usernameError.value = ''
+  newUsername.value = authUser.value?.username || ''
+  isEditingUsername.value = true
+  usernameAvailable.value = true
+  await nextTick()
+  usernameInput.value?.focus()
+  usernameInput.value?.select()
+}
+
+const saveUsername = async () => {
+  if (!newUsername.value.trim()) {
+    auth.addNotification({ type: 'error', message: "Oops, name can't be empty!" })
+    return
+  }
+  if (!usernameAvailable.value) {
+    auth.addNotification({ type: 'error', message: 'This name is already taken' })
+    return
+  }
+  if (newUsername.value.trim() === authUser.value?.username) {
+    isEditingUsername.value = false
+    return
+  }
+
+  usernameLoading.value = true
+  try {
+    await auth.updateUsername(newUsername.value.trim())
+    isEditingUsername.value = false
+    auth.addNotification({ type: 'success', message: 'Name updated!' })
+  } catch (err) {
+    console.error('Failed to update name:', err)
+    auth.addNotification({ type: 'error', message: 'Hmm, something went wrong' })
+  } finally {
+    usernameLoading.value = false
+  }
+}
+
+// const cancelEditingUsername = () => {
+//   isEditingUsername.value = false
+//   newUsername.value = ''
+//   usernameError.value = ''
+//   usernameAvailable.value = true
+// }
 </script>
 
 <style scoped></style>
