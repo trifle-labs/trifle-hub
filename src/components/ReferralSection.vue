@@ -2,11 +2,12 @@
   <section class="_w-full _max-w-2xl" :class="$attrs.class">
     <section class="_bg-metallic-linear _shadow-panel _p-4 _space-y-2 _rounded-lg">
       <div class="_flex _items-center _justify-between _-mt-1.5">
-        <h3 class="_text-mlg _opacity-30 _weight-bold">invites</h3>
+        <h3 class="_text-mlg _weight-bold" :class="{ '_animate-pulse-deep': loading }">
+          <span class="_opacity-30">invites</span>
+        </h3>
       </div>
 
-      <div v-if="loading" class="_text-sm _opacity-50">loading invites...</div>
-      <div v-else-if="error" class="_text-sm _text-red-400">
+      <div v-if="error" class="_text-sm _text-red-400">
         {{ error }}
       </div>
       <div v-else class="_space-y-4">

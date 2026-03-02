@@ -284,17 +284,11 @@
     <section class="_w-full _max-w-2xl">
       <section class="_bg-metallic-linear _shadow-panel _p-4 _space-y-2 _rounded-lg">
         <div class="_flex _items-center _justify-between _-mt-1.5">
-          <h3 class="_text-mlg _opacity-30 _weight-bold">
-            {{
-              pointsLoading
-                ? 'loading activity...'
-                : pointsError
-                  ? 'error loading activity'
-                  : 'activity'
-            }}
+          <h3 class="_text-mlg _weight-bold" :class="{ '_animate-pulse-deep': pointsLoading }">
+            <span class="_opacity-30">activity</span>
           </h3>
           <div v-if="totalPages > 1" class="_flex _items-center _gap-2">
-            <div v-if="page > 1 && !pointsLoading" class="_text-xs _opacity-30 _tracking-wide">
+            <div v-if="page > 1" class="_text-xs _opacity-30 _tracking-wide">
               Page {{ page }}<span v-if="totalCount"> of {{ totalPages }}</span>
             </div>
             <div class="_flex _items-center _gap-1">
@@ -320,7 +314,10 @@
           </div>
         </div>
 
-        <section v-if="!pointsError && points.length" class="_flex _flex-col _gap-4">
+        <div v-if="pointsError" class="_text-sm _text-red-400">
+          {{ pointsError }}
+        </div>
+        <section v-else-if="points.length" class="_flex _flex-col _gap-4">
           <ul class="_space-y-0.5">
             <!-- point rows... -->
             <li v-for="point in points" :key="point.id">

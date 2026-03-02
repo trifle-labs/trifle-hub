@@ -79,14 +79,13 @@
           <div
             v-for="i in 3"
             :key="`loader-${i}`"
-            class="_flex _items-center _gap-3 _p-3 _bg-zinc-200 _rounded-lg animate-pulse"
+            class="_flex _items-center _gap-3 _p-3 _bg-metallic-linear _shadow-panel _rounded-lg animate-pulse"
           >
-            <div class="_size-8 _rounded-full _bg-zinc-400"></div>
+            <div class="_size-8 _rounded-full _bg-black/30"></div>
             <div class="_flex-1 _space-y-2">
-              <div class="_h-4 _bg-zinc-400 _rounded w-3/4"></div>
-              <div class="_h-3 _bg-zinc-400 _rounded w-1/2"></div>
+              <div class="_h-4 _bg-black/30 _rounded w-3/4"></div>
             </div>
-            <div class="_h-6 _w-12 _bg-zinc-400 _rounded"></div>
+            <div class="_h-6 _w-12 _bg-black/30 _rounded"></div>
           </div>
         </div>
 
@@ -96,7 +95,7 @@
         </div>
 
         <!-- Quest List -->
-        <div v-else class="_space-y-3">
+        <div v-else class="_space-y-2">
           <!-- <div class="_flex _justify-center _gap-2 _mb-4">
               <button
                 @click="filter = 'all'"
@@ -149,7 +148,7 @@
           >
             <!-- main body, faded if completed -->
             <div
-              class="_bg-metallic-linear _w-full _flex _flex-col _gap-0.5 _p-2.5 _min-h-14 _rounded-lg _transition-colors _text-mlg _relative _justify-center"
+              class="_bg-metallic-linear _w-full _flex _flex-col _gap-0.5 _p-[0.5em] _rounded-lg _transition-colors _text-base md:_text-mlg _relative _justify-center"
               :class="[
                 {
                   'mouse:hover:_scale-[1.006] _duration-100': quest.link,
@@ -195,7 +194,9 @@
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="black"
-                    class="_size-6 sm:_size-7 _opacity-50 sm:_ml-0.5"
+                    stroke-width="0.75"
+                    stroke="black"
+                    class="_size-6 sm:_size-7 _opacity-30 sm:_ml-0.5"
                     :class="{ '_invisible _ml-4.5': quest.completed && quest.once }"
                   >
                     <path
@@ -210,7 +211,7 @@
               <div v-if="quest.description" class="_flex _items-start _gap-3 _pr-3">
                 <div class="_w-[1.7em] _flex-shrink-0"></div>
                 <p
-                  class="_flex-1 _text-md _text-gray-500 _text-stroke-lg _text-left"
+                  class="_flex-1 _text-em-xs _text-zinc-500 _text-stroke-lg _text-left"
                   v-html="quest.description"
                 ></p>
               </div>
@@ -237,7 +238,7 @@
       <!-- (spend) -->
       <div v-if="selectedTab === 'spend'" class="_space-y-3">
         <section
-          class="_bg-metallic-linearff _p-2.5 _rounded-lg _shadow-panel-insetff _border-4 _border-dashed _border-black/20 _text-center _flex _flex-col _gap-4"
+          class="_text-mlg _bg-metallic-linearff _p-2.5 _rounded-lg _shadow-panel-insetff _border-4 _border-dashed _border-black/20 _text-center _flex _flex-col _gap-4"
         >
           <header
             class="_flex _items-center _gap-[0.75em] _justify-center _leading-none _mt-2 _-mb-1"
@@ -247,7 +248,7 @@
             <TicketEmoji class="_h-[2.5em]" />
           </header>
           <div class="_flex _items-center _gap-[0.5em]">
-            <p class="_flex-1 _text-center _text-lg _text-stroke-2xl">
+            <p class="_flex-1 _text-center _text-stroke-2xl">
               Swap BALL$ for <span class="_inline-block">lotto-balls</span><br />
               in the
               <button class="_underline" @click="openHub('games')">weekly USDC lottery</button>!
