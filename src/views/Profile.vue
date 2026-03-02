@@ -109,9 +109,12 @@
       <!-- Own profile: editable username -->
       <div
         v-else
-        class="_h-12 _flex _items-center _gap-1 _w-full _justify-center _pl-[1em] _border _border-transparent"
+        class="_h-12 _flex _items-center _gap-1 _w-full _justify-center _border _border-transparent"
       >
-        <div v-show="!isEditingUsername" class="_flex _items-center _gap-1 _w-full _justify-center">
+        <div
+          v-show="!isEditingUsername"
+          class="_flex _items-center _gap-1 _w-full _justify-center _pl-[1em]"
+        >
           <span class="_text-stroke-2xl _min-w-0 _truncate _px-0.5">
             {{ authUser?.username || 'Not set' }}
           </span>
@@ -242,7 +245,8 @@
           <h3 class="_weight-black">rank</h3>
         </header>
         <div class="_flex _justify-end _text-2xl _pl-6">
-          <span class="_text-stroke-xl">{{ rankDisplay }}</span>
+          <span v-if="airdropLoading" class="_text-stroke-xl _animate-pulse-deep">...</span>
+          <span v-else class="_text-stroke-xl">{{ rankDisplay }}</span>
         </div>
       </section>
 
@@ -254,10 +258,11 @@
           <!-- <button class="_text-em-xs">ⓘ</button> -->
         </header>
         <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-6">
-          <span class="_text-stroke-xl">
+          <span v-if="airdropLoading" class="_text-stroke-xl _animate-pulse-deep">...</span>
+          <span v-else class="_text-stroke-xl">
             {{ airdropPointsDisplay }}
           </span>
-          <span>🪂</span>
+          <span v-if="!airdropLoading">🪂</span>
         </div>
       </section>
       <section
@@ -267,8 +272,11 @@
           <h3 class="_weight-black">balance</h3>
         </header>
         <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-6">
-          <span class="_text-stroke-xl">{{ user?.totalPoints?.toLocaleString() || 0 }}</span>
-          <span>🪩</span>
+          <span v-if="loading" class="_text-stroke-xl _animate-pulse-deep">...</span>
+          <span v-else class="_text-stroke-xl">
+            {{ user?.totalPoints?.toLocaleString() || 0 }}
+          </span>
+          <span v-if="!loading">🪩</span>
         </div>
       </section>
     </section>
@@ -277,10 +285,16 @@
       <section class="_bg-metallic-linear _shadow-panel _p-4 _space-y-2 _rounded-lg">
         <div class="_flex _items-center _justify-between _-mt-1.5">
           <h3 class="_text-mlg _opacity-30 _weight-bold">
-            {{ pointsLoading ? 'loading activity...' : pointsError ? 'error loading activity' : 'activity' }}
+            {{
+              pointsLoading
+                ? 'loading activity...'
+                : pointsError
+                  ? 'error loading activity'
+                  : 'activity'
+            }}
           </h3>
           <div v-if="totalPages > 1" class="_flex _items-center _gap-2">
-            <div v-if="page > 1" class="_text-xs _opacity-30 _tracking-wide">
+            <div v-if="page > 1 && !pointsLoading" class="_text-xs _opacity-30 _tracking-wide">
               Page {{ page }}<span v-if="totalCount"> of {{ totalPages }}</span>
             </div>
             <div class="_flex _items-center _gap-1">
@@ -306,10 +320,7 @@
           </div>
         </div>
 
-        <section
-          v-if="!pointsLoading && !pointsError"
-          class="_flex _flex-col _gap-4"
-        >
+        <section v-if="!pointsError && points.length" class="_flex _flex-col _gap-4">
           <ul class="_space-y-0.5">
             <!-- point rows... -->
             <li v-for="point in points" :key="point.id">
@@ -357,6 +368,7 @@ const totalPages = computed(() => Math.max(1, Math.ceil(totalCount.value / pageS
 
 const airdropRank = ref(null)
 const airdropPoints = ref(0)
+const airdropLoading = ref(true)
 
 const rankDisplay = computed(() => {
   const r = airdropRank.value
@@ -455,6 +467,7 @@ const fetchUser = async () => {
 }
 
 const fetchAirdropInfo = async () => {
+  airdropLoading.value = true
   try {
     if (!backendUrl.value || !user.value?.id) return
     const params = new URLSearchParams({
@@ -472,6 +485,8 @@ const fetchAirdropInfo = async () => {
     }
   } catch (e) {
     console.error('Failed to fetch airdrop info', e)
+  } finally {
+    airdropLoading.value = false
   }
 }
 
