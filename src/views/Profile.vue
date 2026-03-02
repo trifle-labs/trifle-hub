@@ -21,30 +21,138 @@
         class="_h-12 _flex _items-center _gap-1 _w-full _justify-center _border _border-transparent"
       >
         <span class="_text-stroke-2xl _min-w-0 _px-0.5">
-          {{ user?.username || 'User Profile' }}
+          {{ user?.username || '...' }}
         </span>
       </div>
     </template>
     <template #description>
-      <div class="_flex _justify-center _gap-1 _h-10 _items-center">
-        <span
-          @click="openEarn"
-          class="_text-xl _shadow-panel _pl-[0.3em] _pr-[0.5em] _rounded-full _bg-metallic-cone _leading-none _py-[0.25em] _flex _gap-[0.2em] _cursor-pointer"
+      <div class="_flex _justify-center _gap-2 _h-10 _items-center">
+        <a
+          v-if="primaryDiscord"
+          :href="discordUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="_p-1.5 _flex _items-center _justify-center _rounded-lg _bg-metallic-cone _shadow-panel"
+          aria-label="View Discord profile"
         >
-          <span>🪩</span>
-          <span class="_text-stroke-xl">{{ user?.totalPoints?.toLocaleString() || 0 }}</span>
-        </span>
+          <img
+            src="../assets/imgs/discord-logo.svg"
+            class="_size-7 _rounded"
+            style="background-color: #5865f2"
+          />
+        </a>
+        <a
+          v-if="primaryTwitter"
+          :href="twitterUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="_p-1.5 _flex _items-center _justify-center _rounded-lg _bg-metallic-cone _shadow-panel"
+          aria-label="View Twitter profile"
+        >
+          <img
+            src="../assets/imgs/twitter-x-logo.svg"
+            class="_size-7 _rounded"
+            style="background-color: #000"
+          />
+        </a>
+        <a
+          v-if="primaryTelegram"
+          :href="telegramUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="_p-1.5 _flex _items-center _justify-center _rounded-lg _bg-metallic-cone _shadow-panel"
+          aria-label="View Telegram profile"
+        >
+          <img
+            src="../assets/imgs/telegram-logo.svg"
+            class="_size-7 _rounded"
+            style="background-color: #0088cc"
+          />
+        </a>
+        <a
+          v-if="primaryFarcaster"
+          :href="farcasterUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="_p-1.5 _flex _items-center _justify-center _rounded-lg _bg-metallic-cone _shadow-panel"
+          aria-label="View Farcaster profile"
+        >
+          <img
+            src="../assets/imgs/farcaster-logo.svg"
+            class="_size-7 _rounded"
+            style="background-color: #000"
+          />
+        </a>
       </div>
     </template>
+
+    <!-- <div class="_flex _gap-2 _justify-between _items-center _flex-wrap">
+      <div
+        class="_bg-metallic-cone _rounded-full _p-[0.2em] _leading-none _flex _gap-1 _shadow-panel _pl-[0.5em]"
+      >
+        <span class="_text-stroke-xl">{{ user?.totalPoints?.toLocaleString() || 0 }}</span>
+        <span>🪩</span>
+      </div>
+      <div
+        class="_bg-metallic-cone _rounded-full _p-[0.2em] _leading-none _flex _gap-1 _shadow-panel _pl-[0.5em]"
+      >
+        <span class="_text-stroke-xl">{{ (user?.totalPoints * 2).toLocaleString() || 0 }}</span>
+        <span>🪂</span>
+      </div>
+      <div
+        class="_bg-metallic-cone _rounded-full _p-[0.2em] _leading-none _flex _gap-1 _shadow-panel _pl-[0.5em]"
+      >
+        <span class="_text-stroke-xl">1st place</span>
+      </div>
+    </div> -->
+
+    <section
+      class="_whitespace-nowrap _overflow-x-scroll _no-scrollbar _align-top _-ml-[2px] _p-[2px]"
+    >
+      <section
+        class="_inline-flex _flex-col _mr-2 _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
+      >
+        <header class="_flex _justify-between _items-center _opacity-30 _text-base _leading-snug">
+          <h3 class="_weight-black">rank</h3>
+        </header>
+        <div class="_flex _justify-end _text-2xl _pl-6">
+          <span class="_text-stroke-xl">{{ rankDisplay }}</span>
+        </div>
+      </section>
+
+      <section
+        class="_inline-flex _flex-col _mr-2 _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
+      >
+        <header class="_flex _justify-between _items-center _opacity-30 _text-base _leading-snug">
+          <h3 class="_weight-black">airdrop</h3>
+          <button class="_text-em-xs">ⓘ</button>
+        </header>
+        <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-6">
+          <span class="_text-stroke-xl">
+            {{ airdropPointsDisplay }}
+          </span>
+          <span>🪂</span>
+        </div>
+      </section>
+      <section
+        class="_inline-flex _flex-col _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
+      >
+        <header class="_flex _justify-between _opacity-30 _text-base _leading-snug">
+          <h3 class="_weight-black">balance</h3>
+        </header>
+        <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-6">
+          <span class="_text-stroke-xl">{{ user?.totalPoints?.toLocaleString() || 0 }}</span>
+          <span>🪩</span>
+        </div>
+      </section>
+    </section>
+
     <section class="_w-full _max-w-2xl">
       <section class="_bg-metallic-linear _shadow-panel _p-4 _space-y-2 _rounded-lg">
         <div class="_flex _items-center _justify-between _-mt-1.5">
           <h3 class="_text-xl _weight-bold">activity</h3>
           <div v-if="totalPages > 1" class="_flex _items-center _gap-2">
-            <div
-              v-if="page > 1"
-              class="_text-xs _opacity-60 _tracking-wide"
-            >
+            <div v-if="page > 1" class="_text-xs _opacity-30 _tracking-wide">
               Page {{ page }}<span v-if="totalCount"> of {{ totalPages }}</span>
             </div>
             <div class="_flex _items-center _gap-1">
@@ -125,6 +233,55 @@ const openEarn = () => {
 
 const totalPages = computed(() => Math.max(1, Math.ceil(totalCount.value / pageSize)))
 
+const airdropRank = ref(null)
+const airdropPoints = ref(0)
+
+const rankDisplay = computed(() => {
+  const r = airdropRank.value
+  if (!r || isNaN(r)) return '—'
+  const v = Number(r)
+  const mod10 = v % 10
+  const mod100 = v % 100
+  if (mod10 === 1 && mod100 !== 11) return `${v}st`
+  if (mod10 === 2 && mod100 !== 12) return `${v}nd`
+  if (mod10 === 3 && mod100 !== 13) return `${v}rd`
+  return `${v}th`
+})
+
+const airdropPointsDisplay = computed(() =>
+  Number(airdropPoints.value || 0).toLocaleString('en-us')
+)
+
+const walletAuths = computed(() => auth.getPlatformData('wallet') || [])
+const discordAuths = computed(() =>
+  (auth.getPlatformData('discord') || []).filter((d) => d.username)
+)
+const twitterAuths = computed(() =>
+  (auth.getPlatformData('twitter') || []).filter((t) => t.username)
+)
+const telegramAuths = computed(() =>
+  (auth.getPlatformData('telegram') || []).filter((t) => t.username)
+)
+const farcasterAuths = computed(() => auth.getPlatformData('farcaster') || [])
+
+const primaryDiscord = computed(() => discordAuths.value[0] || null)
+const primaryTwitter = computed(() => twitterAuths.value[0] || null)
+const primaryTelegram = computed(() => telegramAuths.value[0] || null)
+const primaryFarcaster = computed(() => farcasterAuths.value[0] || null)
+
+const discordUrl = computed(() =>
+  primaryDiscord.value ? `https://discord.com/users/${primaryDiscord.value.id}` : '#'
+)
+const twitterUrl = computed(() =>
+  primaryTwitter.value ? `https://x.com/${primaryTwitter.value.username}` : '#'
+)
+const telegramUrl = computed(() =>
+  primaryTelegram.value ? `https://t.me/${primaryTelegram.value.username}` : '#'
+)
+const farcasterUrl = computed(() =>
+  primaryFarcaster.value ? `https://warpcast.com/${primaryFarcaster.value.username}` : '#'
+)
+
 const formatPoints = (points) => {
   points = Number(points)
   // remove the decimal if it's 0
@@ -152,6 +309,27 @@ const fetchUser = async () => {
     error.value = e.message
   } finally {
     loading.value = false
+  }
+}
+
+const fetchAirdropInfo = async () => {
+  try {
+    if (!backendUrl.value || !user.value?.id) return
+    const params = new URLSearchParams({
+      sortBy: 'count',
+      sortDir: 'desc',
+      limit: '1',
+      userId: String(user.value.id)
+    })
+    const res = await fetch(`${backendUrl.value}/balls/airdrop-points?${params.toString()}`)
+    if (!res.ok) return
+    const data = await res.json()
+    if (data.currentUser) {
+      airdropPoints.value = data.currentUser.totalBalls || 0
+      airdropRank.value = data.currentUser.rank || null
+    }
+  } catch (e) {
+    console.error('Failed to fetch airdrop info', e)
   }
 }
 
@@ -224,6 +402,7 @@ onMounted(async () => {
     return
   }
   await fetchUser()
+  await fetchAirdropInfo()
   await fetchCategories()
   await fetchPoints()
 })
