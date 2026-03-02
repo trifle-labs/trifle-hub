@@ -29,6 +29,7 @@ const ADMIN_USERNAMES = ['bugyum', 'okwme', 'idiotsdelight', 'gigi', 'trifle']
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     backendUrl: null,
+    cookieDomain: null, // e.g. '.trifle.life' — enables shared cookie auth across subdomains
     initialized: false,
     user: null, // { id, email, linkedAccounts: { discord: [{id, username}], telegram: [{id, username}], wallet: [{address, chainId}] } }
     isAuthenticated: false,
@@ -234,10 +235,15 @@ export const useAuthStore = defineStore('auth', {
       this._appKitInstance = appKit
       this._wagmiConfigInstance = wagmiConfig
     },
-    async initializeAuth(appKit, wagmiConfig, backendUrl) {
+    async initializeAuth(appKit, wagmiConfig, backendUrl, cookieDomain) {
       console.log('initializeAuthhh')
       if (this.initialized) return
       this.backendUrl = backendUrl
+      this.cookieDomain = cookieDomain || null
+      if (cookieDomain && !/^\.?[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/.test(cookieDomain)) {
+        console.warn('TrifleHub: cookieDomain contains invalid characters and will be ignored.')
+        this.cookieDomain = null
+      }
       this.setInstances(appKit, wagmiConfig)
       if (!this._wagmiConfigInstance || !this._appKitInstance) {
         console.warn('AuthStore: initializeAuth called before appKit/wagmiConfig were set.')
@@ -260,12 +266,34 @@ export const useAuthStore = defineStore('auth', {
           console.warn('error initializing farcaster', e)
         }
 
+        // Check for auth token in URL query params (cross-domain auth handoff)
+        const searchParams = new URLSearchParams(window.location.search)
+        const queryToken = searchParams.get('trifle_auth_token')
+        if (queryToken) {
+          this.setAuthToken(queryToken)
+          // Clean the token from the URL immediately
+          searchParams.delete('trifle_auth_token')
+          const newSearch = searchParams.toString()
+          window.history.replaceState(
+            null,
+            '',
+            window.location.pathname + (newSearch ? '?' + newSearch : '') + window.location.hash
+          )
+          try {
+            await this.fetchUserStatus()
+          } catch (e) {
+            console.warn('Failed to fetch user status from cross-domain token:', e.message)
+          }
+        }
+
         // Check for auth token in URL hash (redirect fallback from in-app browsers
-        // where window.opener.postMessage doesn't work, e.g. Twitter/X in-app browser)
+        // where window.opener.postMessage doesn't work, e.g. Twitter/X in-app browser).
+        // Skipped when a query token is already present to avoid redundant processing.
+        let hashToken = null
         const hash = window.location.hash
-        if (hash.includes('trifle_auth_token=')) {
+        if (!queryToken && hash.includes('trifle_auth_token=')) {
           const hashParams = new URLSearchParams(hash.substring(1))
-          const hashToken = hashParams.get('trifle_auth_token')
+          hashToken = hashParams.get('trifle_auth_token')
           if (hashToken) {
             this.setAuthToken(hashToken)
             // Clean the token from the URL immediately
@@ -278,15 +306,16 @@ export const useAuthStore = defineStore('auth', {
           }
         }
 
-        const token = localStorage.getItem('authToken')
-        if (token) {
+        const urlToken = queryToken || hashToken
+        const token = localStorage.getItem('authToken') || (cookieDomain ? this._getAuthCookie() : null)
+        if (token && !urlToken) {
           this.setAuthToken(token)
           try {
             await this.fetchUserStatus()
           } catch (e) {
             console.warn('Failed to restore session:', e.message)
           }
-        } else {
+        } else if (!token && !urlToken) {
           console.log('no auth token found, not fetching user status')
         }
 
@@ -495,6 +524,43 @@ export const useAuthStore = defineStore('auth', {
     setAuthToken(token) {
       this.authToken = token
       localStorage.setItem('authToken', token)
+      if (this.cookieDomain) {
+        this._setAuthCookie(token)
+      }
+    },
+
+    _setAuthCookie(token) {
+      const maxAge = 60 * 60 * 24 * 30 // 30 days in seconds
+      let cookie = `trifle_auth_token=${encodeURIComponent(token)}; path=/; max-age=${maxAge}; SameSite=Lax`
+      if (window.location.protocol === 'https:') {
+        cookie += '; Secure'
+      }
+      cookie += `; domain=${this.cookieDomain}`
+      document.cookie = cookie
+    },
+
+    _clearAuthCookie() {
+      if (!this.cookieDomain) return
+      document.cookie = `trifle_auth_token=; path=/; max-age=0; domain=${this.cookieDomain}`
+    },
+
+    _getAuthCookie() {
+      const match = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('trifle_auth_token='))
+      return match ? decodeURIComponent(match.split('=').slice(1).join('=')) : null
+    },
+
+    getCrossOriginAuthUrl(url) {
+      if (!this.authToken) return url
+      try {
+        const parsed = new URL(url)
+        parsed.searchParams.set('trifle_auth_token', this.authToken)
+        return parsed.toString()
+      } catch (e) {
+        console.warn('getCrossOriginAuthUrl: invalid URL provided', e)
+        return url
+      }
     },
 
     async addFrame() {
@@ -1146,8 +1212,9 @@ export const useAuthStore = defineStore('auth', {
           if (connected) throw new Error('Failed to disconnect')
         }
 
-        // Clear Discord auth
+        // Clear auth token from storage and cookie
         localStorage.removeItem('authToken')
+        this._clearAuthCookie()
         this.authToken = null
 
         // Cleanup any ongoing Telegram authentication
