@@ -333,6 +333,8 @@
       </section>
     </section>
 
+    <ReferralSection v-if="isOwnProfile" class="_w-full _max-w-2xl" />
+
     <AccountSettings v-if="isOwnProfile" class="_w-full _max-w-2xl" />
   </AccountLayout>
 </template>
@@ -342,6 +344,7 @@ import { ref, onMounted, watch, inject, computed, defineAsyncComponent, nextTick
 import { storeToRefs } from 'pinia'
 import AccountLayout from '../components/AccountLayout.vue'
 import AccountSettings from '../components/AccountSettings.vue'
+import ReferralSection from '../components/ReferralSection.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 import PointCard from '../components/PointCard.vue'
 const TrifleBall = defineAsyncComponent(() => import('../components/TrifleBall/TrifleBall.vue'))

@@ -30,7 +30,8 @@ export default {
         touch: { raw: '(hover:none)' }
       },
       colors: {
-        rot: 'var(--thub-color-rot)'
+        rot: 'var(--thub-color-rot)',
+        primary: 'var(--thub-color-primary)'
       },
       spacing: {
         4.5: '1.125rem',
