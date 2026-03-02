@@ -4,6 +4,7 @@ on:
   pull_request:
     types: [closed]
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   check-conditions:
@@ -26,7 +27,7 @@ jobs:
 
   publish:
     needs: check-conditions
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release')
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release'))
     runs-on: ubuntu-latest
     permissions:
       contents: read
