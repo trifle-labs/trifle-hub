@@ -136,13 +136,31 @@
           <!-- quests... -->
           <component
             v-for="quest in filteredQuests"
-            :is="quest.link ? (typeof quest.link === 'string' ? 'a' : 'button') : 'div'"
+            :is="
+              quest.link && !isTwitterEngagementQuestId(quest.id)
+                ? typeof quest.link === 'string'
+                  ? 'a'
+                  : 'button'
+                : 'div'
+            "
             :key="quest.id"
             :fid="quest.fid"
-            :href="typeof quest.link === 'string' ? quest.link : undefined"
-            :target="typeof quest.link === 'string' ? '_blank' : undefined"
-            :rel="typeof quest.link === 'string' ? 'noopener noreferrer' : undefined"
-            @click="quest.link?.to && handleLink(quest.link.to)"
+            :href="
+              typeof quest.link === 'string' && !isTwitterEngagementQuestId(quest.id)
+                ? quest.link
+                : undefined
+            "
+            :target="
+              typeof quest.link === 'string' && !isTwitterEngagementQuestId(quest.id)
+                ? '_blank'
+                : undefined
+            "
+            :rel="
+              typeof quest.link === 'string' && !isTwitterEngagementQuestId(quest.id)
+                ? 'noopener noreferrer'
+                : undefined
+            "
+            @click="handleQuestClick(quest)"
             class="_w-full _block _relative"
             :class="{ '_pointer-events-none': quest.completed && quest.once }"
           >
@@ -197,7 +215,13 @@
                     stroke-width="0.75"
                     stroke="black"
                     class="_size-6 sm:_size-7 _opacity-30 sm:_ml-0.5"
-                    :class="{ '_invisible _ml-4.5': quest.completed && quest.once }"
+                    :class="[
+                      {
+                        '_invisible _ml-4.5': quest.completed && quest.once,
+                        '_rotate-90':
+                          isTwitterEngagementQuestId(quest.id) && expandedTwitterTasks[quest.id]
+                      }
+                    ]"
                   >
                     <path
                       fill-rule="evenodd"
@@ -208,13 +232,24 @@
                 </div>
               </header>
               <!-- (description) -->
-              <div v-if="quest.description" class="_flex _items-start _gap-3 _pr-3">
+              <div
+                v-if="
+                  quest.description &&
+                  !(isTwitterEngagementQuestId(quest.id) && expandedTwitterTasks[quest.id])
+                "
+                class="_flex _items-start _gap-3 _pr-3"
+              >
                 <div class="_w-[1.7em] _flex-shrink-0"></div>
                 <p
                   class="_flex-1 _text-em-xs _text-zinc-500 _text-stroke-lg _text-left"
                   v-html="quest.description"
                 ></p>
               </div>
+              <TwitterEngagementQuest
+                v-if="isTwitterEngagementQuestId(quest.id) && expandedTwitterTasks[quest.id]"
+                :mode="quest.id === 'twitter-like-tweet' ? 'like' : 'reply'"
+                @points-updated="fetchUserPoints"
+              />
               <!-- (progress) -->
               <!-- <div v-if="quest.progress" class="_mt-2">
                   <div class="_bg-zinc-300 _rounded-full _h-2">
@@ -279,6 +314,7 @@ import { possiblePoints } from '../config/pointsConfig'
 import SocialsButtons from '../components/SocialsButtons.vue'
 import SwapBalls from '../components/SwapBalls.vue'
 import TicketEmoji from '../components/TicketEmoji.vue'
+import TwitterEngagementQuest from '../components/TwitterEngagementQuest.vue'
 
 const auth = inject('TrifleHub/store')
 const { openHub } = inject('hub')
@@ -289,7 +325,25 @@ const totalBalls = ref(0)
 const filter = ref('all') // 'all', 'once', 'ongoing'
 const selectedTab = ref('earn')
 
+const expandedTwitterTasks = ref({})
+
 const { backendUrl, isAuthenticated } = storeToRefs(auth)
+
+const isTwitterEngagementQuestId = (id) =>
+  id === 'twitter-like-tweet' || id === 'twitter-reply-tweet'
+
+const handleQuestClick = (quest) => {
+  if (isTwitterEngagementQuestId(quest.id)) {
+    const current = expandedTwitterTasks.value[quest.id]
+    expandedTwitterTasks.value = {
+      ...expandedTwitterTasks.value,
+      [quest.id]: !current
+    }
+  } else if (quest.link?.to) {
+    handleLink(quest.link.to)
+  }
+}
+
 const handleLink = (link) => {
   if (link == 'spend') {
     selectedTab.value = 'spend'

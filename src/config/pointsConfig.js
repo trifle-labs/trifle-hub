@@ -93,10 +93,10 @@ export const possiblePoints = [
     link: platforms.twitter.url
   },
   {
-    name: 'Like Featured Tweet',
+    name: 'Like latest Tweet',
     id: 'twitter-like-tweet',
     icon: twitterIcon,
-    description: 'Like the latest tweet from @triflelife',
+    // description: 'Like the latest tweet from @triflelife',
     pachinkoBalls: 10,
     kudzuBurn: 0,
     claimed: false,
@@ -105,10 +105,10 @@ export const possiblePoints = [
     link: platforms.twitter.url
   },
   {
-    name: 'Reply to Featured Tweet',
+    name: 'Reply to latest Tweet',
     id: 'twitter-reply-tweet',
     icon: twitterIcon,
-    description: 'Reply to the latest tweet from @triflelife',
+    // description: 'Reply to the latest tweet from @triflelife',
     pachinkoBalls: 10,
     kudzuBurn: 0,
     claimed: false,
