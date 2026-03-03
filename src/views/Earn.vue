@@ -247,7 +247,7 @@
               </div>
               <TwitterEngagementQuest
                 v-if="isTwitterEngagementQuestId(quest.id) && expandedTwitterTasks[quest.id]"
-                :mode="quest.id === 'twitter-like-tweet' ? 'like' : 'reply'"
+                :mode="quest.id === 'twitter-like-tweet' ? 'like' : quest.id === 'twitter-reply-tweet' ? 'reply' : 'follow'"
                 @points-updated="fetchUserPoints"
               />
               <!-- (progress) -->
@@ -330,7 +330,7 @@ const expandedTwitterTasks = ref({})
 const { backendUrl, isAuthenticated } = storeToRefs(auth)
 
 const isTwitterEngagementQuestId = (id) =>
-  id === 'twitter-like-tweet' || id === 'twitter-reply-tweet'
+  id === 'twitter-like-tweet' || id === 'twitter-reply-tweet' || id === 'follow-trifle-twitter'
 
 const handleQuestClick = (quest) => {
   if (isTwitterEngagementQuestId(quest.id)) {

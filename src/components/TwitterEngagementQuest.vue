@@ -1,46 +1,75 @@
 <template>
   <div class="_space-y-3 _mt-2 _mb-0.5">
-    <TwitterTweetSummary v-if="featuredTweet" :tweet="featuredTweet" class="_text-sm" />
-    <p
-      v-else
-      class="_text-em-xs _text-zinc-500 _text-center _border-2 _border-dashed _border-black/30 _rounded-lg _p-3"
-    >
-      {{
-        twitterLoadingFeatured
-          ? 'Loading latest tweet...'
-          : 'No featured tweet available right now.'
-      }}
-    </p>
+    <!-- Tweet summary (like/reply modes only) -->
+    <template v-if="mode !== 'follow'">
+      <TwitterTweetSummary v-if="featuredTweet" :tweet="featuredTweet" class="_text-sm" />
+      <p
+        v-else
+        class="_text-em-xs _text-zinc-500 _text-center _border-2 _border-dashed _border-black/30 _rounded-lg _p-3"
+      >
+        {{
+          twitterLoadingFeatured
+            ? 'Loading latest tweet...'
+            : 'No featured tweet available right now.'
+        }}
+      </p>
+    </template>
 
-    <div v-if="!twitterLoadingFeatured" class="_flex _items-center _justify-between _gap-3 _w-full">
-      <div class="_w-full _flex _items-center _justify-evenly _text-em-smff">
-        <template v-if="featuredTweet?.url">
-          <a
-            :href="featuredTweet.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="_underline _inline-block _animate-wiggle-sm"
-            @click.stop
+    <div
+      v-if="mode === 'follow' || !twitterLoadingFeatured"
+      class="_flex _items-center _justify-between _gap-3 _w-full"
+    >
+      <template v-if="isVerifiedForCurrentTweet">
+        <div class="_w-full _text-em-xs _text-zinc-500 _text-center">
+          <span v-if="mode === 'like'">Like detected</span>
+          <span v-else-if="mode === 'reply'">Reply detected</span>
+          <span v-else-if="mode === 'follow'">Follow detected</span>
+        </div>
+      </template>
+      <template v-else>
+        <div class="_w-full _flex _items-center _justify-evenly _text-em-smff">
+          <template v-if="mode === 'follow'">
+            <a
+              :href="followUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="_underline _inline-block _animate-wiggle-sm"
+              @click.stop
+            >
+              Follow on X
+            </a>
+            <div class="_text-zinc-500">then...</div>
+          </template>
+          <template v-else-if="featuredTweet?.url">
+            <a
+              :href="featuredTweet.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="_underline _inline-block _animate-wiggle-sm"
+              @click.stop
+            >
+              {{ mode === 'like' ? 'Like on X' : 'Reply on X' }}
+            </a>
+            <div class="_text-zinc-500">then...</div>
+          </template>
+          <button
+            class="_bubble-btn _px-5 _py-3 _text-em-smff"
+            :disabled="twitterLoadingEngagement || !isAuthenticated"
+            style="filter: hue-rotate(20deg) saturate(3)"
+            @click.stop="handleVerify"
           >
-            {{ mode === 'like' ? 'Like on X' : 'Reply on X' }}
-          </a>
-          <div class="_text-zinc-500">then...</div>
-        </template>
-        <button
-          class="_bubble-btn _px-5 _py-3 _text-em-smff"
-          :disabled="twitterLoadingEngagement || !isAuthenticated"
-          style="filter: hue-rotate(20deg) saturate(3)"
-          @click.stop="handleVerify"
-        >
-          <span>
-            {{ mode === 'like' ? 'Verify Like' : 'Verify Reply' }}
-          </span>
-        </button>
-      </div>
-      <div class="_text-em-xs _text-zinc-500 _text-right" v-if="twitterEngagement">
-        <span v-if="mode === 'like' && twitterEngagement.liked">Like detected</span>
-        <span v-else-if="mode === 'reply' && twitterEngagement.replied">Reply detected</span>
-      </div>
+            <span>
+              {{
+                mode === 'like'
+                  ? 'Verify Like'
+                  : mode === 'reply'
+                    ? 'Verify Reply'
+                    : 'Verify Follow'
+              }}
+            </span>
+          </button>
+        </div>
+      </template>
     </div>
 
     <p
@@ -52,11 +81,21 @@
     >
       {{ twitterLoadingEngagement ? 'Checking...' : errorMsg || successMsg }}
     </p>
+
+    <div v-if="needsReconnect" class="_flex _justify-center">
+      <button
+        class="_bubble-btn _px-5 _py-3 _text-em-smff"
+        style="filter: hue-rotate(-340deg) saturate(1.8)"
+        @click.stop="reconnectTwitter"
+      >
+        <span style="filter: hue-rotate(340deg) saturate(0.5)">Reconnect Twitter</span>
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, inject, onMounted } from 'vue'
+import { ref, computed, inject, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import TwitterTweetSummary from './TwitterTweetSummary.vue'
 
@@ -64,7 +103,7 @@ const props = defineProps({
   mode: {
     type: String,
     required: true,
-    validator: (v) => v === 'like' || v === 'reply'
+    validator: (v) => v === 'like' || v === 'reply' || v === 'follow'
   }
 })
 
@@ -79,6 +118,19 @@ const twitterLoadingFeatured = ref(false)
 const twitterLoadingEngagement = ref(false)
 const errorMsg = ref(null)
 const successMsg = ref(null)
+const needsReconnect = ref(false)
+
+const followUrl = 'https://trifle.life/twitter'
+
+const isVerifiedForCurrentTweet = computed(() => {
+  if (!twitterEngagement.value) return false
+  if (props.mode === 'follow') return !!twitterEngagement.value.followed
+  if (!featuredTweet.value) return false
+  if (twitterEngagement.value.tweetId !== featuredTweet.value.id) return false
+  if (props.mode === 'like') return !!twitterEngagement.value.liked
+  if (props.mode === 'reply') return !!twitterEngagement.value.replied
+  return false
+})
 
 const getAuthHeaders = () => {
   const token = auth.authToken
@@ -108,13 +160,12 @@ const fetchTwitterStatus = async () => {
     })
     if (!response.ok) return
     const data = await response.json()
-    if (data.tweetId && (data.liked || data.replied)) {
+    if (data.followed || (data.tweetId && (data.liked || data.replied))) {
       twitterEngagement.value = {
         tweetId: data.tweetId,
         liked: !!data.liked,
         replied: !!data.replied,
-        likeAwarded: false,
-        replyAwarded: false
+        followed: !!data.followed
       }
     }
   } catch (err) {
@@ -122,7 +173,7 @@ const fetchTwitterStatus = async () => {
   }
 }
 
-const verifyTwitterEngagement = async () => {
+const verifyEndpoint = async (endpoint) => {
   twitterLoadingEngagement.value = true
   try {
     const headers = {
@@ -130,18 +181,17 @@ const verifyTwitterEngagement = async () => {
       ...getAuthHeaders()
     }
     const body = featuredTweet.value?.id ? { tweetId: featuredTweet.value.id } : {}
-    const response = await fetch(`${backendUrl.value}/twitter/verify-engagement`, {
+    const response = await fetch(`${backendUrl.value}/twitter/${endpoint}`, {
       method: 'POST',
       headers,
       body: JSON.stringify(body)
     })
     const data = await response.json()
     if (!response.ok) {
-      throw new Error(data?.error || 'Engagement verification failed')
-    }
-    twitterEngagement.value = data
-    if (data.likeAwarded || data.replyAwarded) {
-      emit('points-updated')
+      if (data.reconnectRequired) {
+        needsReconnect.value = true
+      }
+      throw new Error(data?.error || 'Verification failed')
     }
     return data
   } finally {
@@ -152,37 +202,42 @@ const verifyTwitterEngagement = async () => {
 const handleVerify = async () => {
   errorMsg.value = null
   successMsg.value = null
+  needsReconnect.value = false
   try {
-    const beforeLiked = twitterEngagement.value?.liked || false
-    const beforeReplied = twitterEngagement.value?.replied || false
+    const endpoints = { like: 'verify-like', reply: 'verify-reply', follow: 'verify-follow' }
+    const labels = { like: 'Like', reply: 'Reply', follow: 'Follow' }
+    const engagementKeys = { like: 'liked', reply: 'replied', follow: 'followed' }
 
-    const data = await verifyTwitterEngagement()
+    const data = await verifyEndpoint(endpoints[props.mode])
 
-    const nowLiked = data?.liked || false
-    const nowReplied = data?.replied || false
-
-    if (props.mode === 'like') {
-      if (!beforeLiked && !nowLiked) {
-        errorMsg.value =
-          "Your like wasn't detected yet — it can take a minute to show up. Try again shortly."
-      } else if (nowLiked) {
-        successMsg.value = 'Like verified!'
+    if (data.verified) {
+      successMsg.value = `${labels[props.mode]} verified!`
+      twitterEngagement.value = {
+        ...twitterEngagement.value,
+        ...(data.tweetId ? { tweetId: data.tweetId } : {}),
+        [engagementKeys[props.mode]]: true
       }
-    } else if (props.mode === 'reply') {
-      if (!beforeReplied && !nowReplied) {
-        errorMsg.value =
-          "Your reply wasn't detected yet — it can take a minute to show up. Try again shortly."
-      } else if (nowReplied) {
-        successMsg.value = 'Reply verified!'
+      if (data.pointsAwarded) {
+        emit('points-updated')
       }
+    } else {
+      errorMsg.value =
+        data.message ||
+        `Your ${labels[props.mode].toLowerCase()} wasn't detected yet — it can take a minute to show up. Try again shortly.`
     }
   } catch (err) {
     errorMsg.value = err?.message || 'Verification failed. Please try again.'
   }
 }
 
+const reconnectTwitter = () => {
+  auth.connectTwitter()
+}
+
 onMounted(() => {
-  fetchFeaturedTweet()
+  if (props.mode !== 'follow') {
+    fetchFeaturedTweet()
+  }
   fetchTwitterStatus()
 })
 </script>

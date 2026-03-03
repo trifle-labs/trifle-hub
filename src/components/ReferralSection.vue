@@ -36,7 +36,7 @@
                 {{ copied ? '✓ copied' : '📋 copy' }}
               </button>
             </div> -->
-            <div class="_w-full _flex">
+            <div class="_w-full _flex _flex-col _gap-1.5">
               <button
                 class="_flex-1 _bubble-btn _py-[1em] _text-base"
                 style="filter: hue-rotate(20deg) saturate(3)"
@@ -44,6 +44,9 @@
               >
                 {{ copied ? 'Copied!' : 'Copy Invite Link' }}
               </button>
+              <div class="_text-xs _text-center _opacity-40">
+                code: <span class="_font-mono">{{ referralCode || fallbackReferralCode }}</span>
+              </div>
             </div>
             <!-- Stats grid -->
             <div v-if="stats.invited > 0" class="_flex _flex-wrap _gap-[inherit] _text-center">
@@ -87,7 +90,7 @@
             <input
               v-model="manualCode"
               type="text"
-              placeholder="enter invite code"
+              placeholder="enter code or invite link"
               class="_flex-1 _bg-metallic-linear _shadow-panel-inset _rounded-lg _px-3 _h-10 _text-sm _min-w-0"
               :disabled="submitting"
               @keyup.enter="submitCode"
@@ -161,14 +164,14 @@ const fallbackReferralCode = computed(() => auth?.user?.username || '')
 
 const referrerName = computed(() => {
   if (!referrer.value) return 'someone'
-  return referrer.value.displayName || referrer.value.username
+  return referrer.value.username || referrer.value.displayName
 })
 
 const referralUrl = computed(() => {
   const code = referralCode.value || fallbackReferralCode.value
   if (!code) return ''
   const origin = window.location.origin
-  return `${origin}?ref=${code}`
+  return `${origin}#ref=${code}`
 })
 const referralUrlShort = computed(() => {
   return referralUrl.value.replace('https://', '')
@@ -239,8 +242,26 @@ const copyLink = () => {
   }, 2000)
 }
 
+const extractRefCode = (input: string): string => {
+  const trimmed = input.trim()
+  try {
+    const url = new URL(trimmed)
+    // Check hash (#ref=CODE) first, then query string (?ref=CODE)
+    if (url.hash) {
+      const hashParams = new URLSearchParams(url.hash.substring(1))
+      const ref = hashParams.get('ref')
+      if (ref) return ref
+    }
+    const ref = url.searchParams.get('ref')
+    if (ref) return ref
+  } catch {
+    // not a URL, use as-is
+  }
+  return trimmed
+}
+
 const submitCode = async () => {
-  const code = manualCode.value.trim()
+  const code = extractRefCode(manualCode.value)
   if (!code || submitting.value) return
 
   submitting.value = true
