@@ -14,51 +14,54 @@
     ></button>
     <!-- menu button / labels -->
     <Teleport :to="props.buttonTarget" :disabled="!props.buttonTarget" :defer="true">
-    <div
-      id="trifle-hub__menu-button"
-      :class="[props.buttonTarget ? '_relative' : '_fixed trifle-hub-position', '_z-10 focus-visible:_ring-4 _rounded-full']"
-      :style="menuButtonStyle"
-      tabindex="0"
-      @keydown.space="hubOpen = !hubOpen"
-      @keydown.enter="hubOpen = !hubOpen"
-      :aria-label="hubOpen ? 'close trifle hub' : 'open trifle hub'"
-    >
-      <!-- 2d avatar fallback -->
-      <button
-        v-if="!props.avatar3d || trifleBallVisible"
-        class="_absolute _inset-0 _flex _items-center _justify-center"
-        :class="{ '_pointer-events-auto _cursor-pointer': !trifleBallVisible || !props.avatar3d }"
-        @click="hubOpen = !hubOpen"
-        :disabled="trifleBallVisible && props.avatar3d !== false"
+      <div
+        id="trifle-hub__menu-button"
+        :class="[
+          props.buttonTarget ? '_relative' : '_fixed trifle-hub-position',
+          '_z-10 focus-visible:_ring-4 _rounded-full'
+        ]"
+        :style="menuButtonStyle"
+        tabindex="0"
+        @keydown.space="hubOpen = !hubOpen"
+        @keydown.enter="hubOpen = !hubOpen"
+        :aria-label="hubOpen ? 'close trifle hub' : 'open trifle hub'"
       >
-        <img
-          :src="
-            auth.user
-              ? auth.user?.avatar || auth.isFarcaster?.user?.avatar || defaultAvatar
-              : trifleBallStill
-          "
-          :style="{
-            width: 'calc(100% / 3.15 * 2)',
-            height: 'calc(100% / 3.15 * 2)'
-          }"
-          class="_rounded-full"
-          :class="{ '_shadow-panel': auth.user && authUserAvatar }"
+        <!-- 2d avatar fallback -->
+        <button
+          v-if="!props.avatar3d || trifleBallVisible"
+          class="_absolute _inset-0 _flex _items-center _justify-center"
+          :class="{ '_pointer-events-auto _cursor-pointer': !trifleBallVisible || !props.avatar3d }"
+          @click="hubOpen = !hubOpen"
+          :disabled="trifleBallVisible && props.avatar3d !== false"
+        >
+          <img
+            :src="
+              auth.user
+                ? auth.user?.avatar || auth.isFarcaster?.user?.avatar || defaultAvatar
+                : trifleBallStill
+            "
+            :style="{
+              width: 'calc(100% / 3.15 * 2)',
+              height: 'calc(100% / 3.15 * 2)'
+            }"
+            class="_rounded-full"
+            :class="{ '_shadow-panel': auth.user && authUserAvatar }"
+          />
+        </button>
+        <TrifleBall
+          v-if="props.avatar3d"
+          ref="trifleBall"
+          :key="authUserAvatar || 'default'"
+          :mode="authUserAvatar ? 'glass-inner-wall' : 'metal'"
+          :image-source="authUserAvatar"
+          :camera-angle="8"
+          :animate="!hubOpen"
+          class="_cursor-pointer _pointer-events-auto"
+          @click="hubOpen = !hubOpen"
+          @isVisible="trifleBallVisible = true"
+          tabindex="-1"
         />
-      </button>
-      <TrifleBall
-        v-if="props.avatar3d"
-        ref="trifleBall"
-        :key="authUserAvatar || 'default'"
-        :mode="authUserAvatar ? 'glass-inner-wall' : 'metal'"
-        :image-source="authUserAvatar"
-        :camera-angle="8"
-        :animate="!hubOpen"
-        class="_cursor-pointer _pointer-events-auto"
-        @click="hubOpen = !hubOpen"
-        @isVisible="trifleBallVisible = true"
-        tabindex="-1"
-      />
-    </div>
+      </div>
     </Teleport>
     <!-- (hub panel) -->
     <transition name="thub-fade-in-scale-up">
@@ -143,7 +146,7 @@
                 class="_h-[5em] sm:_h-[6em] _origin-bottom"
                 :class="{ '_animate-wiggle-sm': props.hubPageKey === 'games' }"
               />
-              games
+              play
             </button>
             <button
               class="_flex _flex-col _items-center _gap-2 _pointer-events-auto _relative"
@@ -169,7 +172,7 @@
                 class="_h-11 sm:_h-14 _origin-bottom"
                 :class="{ '_animate-wiggle': props.hubPageKey === 'earn' }"
               />
-              BALL$
+              earn
             </button>
             <button
               class="_flex _flex-col _items-center _gap-2 _pointer-events-auto _relative"

@@ -34,11 +34,14 @@
           }}</template>
           <!-- date -->
         </div>
-        <div v-if="sourceURL" class="_text-em-2xs _opacity-25 _leading-none _flex _gap-[0.35em]">
+        <div
+          v-if="sourceURL"
+          class="_text-em-2xs _opacity-25 _leading-tight _flex _gap-[0.35em] _truncate"
+        >
           <!-- <a :href="sourceURL.origin" target="_blank" class="mouse:group-hover:_underline">{{
             sourceURL.host
           }}</a> -->
-          <span>{{ formatDate(point.createdAt) }} ago</span>
+          <span>{{ formatDate(point.createdAt) }}</span>
           <span>&middot;</span>
           <u>{{ sourceURL.host }}</u>
         </div>
@@ -47,10 +50,10 @@
       <div class="_flex _items-center _h-9 _text-em-sm _flex-shrink-0 sm:_text-mlg">
         <!-- points -->
         <div
-          class="_rounded-full _bg-metallic-linear _shadow-panel _pr-[0.5em] _pl-[0.25em] _flex _gap-[0.15em]"
+          class="_rounded-full _bg-metallic-linear _shadow-panel _pl-[0.5em] _pr-[0.25em] _flex _gap-[0.15em]"
         >
-          <div>🪩</div>
           <span>{{ formatPoints(point.value) }}</span>
+          <div>🪩</div>
         </div>
       </div>
     </header>

@@ -10,7 +10,6 @@
     <nav class="_gap-[0.45rem] _mt-4 _grid _grid-cols-2 _text-stroke-2xl _text-lg _tracking-wide">
       <button
         class="_bubble-btn _px-4.5 _h-16"
-        :class="{ '_animate-wiggle-sm': selectedCategory === 'balls' }"
         @click="selectedCategory = 'balls'"
         :style="selectedCategory === 'balls' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
       >
@@ -31,19 +30,27 @@
     <!-- time filter tabs (balls only) -->
     <nav
       v-if="selectedCategory === 'balls'"
-      class="_gap-[0.45rem] _mt-2.5 _grid _grid-cols-2 _text-stroke-2xl _text-mlg _tracking-wide _bg-metallic-linear _rounded-lg _shadow-panel-inset _p-3"
+      class="_gap-[0.45rem] _mt-2.5 _grid _grid-cols-2 _text-stroke-2xl _text-mlg _tracking-wide _bg-metallic-cone _rounded-lg _shadow-panel-inset _p-3"
     >
       <button
-        class="_bubble-btn _py-[0.625em]"
+        class="_rounded-lg _py-1.5"
+        :class="
+          selectedTimeFilter === 'weekly'
+            ? '_shadow-panel-inset _bg-metallic-linear _animate-wiggle-sm'
+            : '_shadow-panel _bg-metallic-linear'
+        "
         @click="selectedTimeFilter = 'weekly'"
-        :style="selectedTimeFilter === 'weekly' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
       >
         this week
       </button>
       <button
-        class="_bubble-btn _py-[0.625em]"
+        class="_rounded-lg _py-1.5"
+        :class="
+          selectedTimeFilter === 'allTime'
+            ? '_shadow-panel-inset _bg-metallic-linear _animate-wiggle-sm'
+            : '_shadow-panel _bg-metallic-linear'
+        "
         @click="selectedTimeFilter = 'allTime'"
-        :style="selectedTimeFilter === 'allTime' ? 'filter: hue-rotate(103deg) saturate(2)' : ''"
       >
         all time
       </button>

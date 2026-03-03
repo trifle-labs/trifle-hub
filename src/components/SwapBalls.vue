@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: font size should be set from the parent... but super app uses this component so need to update there as well when done -->
   <form
     ref="el"
     class="trifle-hub-ui _bg-metallic-linear _p-4 _rounded-lg _shadow-panel _flex _flex-col _items-center _gap-2.5 _text-2xl _text-stroke-2xl _text-right"

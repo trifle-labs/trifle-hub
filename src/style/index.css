@@ -230,7 +230,8 @@
   }
   ._bubble-btn-full {
     @apply _bubble-btn;
-    width: calc(100% + 14px);
+    width: calc(100% + 8px);
+    margin-left: -4.5px;
   }
   @media (hover: hover) {
     ._bubble-btn:hover:not([disabled]) {

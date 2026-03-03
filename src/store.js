@@ -260,6 +260,28 @@ export const useAuthStore = defineStore('auth', {
           console.warn('error initializing farcaster', e)
         }
 
+        // Capture referral code from URL hash (#ref=CODE) and persist until login
+        try {
+          const hash = window.location.hash
+          if (hash.includes('ref=')) {
+            const hashParams = new URLSearchParams(hash.substring(1))
+            const refCode = hashParams.get('ref')
+            if (refCode) {
+              localStorage.setItem('pendingReferralCode', refCode)
+              // Clean the ref from the URL
+              hashParams.delete('ref')
+              const remaining = hashParams.toString()
+              window.history.replaceState(
+                null,
+                '',
+                window.location.pathname + window.location.search + (remaining ? '#' + remaining : '')
+              )
+            }
+          }
+        } catch (e) {
+          // ignore URL parsing errors
+        }
+
         // Check for auth token in URL hash (redirect fallback from in-app browsers
         // where window.opener.postMessage doesn't work, e.g. Twitter/X in-app browser)
         const hash = window.location.hash
@@ -1258,6 +1280,8 @@ export const useAuthStore = defineStore('auth', {
                 this.authMethod = firstConnectedPlatform[0]
               }
             }
+            // Auto-submit pending referral code from URL if present
+            this.submitPendingReferral()
           }
 
           this.saveSession()
@@ -1265,6 +1289,29 @@ export const useAuthStore = defineStore('auth', {
       } catch (error) {
         console.error('Failed to fetch user status:', error)
         throw error
+      }
+    },
+
+    async submitPendingReferral() {
+      const code = localStorage.getItem('pendingReferralCode')
+      if (!code || !this.isAuthenticated || !this.authToken) return
+      try {
+        const res = await fetch(`${this.backendUrl}/profile/referral`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.authToken}`
+          },
+          body: JSON.stringify({ referralCode: code })
+        })
+        const data = await res.json()
+        // Clear pending code on success or permanent errors
+        if (res.ok || data.error === 'Already referred' || data.error === 'Cannot refer yourself') {
+          localStorage.removeItem('pendingReferralCode')
+        }
+        // Transient errors (network, server) leave the code for next login attempt
+      } catch (e) {
+        console.warn('Failed to submit pending referral:', e)
       }
     },
 
