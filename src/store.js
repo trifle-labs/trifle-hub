@@ -260,23 +260,18 @@ export const useAuthStore = defineStore('auth', {
           console.warn('error initializing farcaster', e)
         }
 
-        // Capture referral code from URL hash (#ref=CODE) and persist until login
+        // Capture referral code from URL query (?ref=CODE) and persist until login
         try {
-          const hash = window.location.hash
-          if (hash.includes('ref=')) {
-            const hashParams = new URLSearchParams(hash.substring(1))
-            const refCode = hashParams.get('ref')
-            if (refCode) {
-              localStorage.setItem('pendingReferralCode', refCode)
-              // Clean the ref from the URL
-              hashParams.delete('ref')
-              const remaining = hashParams.toString()
-              window.history.replaceState(
-                null,
-                '',
-                window.location.pathname + window.location.search + (remaining ? '#' + remaining : '')
-              )
-            }
+          const url = new URL(window.location.href)
+
+          const refCode = url.searchParams.get('ref')
+
+          if (refCode) {
+            localStorage.setItem('pendingReferralCode', refCode)
+
+            // Clean the ref from the URL
+            url.searchParams.delete('ref')
+            window.history.replaceState(null, '', url.pathname + url.search + url.hash)
           }
         } catch (e) {
           // ignore URL parsing errors

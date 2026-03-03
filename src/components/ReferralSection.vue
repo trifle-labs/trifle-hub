@@ -171,7 +171,7 @@ const referralUrl = computed(() => {
   const code = referralCode.value || fallbackReferralCode.value
   if (!code) return ''
   const origin = window.location.origin
-  return `${origin}#ref=${code}`
+  return `${origin}?ref=${code}`
 })
 const referralUrlShort = computed(() => {
   return referralUrl.value.replace('https://', '')
