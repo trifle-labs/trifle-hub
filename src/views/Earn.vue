@@ -175,7 +175,7 @@
                 }
               ]"
             >
-              <header class="_flex _w-full _gap-2.5">
+              <header class="_flex _w-full _gap-2.5 _cursor-pointer">
                 <!-- icon -->
                 <div class="_size-[1.7em]">
                   <img :src="quest.icon" class="_w-full _h-full _rounded-lg _block" />
@@ -247,7 +247,13 @@
               </div>
               <TwitterEngagementQuest
                 v-if="isTwitterEngagementQuestId(quest.id) && expandedTwitterTasks[quest.id]"
-                :mode="quest.id === 'twitter-like-tweet' ? 'like' : quest.id === 'twitter-reply-tweet' ? 'reply' : 'follow'"
+                :mode="
+                  quest.id === 'twitter-like-tweet'
+                    ? 'like'
+                    : quest.id === 'twitter-reply-tweet'
+                      ? 'reply'
+                      : 'follow'
+                "
                 @points-updated="fetchUserPoints"
               />
               <!-- (progress) -->
