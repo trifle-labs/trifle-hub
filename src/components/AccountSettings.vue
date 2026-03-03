@@ -80,15 +80,15 @@
                   auth.accountConnected &&
                   wallet.id.toLowerCase() === auth.accountAddress?.toLowerCase()
                 "
-                class="_text-em-2xs _text-gray-500 _leading-none"
+                class="_text-em-2xs _text-primary _leading-none _weight-semibold"
               >
                 connected
-                <template v-if="wallet.metadata?.origin">
+                <span v-if="wallet.metadata?.origin" class="_opacity-30">
                   via {{ wallet.metadata.origin }}
-                </template>
+                </span>
               </div>
               <div
-                class="_text-em-2xs _text-gray-500 _leading-none"
+                class="_text-em-2xs _text-gray-500 _leading-none _weight-semibold"
                 v-else-if="wallet.metadata?.origin"
               >
                 via {{ wallet.metadata.origin }}
@@ -399,17 +399,14 @@
           </template>
         </li>
         <template v-if="!hasTelegramAuth">
-          <div class="_w-full _flex">
-            <AuthButton
-              v-if="!hasTelegramAuth"
-              platform="telegram"
-              points="+10"
-              :disabled="auth.isSimulationMode"
-              class="_flex-1"
-            >
-              {{ telegramAuths.length > 0 ? 'Link Another Telegram' : 'Link Telegram' }}
-            </AuthButton>
-          </div>
+          <AuthButton
+            v-if="!hasTelegramAuth"
+            platform="telegram"
+            points="+10"
+            :disabled="auth.isSimulationMode"
+          >
+            {{ telegramAuths.length > 0 ? 'Link Another Telegram' : 'Link Telegram' }}
+          </AuthButton>
         </template>
       </ul>
     </section>
@@ -516,12 +513,12 @@
       </ul>
     </section>
 
-    <footer
-      class="_order-last _bg-metallic-cone _p-4 _rounded-lg _shadow-panel _flex _items-center _justify-center"
-    >
-      <button @click="handleLogout" class="_bubble-btn-full _h-16 _text-lg _bold">
-        <span>logout 💤</span>
-      </button>
+    <footer class="_order-last _bg-metallic-cone _p-4 _rounded-lg _shadow-panel">
+      <div class="_w-full">
+        <button @click="handleLogout" class="_bubble-btn-full _h-16 _text-lg _bold">
+          <span>logout 💤</span>
+        </button>
+      </div>
     </footer>
   </section>
 </template>
