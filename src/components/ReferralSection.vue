@@ -10,7 +10,7 @@
       <div v-if="error" class="_text-sm _text-red-400">
         {{ error }}
       </div>
-      <div v-else class="_space-y-4">
+      <div v-else class="_space-y-2">
         <!-- Invite link -->
         <section class="_flex _flex-col _gap-0.5">
           <div
@@ -124,16 +124,17 @@
           </div>
           <div v-if="codeSuccess" class="_text-xs _text-emerald-300">invite code applied!</div>
         </div>
-        <div v-else class="_text-base">
-          <div>
-            invited by
-            <span class="_font-semibold">
-              {{ referrerName }}
-            </span>
+        <div
+          v-else
+          class="_text-xs _bg-metallic-linear _shadow-panel _px-3 _py-1 _rounded-lg _text-zinc-500"
+        >
+          <div class="">
+            ♡ You were invited by
+            <span class="_weight-black _text-em-xl _text-black"> {{ referrerName }}</span>
+            <br />
+            You BOTH earn 10🪩 every time YOU earn 100🪩 (max 100)
           </div>
-          <div class="_text-xs _opacity-30 _mt-0.5">
-            you'll both earn 10🪩 when you reach 100🪩!
-          </div>
+          <div class="_text-em-2xsff _mt-0.5"></div>
         </div>
       </div>
     </section>
