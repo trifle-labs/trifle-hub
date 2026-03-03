@@ -12,6 +12,27 @@
         games, contests
       </HubPageHeader>
     </header>
+    <!-- category tabs -->
+    <nav
+      class="_px-5 _gap-[0.45rem] _mt-4 _grid _grid-cols-2 _text-stroke-2xl _text-xl _tracking-wide _mb-3"
+    >
+      <button
+        class="_bubble-btn _px-4.5 _h-16"
+        :class="{ '_animate-wiggle-sm': selectedTab === 'games' }"
+        @click="selectedTab = 'games'"
+        :style="selectedTab === 'games' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
+      >
+        games
+      </button>
+      <button
+        class="_bubble-btn _px-4.5 _h-16"
+        :class="{ '_animate-wiggle-sm': selectedTab === 'lotteries' }"
+        @click="selectedTab = 'lotteries'"
+        :style="selectedTab === 'lotteries' ? 'filter: hue-rotate(103deg) saturate(2)' : ''"
+      >
+        lotteries
+      </button>
+    </nav>
     <!-- <div class="_grid _grid-cols-2 _gap-4">
       <div
         v-for="i in 16"
@@ -22,69 +43,73 @@
       </div>
     </div> -->
     <div class="_mt-5 _-space-y-1 _overflow-hidden">
-      <template v-for="game in games" :key="game.name">
-        <section class="_relative _group">
-          <a
-            :href="game.link"
-            class="_block _pointer-events-auto _cursor-pointer _scale-[1.05] mouse:hover:_scale-[1.1] _duration-500"
-          >
-            <figure
-              class="masked-oval _relative _flex _items-center _justify-center _pointer-events-none"
-              style="aspect-ratio: 14.5/9"
+      <transition name="thub-page" mode="out-in">
+        <div :key="selectedTab" class="_space-y-1">
+          <section v-for="game in currentList" :key="game.name" class="_relative _group">
+            <a
+              :href="game.link"
+              class="_block _pointer-events-auto _cursor-pointer _scale-[1.05] mouse:hover:_scale-[1.1] _duration-500"
             >
-              <video
-                v-if="game.bgVideo"
-                :src="game.bgVideo"
-                autoplay
-                muted
-                playsinline
-                webkit-playsinline
-                preload="auto"
-                loop
-                class="_absolute _top-0 _left-0 _w-full _h-full _object-cover"
-                :style="{
-                  filter: game.bgBlur ? `blur(${game.bgBlur}px)` : 'none'
-                  // imageRendering: 'pixelated'
-                }"
-                loading="lazy"
-              ></video>
-              <img
-                v-else
-                :src="game.image"
-                alt=""
-                class="_w-full _scale-y-[1.4] mouse:hover:_scale-y-[1.45] mouse:hover:_scale-x-[1.05] _cursor-pointer _duration-500"
-              />
-              <img v-if="game.titleImg" :src="game.titleImg" class="_relative _z-10 _w-[75%]" />
-            </figure>
-          </a>
-          <div class="_px-2.5 _mx-6 _flex _justify-center _-mt-5 _relative _p-2">
-            <div
-              class="_bg-metallic-linearff _shadow-panel-insetff _rounded-lg _flex _items-center _w-fullff _justify-between _flex-col _gap-1 _shadow-panel-insetff _rounded-full _w-full _pb-5"
-            >
-              <a
-                :href="game.link"
-                class="_-mt-8 _relative _z-10 _bg-metallic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _text-em-2xl sm:_text-em-3xl mouse:hover:_scale-[1.05] _duration-150"
-                :class="{
-                  '_animate-rainbow-wiggle': game.isNewUntil > today && !game.title,
-                  '_animate-rainbow-wiggle-sm': game.isNewUntil > today && game.title,
-                  '_tracking-[0.2em]': !game.title,
-                  '_tracking-[0.05em]': game.title
-                }"
+              <figure
+                class="masked-oval _relative _flex _items-center _justify-center _pointer-events-none"
+                style="aspect-ratio: 14.5/9"
               >
-                <template v-if="game.title">{{ game.title }}</template>
-                <template v-else-if="game.isNewUntil > today">
-                  <span class="mouse:group-hover:_hidden">NEW</span>
-                  <span class="mouse:group-hover:_inline _hidden">PLAY</span>
-                </template>
-                <template v-else> PLAY </template>
-              </a>
-              <div v-if="game.description" class="_relative _-mt-3 _shadow-panel-inset _rounded-md">
-                <p
-                  class="_px-4.5 _leading-none _py-4.5 _italic _opacity-50ff _whitespace-nowrap _text-stroke-lg _tracking-[0.01em]"
-                  v-html="game.description"
-                ></p>
-                <!-- (new badge) -->
-                <!-- <div
+                <video
+                  v-if="game.bgVideo"
+                  :src="game.bgVideo"
+                  autoplay
+                  muted
+                  playsinline
+                  webkit-playsinline
+                  preload="auto"
+                  loop
+                  class="_absolute _top-0 _left-0 _w-full _h-full _object-cover"
+                  :style="{
+                    filter: game.bgBlur ? `blur(${game.bgBlur}px)` : 'none'
+                    // imageRendering: 'pixelated'
+                  }"
+                  loading="lazy"
+                ></video>
+                <img
+                  v-else
+                  :src="game.image"
+                  alt=""
+                  class="_w-full _scale-y-[1.4] mouse:hover:_scale-y-[1.45] mouse:hover:_scale-x-[1.05] _cursor-pointer _duration-500"
+                />
+                <img v-if="game.titleImg" :src="game.titleImg" class="_relative _z-10 _w-[75%]" />
+              </figure>
+            </a>
+            <div class="_px-2.5 _mx-6 _flex _justify-center _-mt-5 _relative _p-2">
+              <div
+                class="_bg-metallic-linearff _shadow-panel-insetff _rounded-lg _flex _items-center _w-fullff _justify-between _flex-col _gap-1 _shadow-panel-insetff _rounded-full _w-full _pb-5"
+              >
+                <a
+                  :href="game.link"
+                  class="_-mt-8 _relative _z-10 _bg-metallic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _text-em-2xl sm:_text-em-3xl mouse:hover:_scale-[1.05] _duration-150"
+                  :class="{
+                    '_animate-rainbow-wiggle': game.isNewUntil > today && !game.title,
+                    '_animate-rainbow-wiggle-sm': game.isNewUntil > today && game.title,
+                    '_tracking-[0.2em]': !game.title,
+                    '_tracking-[0.05em]': game.title
+                  }"
+                >
+                  <template v-if="game.title">{{ game.title }}</template>
+                  <template v-else-if="game.isNewUntil > today">
+                    <span class="mouse:group-hover:_hidden">NEW</span>
+                    <span class="mouse:group-hover:_inline _hidden">PLAY</span>
+                  </template>
+                  <template v-else> PLAY </template>
+                </a>
+                <div
+                  v-if="game.description"
+                  class="_relative _-mt-3 _shadow-panel-inset _rounded-md"
+                >
+                  <p
+                    class="_px-4.5 _leading-none _py-4.5 _italic _opacity-50ff _whitespace-nowrap _text-stroke-lg _tracking-[0.01em]"
+                    v-html="game.description"
+                  ></p>
+                  <!-- (new badge) -->
+                  <!-- <div
                   v-if="game.isNewUntil > today"
                   class="_absolute _bottom-0 _right-0 _translate-x-[55%] _translate-y-[40%]"
                 >
@@ -94,11 +119,12 @@
                     new
                   </div>
                 </div> -->
+                </div>
               </div>
             </div>
-          </div>
-        </section>
-      </template>
+          </section>
+        </div>
+      </transition>
 
       <section class="_mx-8 _text-center _flex _flex-col _gap-3.5">
         <div class="_mt-4"></div>
@@ -115,11 +141,14 @@
 </template>
 
 <script setup>
+import { ref, computed } from 'vue'
 import HubPageHeader from '../components/HubPageHeader.vue'
 import anybodyTitleImg from '../assets/imgs/anybody-title.png'
 import SocialsButtons from '../components/SocialsButtons.vue'
 // import { sdk } from '@farcaster/miniapp-sdk'
 const today = new Date()
+
+const selectedTab = ref('games')
 
 // use https://gm-trifle.b-cdn.net for videos so they're cached across domains for users
 const games = [
@@ -134,16 +163,6 @@ const games = [
     bgBlur: 0,
     scale: 1,
     isNewUntil: new Date('March 15, 2026')
-  },
-  {
-    name: 'like-lottery',
-    title: 'LIKE LOTTERY',
-    link: 'https://trifle.life/lotteries',
-    description: 'follow → like → win $$$',
-    bgVideo:
-      'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1757079745/lottery-gif-loop-better-shorter__16-9__240p-400br_f5bx63.mp4',
-    bgBlur: 0,
-    isNewUntil: new Date('September 30, 2025')
   },
   {
     name: 'gm-game',
@@ -176,6 +195,21 @@ const games = [
     bgBlur: 0
   }
 ]
+
+const lotteries = [
+  {
+    name: 'like-lottery',
+    title: 'WEEKLY LOTTOS',
+    link: 'https://trifle.life/lotteries',
+    description: 'get BALL$ → win USDC',
+    bgVideo:
+      'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1757079745/lottery-gif-loop-better-shorter__16-9__240p-400br_f5bx63.mp4',
+    bgBlur: 0,
+    isNewUntil: new Date('September 30, 2099')
+  }
+]
+
+const currentList = computed(() => (selectedTab.value === 'lotteries' ? lotteries : games))
 </script>
 
 <style scoped>

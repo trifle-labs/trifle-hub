@@ -146,7 +146,7 @@
                 class="_h-[5em] sm:_h-[6em] _origin-bottom"
                 :class="{ '_animate-wiggle-sm': props.hubPageKey === 'games' }"
               />
-              games
+              play
             </button>
             <button
               class="_flex _flex-col _items-center _gap-2 _pointer-events-auto _relative"
