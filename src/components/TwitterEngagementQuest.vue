@@ -20,11 +20,11 @@
       class="_flex _items-center _justify-between _gap-3 _w-full"
     >
       <template v-if="isVerifiedForCurrentTweet">
-        <div class="_w-full _text-em-xs _text-zinc-500 _text-center">
-          <span v-if="mode === 'like'">Like detected</span>
-          <span v-else-if="mode === 'reply'">Reply detected</span>
-          <span v-else-if="mode === 'follow'">Follow detected</span>
-        </div>
+        <p
+          class="_w-full _-mt-1 _text-em-sm _text-center _bg-metallic-cone _shadow-panel _rounded-lg _p-3 _text-green-600"
+        >
+          <span class="_animate-scaleup-sm _block">You did it! 🪩🪩🪩</span>
+        </p>
       </template>
       <template v-else>
         <div class="_w-full _flex _items-center _justify-evenly _text-em-smff">

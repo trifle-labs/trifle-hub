@@ -201,7 +201,7 @@ const lotteries = [
     name: 'like-lottery',
     title: 'WEEKLY LOTTOS',
     link: 'https://trifle.life/lotteries',
-    description: 'get BALL$ → win USDC',
+    description: 'get BALL$ <span class="_not-italic">🪩</span> → win USDC',
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1757079745/lottery-gif-loop-better-shorter__16-9__240p-400br_f5bx63.mp4',
     bgBlur: 0,

@@ -10,7 +10,7 @@
       <div v-if="error" class="_text-sm _text-red-400">
         {{ error }}
       </div>
-      <div v-else class="_space-y-4">
+      <div v-else class="_space-y-2">
         <!-- Invite link -->
         <section class="_flex _flex-col _gap-0.5">
           <div
@@ -36,17 +36,25 @@
                 {{ copied ? '✓ copied' : '📋 copy' }}
               </button>
             </div> -->
-            <div class="_w-full _flex _flex-col _gap-1.5">
+            <div class="_w-full _flex _flex-col _gap-2.5">
               <button
-                class="_flex-1 _bubble-btn _py-[1em] _text-base"
+                class="_flex-1 _bubble-btn _py-4 _weight-black"
                 style="filter: hue-rotate(20deg) saturate(3)"
                 @click="copyLink"
               >
                 {{ copied ? 'Copied!' : 'Copy Invite Link' }}
               </button>
-              <div class="_text-xs _text-center _opacity-40">
+              <button
+                class="_py-0.5 _border-4 _border-dashed _border-zinc-400 _rounded-lg _px-2 _leading-relaxed _text-center _text-zinc-500 _text-em-lg _text-stroke-3xl"
+                @click="copyCode"
+              >
+                <div class="_w-full _truncate _min-w-0">
+                  {{ copiedCode ? 'Copied!' : referralCode || fallbackReferralCode }}
+                </div>
+              </button>
+              <!-- <div class="_text-xs _text-center _opacity-40">
                 code: <span class="_font-mono">{{ referralCode || fallbackReferralCode }}</span>
-              </div>
+              </div> -->
             </div>
             <!-- Stats grid -->
             <div v-if="stats.invited > 0" class="_flex _flex-wrap _gap-[inherit] _text-center">
@@ -67,7 +75,7 @@
               </div>
             </div>
             <div
-              class="_text-gray-500 _text-xs _-mb-0.5"
+              class="_text-zinc-500 _text-xs _-my-0.5"
               :class="{ '_text-center': stats.invited > 0, '_text-right': stats.invited === 0 }"
             >
               Max 100🪩 per friend
@@ -116,16 +124,17 @@
           </div>
           <div v-if="codeSuccess" class="_text-xs _text-emerald-300">invite code applied!</div>
         </div>
-        <div v-else class="_text-base">
-          <div>
-            invited by
-            <span class="_font-semibold">
-              {{ referrerName }}
-            </span>
+        <div
+          v-else
+          class="_text-xs _bg-metallic-linear _shadow-panel _px-3 _py-1 _rounded-lg _text-zinc-500"
+        >
+          <div class="">
+            ♡ You were invited by
+            <span class="_weight-black _text-em-xl _text-black"> {{ referrerName }}</span>
+            <br />
+            You BOTH earn 10🪩 every time YOU earn 100🪩 (max 100)
           </div>
-          <div class="_text-xs _opacity-30 _mt-0.5">
-            you'll both earn 10🪩 when you reach 100🪩!
-          </div>
+          <div class="_text-em-2xsff _mt-0.5"></div>
         </div>
       </div>
     </section>
@@ -159,7 +168,7 @@ const codeError = ref('')
 const codeSuccess = ref(false)
 
 const copied = ref(false)
-
+const copiedCode = ref(false)
 const fallbackReferralCode = computed(() => auth?.user?.username || '')
 
 const referrerName = computed(() => {
@@ -239,6 +248,15 @@ const copyLink = () => {
   copied.value = true
   setTimeout(() => {
     copied.value = false
+  }, 2000)
+}
+
+const copyCode = () => {
+  if (!referralCode.value || !fallbackReferralCode.value) return
+  navigator.clipboard.writeText(referralCode.value || fallbackReferralCode.value)
+  copiedCode.value = true
+  setTimeout(() => {
+    copiedCode.value = false
   }, 2000)
 }
 
