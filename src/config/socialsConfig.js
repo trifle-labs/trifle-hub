@@ -1,4 +1,5 @@
 import ethereumLogo from '../assets/imgs/ethereum-logo-white.svg'
+import solanaLogo from '../assets/imgs/solana-logo.svg'
 import discordLogo from '../assets/imgs/discord-logo.svg'
 import farcasterLogo from '../assets/imgs/farcaster-logo.svg'
 import twitterLogo from '../assets/imgs/twitter-x-logo.svg'
@@ -13,6 +14,15 @@ export const platforms = {
       hueRotate: -236,
       saturate: 1.5
     }
+  },
+  solana: {
+    name: 'Solana',
+    icon: solanaLogo,
+    bubbleButtonStyle: {
+      hueRotate: -280,
+      saturate: 1.5
+    },
+    textColor: '#9945FF'
   },
   discord: {
     name: 'Discord',
