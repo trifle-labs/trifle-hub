@@ -2,6 +2,7 @@ import discordIcon from '../assets/imgs/discord-logo-90.png'
 import twitterIcon from '../assets/imgs/twitter-x-logo.svg'
 import telegramIcon from '../assets/imgs/telegram-logo.svg'
 import walletIcon from '../assets/imgs/ethereum-logo-orange-bg.svg'
+import solanaIcon from '../assets/imgs/solana-logo.svg'
 import farcasterIcon from '../assets/imgs/farcaster-logo.svg'
 import anybodyIcon from '../assets/imgs/anybody-icon.png'
 import kudzuIcon from '../assets/imgs/kudzu-icon.gif'
@@ -39,6 +40,17 @@ export const possiblePoints = [
     icon: walletIcon,
     // description: 'Authenticate with your wallet address to earn 10 pachinko balls.',
     // description: 'in the Account page',
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: { to: 'account' }
+  },
+  {
+    name: 'Link Solana Wallet',
+    id: 'auth-solana',
+    icon: solanaIcon,
     pachinkoBalls: 10,
     kudzuBurn: 0,
     claimed: false,

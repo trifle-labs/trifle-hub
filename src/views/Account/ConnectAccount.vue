@@ -35,6 +35,7 @@
         <template v-else>
           <AuthButton platform="wallet" points="+10"> Wallet Login </AuthButton>
         </template>
+        <AuthButton platform="solana" points="+10"> Solana Login </AuthButton>
         <AuthButton platform="discord" points="+10"> Discord Login </AuthButton>
         <AuthButton platform="twitter" points="+10"> TwitterX Login </AuthButton>
         <AuthButton platform="telegram" points="+10"> Telegram Login </AuthButton>

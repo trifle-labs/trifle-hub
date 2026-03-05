@@ -12,10 +12,12 @@ import { mainnet, base } from '@reown/appkit/networks'
 
 import { createSiweMessage } from 'viem/siwe'
 import { sdk } from '@farcaster/miniapp-sdk'
+import { getWallets } from '@wallet-standard/core'
 
 // Platform types
 const PLATFORMS = {
   WALLET: 'wallet',
+  SOLANA: 'solana',
   TELEGRAM: 'telegram',
   DISCORD: 'discord',
   FARCASTER: 'farcaster',
@@ -1067,6 +1069,190 @@ export const useAuthStore = defineStore('auth', {
       } finally {
         this.authSteps.wallet.signing = false
         this.authSteps.wallet.verifying = false
+      }
+    },
+
+    _getSolanaWallet() {
+      // Try Wallet Standard first (MetaMask, Phantom, Solflare, etc.)
+      try {
+        const { get } = getWallets()
+        const wallets = get()
+        const solanaWallet = wallets.find(
+          (w) =>
+            w.chains?.some((c) => c.startsWith('solana:')) &&
+            w.features?.['solana:signMessage']
+        )
+        if (solanaWallet) return { type: 'standard', wallet: solanaWallet }
+      } catch (e) {
+        console.warn('Wallet Standard not available:', e)
+      }
+
+      // Fallback to legacy window.solana (older Phantom versions)
+      const legacy = window.solana || window.phantom?.solana
+      if (legacy) return { type: 'legacy', wallet: legacy }
+
+      return null
+    },
+
+    async connectSolana() {
+      try {
+        this.loading = true
+
+        const walletInfo = this._getSolanaWallet()
+        if (!walletInfo) {
+          throw new Error('No Solana wallet found. Please install Phantom, MetaMask, or another Solana wallet.')
+        }
+
+        let publicKey
+        let provider
+
+        if (walletInfo.type === 'standard') {
+          const wallet = walletInfo.wallet
+          // Connect if the wallet supports it
+          if (wallet.features?.['standard:connect']) {
+            await wallet.features['standard:connect'].connect()
+          }
+          // Get first Solana account
+          const solanaAccount = wallet.accounts.find((a) =>
+            a.chains?.some((c) => c.startsWith('solana:'))
+          )
+          if (!solanaAccount) {
+            throw new Error('No Solana account found in wallet. Please add a Solana account.')
+          }
+          publicKey = solanaAccount.address
+          provider = { _standard: wallet, _account: solanaAccount }
+        } else {
+          // Legacy provider
+          provider = walletInfo.wallet
+          const resp = await provider.connect()
+          publicKey = resp.publicKey.toString()
+        }
+
+        // Authenticate with the backend
+        await this.authenticateWithSolana(publicKey, provider)
+        return true
+      } catch (error) {
+        console.error('Solana connection error:', error)
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async authenticateWithSolana(publicKey, provider) {
+      try {
+        const headers = {
+          'Content-Type': 'application/json'
+        }
+        if (this.isAuthenticated) {
+          headers.Authorization = `Bearer ${this.authToken}`
+        }
+
+        // 1. Get nonce from server
+        const nonceResponse = await fetch(`${this.backendUrl}/auth/solana/nonce`, {
+          method: 'POST',
+          headers
+        })
+        if (!nonceResponse.ok) {
+          throw new Error('Failed to get nonce')
+        }
+        const { nonce } = await nonceResponse.json()
+
+        // 2. Build SIWS-style message
+        const domain = window.location.host
+        const uri = window.location.origin
+        const issuedAt = new Date().toISOString()
+        const statement = 'Sign this message to prove you own this wallet (at no cost to you).'
+
+        const header = { t: 'sip99' }
+        const payload = {
+          domain,
+          address: publicKey,
+          statement,
+          uri,
+          version: '1',
+          chainId: 1,
+          nonce,
+          issuedAt
+        }
+
+        // Build the plaintext message matching SIWS format (must match server's SIWS.prepareMessage())
+        const message = [
+          `${domain} wants you to sign in with your Solana account:`,
+          publicKey,
+          '',
+          `${statement}`,
+          '',
+          `URI: ${uri}`,
+          `Version: 1`,
+          `Chain ID: 1`,
+          `Nonce: ${nonce}`,
+          `Issued At: ${issuedAt}`
+        ].join('\n')
+
+        // 3. Sign the message
+        const encodedMessage = new TextEncoder().encode(message)
+        let sigBytes
+
+        if (provider._standard) {
+          // Wallet Standard provider (MetaMask, modern Phantom, etc.)
+          const [result] = await provider._standard.features['solana:signMessage'].signMessage({
+            account: provider._account,
+            message: encodedMessage
+          })
+          sigBytes = result.signature
+        } else {
+          // Legacy provider (older Phantom)
+          const signedMessage = await provider.signMessage(encodedMessage, 'utf8')
+          sigBytes = signedMessage.signature
+        }
+
+        // Encode signature as base58 (required by @web3auth/sign-in-with-solana verify)
+        const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+        const toBase58 = (bytes) => {
+          let num = BigInt('0x' + Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(''))
+          let result = ''
+          while (num > 0n) {
+            result = BASE58_ALPHABET[Number(num % 58n)] + result
+            num = num / 58n
+          }
+          for (const b of bytes) {
+            if (b === 0) result = '1' + result
+            else break
+          }
+          return result || '1'
+        }
+        const signature = {
+          t: 'sip99',
+          s: toBase58(sigBytes)
+        }
+
+        // 4. Verify signature and get token
+        const verifyUrl = `${this.backendUrl}/auth/solana/${
+          this.isAuthenticated ? 'add-verify' : 'verify'
+        }`
+        const verifyResponse = await fetch(verifyUrl, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            header,
+            payload,
+            signature
+          })
+        })
+        if (!verifyResponse.ok) {
+          throw new Error('Failed to verify signature')
+        }
+        const verifyResult = await verifyResponse.json()
+        if (verifyResult.token) {
+          this.setAuthToken(verifyResult.token)
+        }
+
+        await this.fetchUserStatus()
+        return true
+      } catch (error) {
+        console.error('Solana authentication error:', error)
+        throw error
       }
     },
 

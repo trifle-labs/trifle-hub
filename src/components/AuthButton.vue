@@ -118,6 +118,9 @@ const handleConnect = async (platform) => {
     case 'telegram':
       await handleTelegramConnect()
       break
+    case 'solana':
+      await handleSolanaConnect()
+      break
     default:
       throw new Error(`Unsupported platform: ${platform}`)
   }
@@ -184,6 +187,18 @@ const handleTelegramConnect = async () => {
     auth.addNotification({
       type: 'error',
       message: 'Telegram login failed. Try again?'
+    })
+  }
+}
+
+const handleSolanaConnect = async () => {
+  try {
+    await auth.connectSolana()
+  } catch (err) {
+    console.error('Solana connection failed:', err)
+    auth.addNotification({
+      type: 'error',
+      message: err.message || 'Solana login failed. Try again?'
     })
   }
 }

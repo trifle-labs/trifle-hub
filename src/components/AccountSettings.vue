@@ -137,6 +137,68 @@
       </ul>
     </section>
 
+    <!-- solana -->
+    <section
+      class="_bg-metallic-linear _shadow-panel _p-4 _space-y-1.5 _rounded-lg"
+      :class="{ '_order-last': !solanaAuths?.length }"
+    >
+      <div v-if="solanaAuths.length" class="_flex _items-center _gap-2.5 _-mt-1.5">
+        <h3 class="_text-mlg _opacity-30 _weight-bold">
+          solana wallet{{ solanaAuths.length > 1 ? 's' : '' }}
+        </h3>
+      </div>
+      <ul class="_flex _flex-col _gap-0.5">
+        <li
+          v-for="solana in solanaAuths"
+          :key="solana.id"
+          class="_flex _items-center _p-2 _pr-3.5 _justify-between _bg-metallic-linear _shadow-panel _rounded-lg"
+        >
+          <div class="_flex _items-center _gap-2">
+            <div class="_size-11 _flex _items-stretch _p-1.5 _rounded-md">
+              <div class="_w-full _flex _items-center _justify-center">
+                <img
+                  src="../assets/imgs/solana-logo.svg"
+                  class="_size-6 _rounded"
+                  style="background-color: #000"
+                />
+              </div>
+            </div>
+            <div class="_flex-1 _min-w-0 _leading-tight">
+              <div class="_flex-1 _min-w-0 _truncate _text-em-lg">
+                {{ truncateSolanaAddress(solana.id) }}
+              </div>
+            </div>
+          </div>
+          <!-- (disconnect solana button) -->
+          <template v-if="totalAccountConnections > 1">
+            <button
+              class="_bubble-btn _h-10 _text-sm _text-stroke-md _px-[1em]"
+              @click="(e) => handleDisconnectPlatform('solana', solana.id, e)"
+              aria-label="Remove"
+            >
+              <span>
+                <template
+                  v-if="aboutToDisconnect.platform == 'solana' && aboutToDisconnect.id == solana.id"
+                >
+                  Confirm?
+                </template>
+                <template v-else> ⛌ </template>
+              </span>
+            </button>
+          </template>
+        </li>
+        <AuthButton
+          v-if="!hasSolanaAuth"
+          platform="solana"
+          :points="!solanaAuths.length ? '+10' : undefined"
+          :disabled="auth.isSimulationMode"
+          class="_w-full"
+        >
+          {{ solanaAuths.length > 0 ? 'Link another Solana' : 'Link Solana' }}
+        </AuthButton>
+      </ul>
+    </section>
+
     <!-- discord -->
     <section
       class="_bg-metallic-linear _shadow-panel _p-4 _space-y-1.5 _rounded-lg"
@@ -543,6 +605,7 @@ const addFrame = async () => {
 }
 
 const walletAuths = computed(() => auth.getPlatformData('wallet'))
+const solanaAuths = computed(() => auth.getPlatformData('solana'))
 const discordAuths = computed(() => auth.getPlatformData('discord').filter((d) => d.username))
 const farcasterAuths = computed(() => auth.getPlatformData('farcaster'))
 const twitterAuths = computed(() => auth.getPlatformData('twitter').filter((t) => t.username))
@@ -552,10 +615,12 @@ const hasDiscordAuth = computed(() => discordAuths.value.length > 0)
 const hasFarcasterAuth = computed(() => farcasterAuths.value.length > 0)
 const hasTwitterAuth = computed(() => twitterAuths.value.length > 0)
 const hasTelegramAuth = computed(() => telegramAuths.value.length > 0)
+const hasSolanaAuth = computed(() => solanaAuths.value.length > 0)
 
 const totalAccountConnections = computed(
   () =>
     walletAuths.value.length +
+    solanaAuths.value.length +
     discordAuths.value.length +
     farcasterAuths.value.length +
     twitterAuths.value.length +
@@ -602,6 +667,11 @@ watch(aboutToDisconnect, (newValue) => {
 const truncateAddress = (address) => {
   if (!address) return ''
   return `0x${address.slice(2, 6).toUpperCase()}...${address.slice(-4).toUpperCase()}`
+}
+
+const truncateSolanaAddress = (address) => {
+  if (!address) return ''
+  return `${address.slice(0, 4)}...${address.slice(-4)}`
 }
 
 const handleLogout = async () => {
