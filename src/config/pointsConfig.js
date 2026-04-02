@@ -213,6 +213,18 @@ export const possiblePoints = [
     link: snakeLink
   },
   {
+    name: 'Snake Tutorial',
+    id: 'snake-tutorial',
+    icon: snakeIcon,
+    description: 'Finish the tutorial to claim',
+    pachinkoBalls: 100,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: snakeLink + '/tutorial'
+  },
+  {
     name: 'Play the GM Game',
     id: 'gm',
     icon: gmIcon,
