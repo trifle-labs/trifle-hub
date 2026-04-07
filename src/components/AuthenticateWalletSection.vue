@@ -73,7 +73,18 @@ const disconnect = async () => {
   }
 
   try {
-    await auth.disconnect()
+    if (!props.walletAddress) {
+      throw new Error('No wallet address provided')
+    }
+    const isLinkedWallet = auth.isWalletAuthenticated(props.walletAddress)
+
+    // If this wallet was never linked server-side, just clear the local wallet
+    // connection state and avoid calling disconnect-instance (which returns 404).
+    if (isLinkedWallet) {
+      await auth.disconnectPlatformInstance('wallet', props.walletAddress)
+    } else {
+      await auth.disconnectWalletConnection()
+    }
     auth.addNotification({ message: 'Wallet disconnected' })
   } catch (e) {
     console.error(e)

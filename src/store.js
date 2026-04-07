@@ -1343,11 +1343,7 @@ export const useAuthStore = defineStore('auth', {
       console.log('disconnecting')
       try {
         console.log('disconnecting account', this.accountConnected)
-        if (this.accountConnected) {
-          await this._appKitInstance.disconnect()
-          const connected = this._appKitInstance.getIsConnectedState()
-          if (connected) throw new Error('Failed to disconnect')
-        }
+        await this.disconnectWalletConnection()
 
         // Clear Discord auth
         localStorage.removeItem('authToken')
@@ -1372,6 +1368,18 @@ export const useAuthStore = defineStore('auth', {
         console.error('Disconnect error:', error)
         throw error
       }
+    },
+    async disconnectWalletConnection() {
+      if (this.accountConnected) {
+        await this._appKitInstance.disconnect()
+        const connected = this._appKitInstance.getIsConnectedState()
+        if (connected) throw new Error('Failed to disconnect wallet connection')
+      }
+
+      this.accountAddress = null
+      this.accountChainId = null
+      this.accountConnected = false
+      this.needsWalletAuth = false
     },
 
     saveSession() {
@@ -1638,6 +1646,17 @@ export const useAuthStore = defineStore('auth', {
           throw new Error('Failed to disconnect platform instance')
         }
         console.log('disconnectPlatformInstance')
+
+        // If the removed wallet is the currently connected one, fully disconnect
+        // from wagmi/reown so the sign-message UI doesn't linger and the next
+        // "Wallet Login" click opens a fresh connect dialog instead.
+        if (
+          platform === 'wallet' &&
+          instanceId?.toLowerCase() === this.accountAddress?.toLowerCase()
+        ) {
+          await this.disconnectWalletConnection()
+        }
+
         await this.fetchUserStatus()
       } catch (error) {
         console.error('Failed to disconnect platform instance:', error)

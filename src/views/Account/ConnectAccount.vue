@@ -25,7 +25,7 @@
     >
       <nav class="_flex _flex-col _w-full _leading-none">
         <template v-if="accountConnected && currentWalletNeedsAuth">
-          <SplitWalletButton
+          <AuthenticateWalletSection
             :wallet-address="accountAddress"
             :wallet-avatar="currentWallet?.avatar"
             :display-name="currentWallet?.username || accountAddress"
@@ -72,7 +72,7 @@
 import smileyFaceSvg from '../../assets/imgs/smiley-face-dashed-outline.svg'
 import AuthButton from '../../components/AuthButton.vue'
 import AccountLayout from '../../components/AccountLayout.vue'
-import SplitWalletButton from '../../components/AuthenticateWalletSection.vue'
+import AuthenticateWalletSection from '../../components/AuthenticateWalletSection.vue'
 import { inject, computed } from 'vue'
 
 const auth = inject('TrifleHub/store')

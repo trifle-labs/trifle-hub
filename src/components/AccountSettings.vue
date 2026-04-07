@@ -5,11 +5,11 @@
       class="_bg-metallic-linear _shadow-panel _p-4 _space-y-1.5 _rounded-lg"
       :class="{ '_order-last': !walletAuths?.length }"
     >
-      <div class="_flex _items-center _gap-2.5 _-mt-1.5">
+      <header v-if="walletAuths.length" class="_flex _items-center _gap-2.5 _-mt-1.5">
         <h3 class="_text-mlg _opacity-30 _weight-bold">
           wallet{{ walletAuths.length > 1 ? 's' : '' }}
         </h3>
-      </div>
+      </header>
       <ul class="_flex _flex-col _gap-0.5">
         <!-- wallets... -->
         <li
@@ -115,7 +115,7 @@
           </template>
         </li>
         <!-- (authenticate wallet button) -->
-        <SplitWalletButton
+        <AuthenticateWalletSection
           v-if="isAuthenticated && auth.accountConnected && auth.currentWalletNeedsAuth"
           :wallet-address="auth.accountAddress"
           :wallet-avatar="currentWallet?.avatar"
@@ -123,7 +123,7 @@
           :disabled="auth.isSimulationMode"
         >
           Authenticate {{ truncateAddress(auth.accountAddress) }}
-        </SplitWalletButton>
+        </AuthenticateWalletSection>
         <!-- (link wallet button) -->
         <AuthButton
           v-if="isAuthenticated && !auth.accountConnected"
@@ -589,7 +589,7 @@
 import { computed, ref, inject, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import AuthButton from './AuthButton.vue'
-import SplitWalletButton from './AuthenticateWalletSection.vue'
+import AuthenticateWalletSection from './AuthenticateWalletSection.vue'
 
 const auth = inject('TrifleHub/store')
 const { isAuthenticated, backendUrl } = storeToRefs(auth)
