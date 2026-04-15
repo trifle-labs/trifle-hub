@@ -414,8 +414,12 @@ const telegramAuths = computed(() => {
   return list.filter((t) => t.username)
 })
 const farcasterAuths = computed(() => {
-  if (isOwnProfile.value) return auth.getPlatformData('farcaster') || []
-  return user.value?.linkedAccounts?.farcaster || []
+  const list = isOwnProfile.value
+    ? auth.getPlatformData('farcaster') || []
+    : user.value?.linkedAccounts?.farcaster || []
+  // Guard against incomplete records (e.g. FID added via follower sync before
+  // profile fetch completed) — without a username we can't build a valid link.
+  return list.filter((f) => f.username)
 })
 
 const primaryDiscord = computed(() => discordAuths.value[0] || null)

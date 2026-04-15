@@ -270,15 +270,14 @@ const submit = async () => {
 
     showStatus('pending', 'Swapping...')
 
-    const response = await fetch(authStore.backendUrl + '/farcaster/award', {
+    const response = await fetch(authStore.backendUrl + '/api/like-lottery/award', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authStore.authToken}`
       },
       body: JSON.stringify({
-        points: amount.value, // Integer. Required. Number of points to award.
-        targetFid: myUser.value?.linkedAccounts?.farcaster?.[0]?.id // Integer or string. Required. Farcaster FID to award points to.
+        points: amount.value // Integer. Required. Number of points to swap to lotto-balls (awarded to the calling user).
       })
     })
     const result = await response.json()
