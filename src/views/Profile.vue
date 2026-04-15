@@ -402,9 +402,12 @@ const totalCount = ref(0)
 
 const totalPages = computed(() => Math.max(1, Math.ceil(totalCount.value / pageSize)))
 
-const PROFILE_QUEST_IDS = ['follow-trifle-twitter', 'trifler']
+const DEFAULT_PROFILE_QUEST_IDS = ['follow-trifle-twitter', 'trifler']
+const POST_FOLLOW_PROFILE_QUEST_IDS = ['twitter-like-tweet', 'twitter-reply-tweet', 'trifler']
+const profileQuestIds = ref([...DEFAULT_PROFILE_QUEST_IDS])
+let profileQuestsInitialized = false
 const profileQuests = ref(
-  PROFILE_QUEST_IDS.map((id) => {
+  profileQuestIds.value.map((id) => {
     const q = possiblePoints.find((p) => p.id === id)
     return {
       ...q,
@@ -425,7 +428,18 @@ const fetchProfileQuests = async () => {
     })
     if (!response.ok) return
     const data = await response.json()
-    profileQuests.value = PROFILE_QUEST_IDS.map((id) => {
+    // Lock the displayed X-quest set to what was true at mount time: if the
+    // user had already completed follow-trifle-twitter, swap in like/reply
+    // instead. Completing follow mid-session intentionally does NOT mutate
+    // the list, so the follow card stays visible to show its success state.
+    if (!profileQuestsInitialized) {
+      const followCompleted = data.balls.data.some((p) => p.name === 'follow-trifle-twitter')
+      profileQuestIds.value = followCompleted
+        ? [...POST_FOLLOW_PROFILE_QUEST_IDS]
+        : [...DEFAULT_PROFILE_QUEST_IDS]
+      profileQuestsInitialized = true
+    }
+    profileQuests.value = profileQuestIds.value.map((id) => {
       const q = possiblePoints.find((p) => p.id === id)
       const completed = data.balls.data.some((p) => p.name === id)
       return {
@@ -632,6 +646,8 @@ watch(currentProfileUsername, async (newVal, oldVal) => {
   if (!newVal || newVal === oldVal) return
   user.value = null
   page.value = 1
+  profileQuestsInitialized = false
+  profileQuestIds.value = [...DEFAULT_PROFILE_QUEST_IDS]
   await loadProfileData()
 })
 
