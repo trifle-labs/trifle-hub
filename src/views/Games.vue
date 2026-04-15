@@ -156,7 +156,7 @@ const games = [
     name: 'snake',
     title: 'SNAKE.rodeo',
     link: 'https://snake.rodeo',
-    description: 'playtest for <span class="_not-italic">🪩🪩🪩</span> + Airdrop!',
+    description: 'MMO-Snake, win <span class="_not-italic">🪩</span> + airdrop',
     bgVideo:
       // 'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1749555540/gm-game-clip-optim_ubnztp.mp4',
       `https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco,h_480/v1770644193/chomp-combined-2-titled-end-4frames__110spd_nobxlw.mp4`,
@@ -178,7 +178,7 @@ const games = [
   },
   {
     name: 'anybody',
-    description: 'daily puzzle-shooter, fully onchain',
+    description: 'daily puzzle-shooter, win <span class="_not-italic">🪩</span>',
     // link: anybodyLink,
     link: 'https://anybody.gg',
     bgVideo:
