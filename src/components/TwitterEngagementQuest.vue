@@ -120,7 +120,8 @@ const errorMsg = ref(null)
 const successMsg = ref(null)
 const needsReconnect = ref(false)
 
-const followUrl = 'https://trifle.life/twitter'
+// const followUrl = 'https://trifle.life/twitter'
+const followUrl = 'https://x.com/intent/follow?screen_name=triflelife'
 
 const isVerifiedForCurrentTweet = computed(() => {
   if (!twitterEngagement.value) return false
