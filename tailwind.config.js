@@ -94,7 +94,10 @@ export default {
         'wiggle-sm': 'wiggle-sm 0.8s linear infinite',
         float: 'float 4s ease-in-out infinite',
         'scaleup-sm': 'scaleup-sm 1s ease-in-out infinite',
-        'scaleup-xs': 'scaleup-xs 1s ease-in-out infinite'
+        'scaleup-xs': 'scaleup-xs 1s ease-in-out infinite',
+        /** Earn: one-shot pop when a quest is pinned via `openHub('earn', …, { quest })` */
+        'quest-highlight-pop':
+          'quest-highlight-pop 1.1s cubic-bezier(0.34, 1.56, 0.64, 1) 0s 1 normal both'
       },
       keyframes: {
         'pulse-light': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.75 } },
@@ -125,6 +128,11 @@ export default {
         'scaleup-xs': {
           '0%, 100%': { transform: 'scale(1)' },
           '50%': { transform: 'scale(1.025)' }
+        },
+        'quest-highlight-pop': {
+          '0%': { transform: 'scale(1) rotate(0deg)' },
+          '45%': { transform: 'scale(1.5) rotate(-20deg)' },
+          '100%': { transform: 'scale(1) rotate(0deg)' }
         }
       }
     }

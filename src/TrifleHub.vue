@@ -42,11 +42,31 @@ const route = useRoute()
 const hubOpen = ref(route.query.hub !== undefined)
 const hubPageKey = ref(route.query.hub || sessionStorage.getItem('hubPageKey') || defaultPage)
 
+/** Quest id from `?hub=earn&quest=…` or `openHub('earn', false, { quest: '…' })` — Earn pins that row to the top. */
+const highlightQuestId = ref(
+  route.query.hub === 'earn' && route.query.quest
+    ? String(Array.isArray(route.query.quest) ? route.query.quest[0] : route.query.quest)
+    : null
+)
+
 const watcherCleanup = { stop: null, timeout: null }
 let resolveFunction = null
 const hubActions = {
   hubOpen,
-  openHub: (page, closeAfterLogin = false, { timeoutPeriod = 5 * 60 * 1_000 } = {}) => {
+  openHub: (
+    page,
+    closeAfterLogin = false,
+    { timeoutPeriod = 5 * 60 * 1_000, quest } = {}
+  ) => {
+    if (page) {
+      hubPageKey.value = page
+      if (page === 'earn') {
+        highlightQuestId.value = quest !== undefined ? quest || null : null
+      } else {
+        highlightQuestId.value = null
+      }
+    }
+
     hubOpen.value = true
     store.closeHubAfterLogin = closeAfterLogin
 
@@ -89,10 +109,11 @@ const hubActions = {
       })
       return closedPromise
     }
-    return page && (hubPageKey.value = page)
+    return page || undefined
   },
   closeHub: async () => {
     hubOpen.value = false
+    highlightQuestId.value = null
     // Clean up watcher/timeout on close
     if (watcherCleanup.stop) {
       watcherCleanup.stop()
@@ -112,7 +133,11 @@ const hubActions = {
       throw new Error(`Page '${page}' not found in TrifleHub`)
     }
     hubPageKey.value = page
+    if (page !== 'earn') {
+      highlightQuestId.value = null
+    }
   },
+  highlightQuestId,
   getAvailablePages: () => Object.keys(hubPages)
 }
 store.setCloseHubCallback(hubActions.closeHub)

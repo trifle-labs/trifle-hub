@@ -162,7 +162,12 @@
             "
             @click="handleQuestClick(quest)"
             class="_w-full _block _relative"
-            :class="{ '_pointer-events-none': quest.completed && quest.once }"
+            :id="'thub-quest-' + quest.id"
+            :class="{
+              '_pointer-events-none': quest.completed && quest.once,
+              '_origin-center _animate-quest-highlight-pop _delay-500 _z-10 _relative':
+                quest.id === highlightQuestPinId
+            }"
           >
             <!-- main body, faded if completed -->
             <div
@@ -315,7 +320,7 @@
 <script setup>
 import HubPageHeader from '../components/HubPageHeader.vue'
 import { storeToRefs } from 'pinia'
-import { ref, onMounted, inject, watch, computed } from 'vue'
+import { ref, onMounted, inject, watch, computed, nextTick } from 'vue'
 import { possiblePoints } from '../config/pointsConfig'
 import SocialsButtons from '../components/SocialsButtons.vue'
 import SwapBalls from '../components/SwapBalls.vue'
@@ -323,7 +328,8 @@ import TicketEmoji from '../components/TicketEmoji.vue'
 import TwitterEngagementQuest from '../components/TwitterEngagementQuest.vue'
 
 const auth = inject('TrifleHub/store')
-const { openHub } = inject('hub')
+const hub = inject('hub')
+const { openHub } = hub
 const quests = ref([])
 const loading = ref(true)
 const error = ref(null)
@@ -362,6 +368,8 @@ const openProfile = () => {
   openHub('profile')
 }
 
+const highlightQuestPinId = computed(() => hub.highlightQuestId?.value)
+
 // Compute filtered quests based on the selected filter
 const filteredQuests = computed(() => {
   let questsToDisplay = []
@@ -376,7 +384,7 @@ const filteredQuests = computed(() => {
     questsToDisplay = visibleQuests
   }
 
-  return questsToDisplay.slice().sort((a, b) => {
+  const sorted = questsToDisplay.slice().sort((a, b) => {
     // Sort by enabled status first (enabled quests on top)
     if (a.enabled && !b.enabled) return -1
     if (!a.enabled && b.enabled) return 1
@@ -391,6 +399,17 @@ const filteredQuests = computed(() => {
 
     return 0 // Keep original array order for everything else
   })
+
+  const pinId = hub.highlightQuestId?.value
+  if (pinId) {
+    const idx = sorted.findIndex((q) => q.id === pinId)
+    if (idx > 0) {
+      const [item] = sorted.splice(idx, 1)
+      sorted.unshift(item)
+    }
+  }
+
+  return sorted
 })
 
 const fetchUserPoints = async () => {
@@ -475,6 +494,19 @@ watch(isAuthenticated, () => {
 onMounted(() => {
   fetchUserPoints()
 })
+
+watch(
+  () => [hub.highlightQuestId?.value, loading.value],
+  async ([pinId, isLoading]) => {
+    if (!pinId || isLoading) return
+    await nextTick()
+    document.getElementById(`thub-quest-${pinId}`)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest'
+    })
+  },
+  { flush: 'post' }
+)
 </script>
 
 <style scoped>

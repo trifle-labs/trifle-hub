@@ -32,10 +32,12 @@ export const trifleTheme = {
   },
   boxShadow: {
     px: '0 1px 1px var(--thub-shadow-color)',
-    'panel-xs': '0 0.75px 0.75px var(--thub-shadow-color), inset 0 0.75px 0 rgba(255, 255, 255, 0.75)',
+    'panel-xs':
+      '0 0.75px 0.75px var(--thub-shadow-color), inset 0 0.75px 0 rgba(255, 255, 255, 0.75)',
     panel: '0 1px 1px var(--thub-shadow-color), inset 0 1px 0 rgba(255, 255, 255, 0.75)',
     'panel-inset': '0 1px 1px var(--thub-shadow-color) inset, 0 1px 0 rgba(255, 255, 255, 0.75)',
-    'panel-md': '0 1.25px 1.25px var(--thub-shadow-color), inset 0 1.25px 0 rgba(255, 255, 255, 0.75)',
+    'panel-md':
+      '0 1.25px 1.25px var(--thub-shadow-color), inset 0 1.25px 0 rgba(255, 255, 255, 0.75)',
     deep: '0 4px 8px 0 rgba(0, 0, 0, 0.5)'
   },
   animation: {
@@ -45,7 +47,9 @@ export const trifleTheme = {
     'wiggle-sm': 'wiggle-sm 0.8s linear infinite',
     float: 'float 4s ease-in-out infinite',
     'scaleup-sm': 'scaleup-sm 1s ease-in-out infinite',
-    'scaleup-xs': 'scaleup-xs 1s ease-in-out infinite'
+    'scaleup-xs': 'scaleup-xs 1s ease-in-out infinite',
+    'quest-highlight-pop':
+      'quest-highlight-pop 1.1s cubic-bezier(0.34, 1.56, 0.64, 1) 0s 1 normal both'
   },
   keyframes: {
     'pulse-light': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.75 } },
@@ -71,6 +75,11 @@ export const trifleTheme = {
     'scaleup-xs': {
       '0%, 100%': { transform: 'scale(1)' },
       '50%': { transform: 'scale(1.025)' }
+    },
+    'quest-highlight-pop': {
+      '0%': { transform: 'scale(1) rotate(0deg)' },
+      '45%': { transform: 'scale(1.5) rotate(-10deg)' },
+      '100%': { transform: 'scale(1) rotate(0deg)' }
     }
   }
 }
