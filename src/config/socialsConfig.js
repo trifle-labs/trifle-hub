@@ -4,6 +4,7 @@ import discordLogo from '../assets/imgs/discord-logo.svg'
 import farcasterLogo from '../assets/imgs/farcaster-logo.svg'
 import twitterLogo from '../assets/imgs/twitter-x-logo.svg'
 import telegramLogo from '../assets/imgs/telegram-logo.svg'
+import emailLogo from '../assets/imgs/email-logo.svg'
 
 export const platforms = {
   wallet: {
@@ -66,5 +67,13 @@ export const platforms = {
       brightness: 0.95
     },
     textColor: '#000000'
+  },
+  email: {
+    name: 'Email',
+    icon: emailLogo,
+    bubbleButtonStyle: {
+      hueRotate: 102,
+      saturate: 1.5
+    }
   }
 }

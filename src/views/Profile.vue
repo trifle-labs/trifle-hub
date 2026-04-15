@@ -150,9 +150,7 @@
     </template>
     <template
       #description
-      v-if="
-        !isOwnProfile && (primaryDiscord || primaryTwitter || primaryTelegram || primaryFarcaster)
-      "
+      v-if="primaryDiscord || primaryTwitter || primaryTelegram || primaryFarcaster"
     >
       <div class="_flex _justify-center _gap-2 _h-10 _items-center">
         <a
@@ -237,48 +235,52 @@
     <section
       class="_whitespace-nowrap _overflow-x-scroll _no-scrollbar _align-top _-ml-[2px] _p-[2px]"
     >
-      <section
-        class="_inline-flex _flex-col _mr-2 _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
-        @click="hub.openHub('leaderboard')"
-      >
-        <header class="_flex _justify-between _items-center _opacity-30 _text-base _leading-snug">
-          <h3 class="_weight-black">rank</h3>
-        </header>
-        <div class="_flex _justify-end _text-2xl _pl-6">
-          <span v-if="airdropLoading" class="_text-stroke-xl _animate-pulse-deep">...</span>
-          <span v-else class="_text-stroke-xl">{{ rankDisplay }}</span>
-        </div>
-      </section>
+      <div class="_inline-flex _gap-2">
+        <section
+          class="_inline-flex _flex-col _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
+        >
+          <header class="_flex _justify-between _opacity-30 _text-base _leading-snug">
+            <h3 class="_weight-black">balance</h3>
+          </header>
+          <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-4">
+            <span v-if="loading" class="_text-stroke-xl _animate-pulse-deep">...</span>
+            <span v-else class="_text-stroke-xl">
+              {{ user?.totalPoints?.toLocaleString() || 0 }}
+            </span>
+            <span v-if="!loading">🪩</span>
+          </div>
+        </section>
 
-      <section
-        class="_inline-flex _flex-col _mr-2 _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
-      >
-        <header class="_flex _justify-between _items-center _opacity-30 _text-base _leading-snug">
-          <h3 class="_weight-black">airdrop points</h3>
-          <!-- <button class="_text-em-xs">ⓘ</button> -->
-        </header>
-        <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-6">
-          <span v-if="airdropLoading" class="_text-stroke-xl _animate-pulse-deep">...</span>
-          <span v-else class="_text-stroke-xl">
-            {{ airdropPointsDisplay }}
-          </span>
-          <span v-if="!airdropLoading">🪂</span>
-        </div>
-      </section>
-      <section
-        class="_inline-flex _flex-col _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
-      >
-        <header class="_flex _justify-between _opacity-30 _text-base _leading-snug">
-          <h3 class="_weight-black">balance</h3>
-        </header>
-        <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-6">
-          <span v-if="loading" class="_text-stroke-xl _animate-pulse-deep">...</span>
-          <span v-else class="_text-stroke-xl">
-            {{ user?.totalPoints?.toLocaleString() || 0 }}
-          </span>
-          <span v-if="!loading">🪩</span>
-        </div>
-      </section>
+        <section
+          class="_inline-flex _flex-col _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
+        >
+          <header class="_flex _justify-between _items-center _opacity-30 _text-base _leading-snug">
+            <h3 class="_weight-black">airdrop pts.</h3>
+            <!-- <button class="_text-em-xs">ⓘ</button> -->
+          </header>
+          <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-4">
+            <span v-if="airdropLoading" class="_text-stroke-xl _animate-pulse-deep">...</span>
+            <span v-else class="_text-stroke-xl">
+              {{ airdropPointsDisplay }}
+            </span>
+            <span v-if="!airdropLoading">🪂</span>
+          </div>
+        </section>
+
+        <section
+          class="_inline-flex _flex-col _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
+          :class="{ '_order-first': airdropRank < 100 || !isOwnProfile }"
+          @click="hub.openHub('leaderboard')"
+        >
+          <header class="_flex _justify-between _items-center _opacity-30 _text-base _leading-snug">
+            <h3 class="_weight-black">rank</h3>
+          </header>
+          <div class="_flex _justify-end _text-2xl _pl-4">
+            <span v-if="airdropLoading" class="_text-stroke-xl _animate-pulse-deep">...</span>
+            <span v-else class="_text-stroke-xl">{{ rankDisplay }}</span>
+          </div>
+        </section>
+      </div>
     </section>
 
     <section class="_w-full _max-w-2xl">

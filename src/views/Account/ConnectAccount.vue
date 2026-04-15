@@ -24,7 +24,7 @@
       class="_w-full _max-w-[22em] _mx-auto _px-1.5 sm:_px-8 _flex _flex-col _gap-4 _items-center"
     >
       <nav class="_flex _flex-col _w-full _leading-none">
-        <template v-if="accountConnected && currentWalletNeedsAuth">
+        <template v-if="accountConnected && currentWalletNeedsAuth && !isFarcasterCtx">
           <AuthenticateWalletSection
             :wallet-address="accountAddress"
             :wallet-avatar="currentWallet?.avatar"
@@ -33,14 +33,30 @@
           />
         </template>
         <template v-else>
-          <AuthButton platform="wallet" points="+10"> Wallet Login </AuthButton>
+          <AuthButton platform="wallet" points="+10" :disabled="isFarcasterCtx">
+            Wallet Login
+          </AuthButton>
         </template>
-        <AuthButton platform="solana" points="+10"> Solana Login </AuthButton>
-        <AuthButton platform="discord" points="+10"> Discord Login </AuthButton>
-        <AuthButton platform="twitter" points="+10"> TwitterX Login </AuthButton>
-        <AuthButton platform="telegram" points="+10"> Telegram Login </AuthButton>
-        <AuthButton platform="farcaster" points="+10" :class="{ '_order-first': auth.isFarcaster }">
+        <AuthButton platform="solana" points="+10" :disabled="isFarcasterCtx">
+          Solana Login
+        </AuthButton>
+        <AuthButton platform="discord" points="+10" :disabled="isFarcasterCtx">
+          Discord Login
+        </AuthButton>
+        <AuthButton platform="twitter" points="+10" :disabled="isFarcasterCtx">
+          TwitterX Login
+        </AuthButton>
+        <AuthButton platform="telegram" points="+10" :disabled="isFarcasterCtx">
+          Telegram Login
+        </AuthButton>
+        <AuthButton platform="farcaster" points="+10" :class="{ '_order-first': isFarcasterCtx }">
           Farcaster Login
+        </AuthButton>
+        <!-- Email login opens the same Reown AppKit modal as Wallet Login
+             (email + socials + wallets all live inside that modal). Pinned
+             to the bottom of the list in the web flow. -->
+        <AuthButton platform="email" points="+10" :disabled="isFarcasterCtx" class="_order-last">
+          Email Login
         </AuthButton>
       </nav>
       <!-- TODO: follow up with support request on how to do this
@@ -76,6 +92,9 @@ import AuthenticateWalletSection from '../../components/AuthenticateWalletSectio
 import { inject, computed } from 'vue'
 
 const auth = inject('TrifleHub/store')
+// auth.isFarcaster is the raw context object from sdk.context (truthy when in a Farcaster mini-app)
+// — coerce to a proper Boolean so we can bind it to the AuthButton `disabled` prop.
+const isFarcasterCtx = computed(() => !!auth.isFarcaster)
 const walletAuths = computed(() => auth.getPlatformData('wallet'))
 const accountConnected = computed(() => auth.accountConnected)
 const currentWalletNeedsAuth = computed(() => auth.currentWalletNeedsAuth)

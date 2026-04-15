@@ -110,6 +110,9 @@ const handleConnect = async (platform) => {
       await handleFarcasterConnect()
       break
     case 'wallet':
+    case 'email':
+      // Email + wallet both open the same Reown AppKit modal where the user
+      // can pick email / social / wallet — connectWallet() drives that flow.
       await handleWalletConnect()
       break
     case 'twitter':
@@ -217,5 +220,6 @@ const handleSolanaConnect = async () => {
 <style>
 ._platform-login-btn[disabled] {
   filter: grayscale(100%) !important;
+  opacity: 0.5;
 }
 </style>
