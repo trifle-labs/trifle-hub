@@ -270,7 +270,7 @@ const submit = async () => {
 
     showStatus('pending', 'Swapping...')
 
-    const response = await fetch(authStore.backendUrl + '/api/like-lottery/award', {
+    const response = await fetch(authStore.backendUrl + '/farcaster/award', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
