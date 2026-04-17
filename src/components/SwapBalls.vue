@@ -131,7 +131,7 @@
                   status.data.pointsAwarded > 1 ? 's' : ''
                 }}
                 <TicketEmoji class="_mb-[0.25em]" :animate="false" />
-                to the LOTTOS!</template
+                to the next LOTTO!</template
               ><template v-else>
                 {{ status.message }}
               </template>
@@ -179,7 +179,7 @@
         class="_flex-1 _bubble-btn _px-6 _h-16 _flex _items-center _justify-center _text-xl _text-stroke-2xl"
         :style="{ filter: canSwap ? 'hue-rotate(-345deg) saturate(2.5)' : 'none' }"
       >
-        <div :class="{ '_animate-scaleup-sm': canSwap }">SWAP</div>
+        <div :class="{ '_animate-scaleup-sm': canSwap }">ADD TO LOTTO</div>
       </button>
     </footer>
   </form>

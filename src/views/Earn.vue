@@ -158,8 +158,7 @@
           </header>
           <div class="_flex _items-center _gap-[0.5em]">
             <p class="_flex-1 _text-center _text-stroke-2xl">
-              Swap BALL$ for <span class="_inline-block">lotto-balls</span><br />
-              in the
+              Add <span class="_inline-block">lotto-balls</span> to the next
               <button class="_underline" @click="openHub('games')">weekly USDC lottery</button>!
             </p>
           </div>
