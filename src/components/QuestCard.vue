@@ -31,15 +31,19 @@
         <div class="_size-9 _flex-shrink-0">
           <img :src="quest.icon" class="_w-full _h-full _rounded-lg _block" />
         </div>
-        <div class="_flex-1 _min-w-0 _flex _flex-col _justify-center _min-h-8 _text-left _leading-normal">
+        <div
+          class="_flex-1 _min-w-0 _flex _flex-col _justify-center _min-h-8 _text-left _leading-normal"
+        >
           <div
-            class="_min-w-0 _leading-[1.1] _text-stroke-xl _truncate"
+            class="_min-w-0 _leading-[1.1] _text-stroke-xl"
             :class="{ '_line-through': quest.completed && quest.once }"
           >
             {{ quest.name }}
           </div>
         </div>
-        <div class="_flex _items-center _h-9 _gap-0.5 _relative _text-em-sm sm:_text-mlg _flex-shrink-0">
+        <div
+          class="_flex _items-center _h-9 _gap-0.5 _relative _text-em-sm sm:_text-mlg _flex-shrink-0"
+        >
           <div
             v-if="!quest.enabled"
             class="_rounded-full _bg-metallic-cone _shadow-panel _px-[0.5em]"

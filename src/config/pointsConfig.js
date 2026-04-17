@@ -23,70 +23,9 @@ const lotteryLink = 'https://trifle.life/lotteries'
 
 export const possiblePoints = [
   {
-    name: 'Link your Discord',
-    id: 'auth-discord',
-    icon: discordIcon,
-    // description: 'Authenticate with Discord to earn 10 pachinko balls and 1 kudzu burn.',
-    // description: 'in the Account page',
-    pachinkoBalls: 10,
-    kudzuBurn: 10,
-    claimed: false,
-    once: true,
-    enabled: true,
-    link: { to: 'account' }
-  },
-  {
-    name: 'Link a Wallet',
-    id: 'auth-wallet',
-    icon: walletIcon,
-    // description: 'Authenticate with your wallet address to earn 10 pachinko balls.',
-    // description: 'in the Account page',
-    pachinkoBalls: 10,
-    kudzuBurn: 0,
-    claimed: false,
-    once: true,
-    enabled: true,
-    link: { to: 'account' }
-  },
-  {
-    name: 'Link Solana Wallet',
-    id: 'auth-solana',
-    icon: solanaIcon,
-    pachinkoBalls: 10,
-    kudzuBurn: 0,
-    claimed: false,
-    once: true,
-    enabled: true,
-    link: { to: 'account' }
-  },
-  {
-    name: 'Link Farcaster',
-    id: 'auth-farcaster',
-    icon: farcasterIcon,
-    // description: 'Authenticate with Farcaster to earn 10 pachinko balls.',
-    pachinkoBalls: 10,
-    kudzuBurn: 0,
-    claimed: false,
-    once: true,
-    enabled: true,
-    link: { to: 'account' }
-  },
-
-  {
     name: 'Link TwitterX',
     id: 'auth-twitter',
     icon: twitterIcon,
-    pachinkoBalls: 10,
-    kudzuBurn: 0,
-    claimed: false,
-    once: true,
-    enabled: true,
-    link: { to: 'account' }
-  },
-  {
-    name: 'Link Telegram',
-    id: 'auth-telegram',
-    icon: telegramIcon,
     pachinkoBalls: 10,
     kudzuBurn: 0,
     claimed: false,
@@ -252,9 +191,10 @@ export const possiblePoints = [
   },
 
   {
-    name: 'Follow Trifle on Farcaster',
+    name: 'Follow Trifle',
     id: 'fc-follow',
     icon: farcasterIcon,
+    description: 'on Farcaster',
     pachinkoBalls: 10,
     kudzuBurn: 0,
     claimed: false,
@@ -264,10 +204,10 @@ export const possiblePoints = [
     link: platforms.farcaster.url
   },
   {
-    name: "Like Trifle's Farcaster casts",
+    name: "Like Trifle's casts",
     id: 'fc-like',
     icon: farcasterIcon,
-    description: "Earn 1🪩 for every like of Trifle's casts",
+    description: 'Earn 1🪩 for every like',
     pachinkoBalls: '1+',
     kudzuBurn: 0,
     claimed: false,
@@ -277,11 +217,11 @@ export const possiblePoints = [
     link: platforms.farcaster.url
   },
   {
-    name: 'Quote-cast Trifle',
+    name: 'Quote a Trifle cast',
     id: 'fc-quote-cast',
     icon: farcasterIcon,
-    description: "Quote one of Trifle's casts for +20🪩",
-    pachinkoBalls: '20+',
+    // description: 'Help spread the good word',
+    pachinkoBalls: '20/48h',
     kudzuBurn: 0,
     claimed: false,
     once: false,
@@ -290,11 +230,11 @@ export const possiblePoints = [
     link: platforms.farcaster.url
   },
   {
-    name: 'Cast with Trifle mini-app link',
+    name: 'Cast mini-app link',
     id: 'fc-mini-app-cast',
     icon: farcasterIcon,
-    description: 'Include a trifle.life mini-app link in your cast for +20🪩',
-    pachinkoBalls: '20+',
+    description: 'Include trifle.life in your cast',
+    pachinkoBalls: '20/48h',
     kudzuBurn: 0,
     claimed: false,
     once: false,
@@ -317,7 +257,7 @@ export const possiblePoints = [
     id: 'crank',
     icon: tiltLottoHead,
     description: 'Earn BALL$ powering the lotto',
-    pachinkoBalls: '2+',
+    pachinkoBalls: '2/hr',
     kudzuBurn: 0,
     claimed: false,
     once: false,
@@ -329,7 +269,7 @@ export const possiblePoints = [
     id: 'crank-onchain',
     icon: tiltLottoHead,
     description: 'Bonus 4🪩 for cranking on-chain',
-    pachinkoBalls: '4+',
+    pachinkoBalls: '4/hr',
     kudzuBurn: 0,
     claimed: false,
     once: false,
@@ -432,6 +372,66 @@ export const possiblePoints = [
     once: false,
     enabled: true,
     link: kudzuLink
+  },
+  {
+    name: 'Link your Discord',
+    id: 'auth-discord',
+    icon: discordIcon,
+    // description: 'Authenticate with Discord to earn 10 pachinko balls and 1 kudzu burn.',
+    // description: 'in the Account page',
+    pachinkoBalls: 10,
+    kudzuBurn: 10,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: { to: 'account' }
+  },
+  {
+    name: 'Link a Wallet',
+    id: 'auth-wallet',
+    icon: walletIcon,
+    // description: 'Authenticate with your wallet address to earn 10 pachinko balls.',
+    // description: 'in the Account page',
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: { to: 'account' }
+  },
+  {
+    name: 'Link Solana Wallet',
+    id: 'auth-solana',
+    icon: solanaIcon,
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: { to: 'account' }
+  },
+  {
+    name: 'Link Farcaster',
+    id: 'auth-farcaster',
+    icon: farcasterIcon,
+    // description: 'Authenticate with Farcaster to earn 10 pachinko balls.',
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: { to: 'account' }
+  },
+  {
+    name: 'Link Telegram',
+    id: 'auth-telegram',
+    icon: telegramIcon,
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: { to: 'account' }
   }
   // {
   //   name: 'Nuke to 1st on Kudzus',
