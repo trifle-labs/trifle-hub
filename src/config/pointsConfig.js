@@ -9,6 +9,7 @@ import kudzuIcon from '../assets/imgs/kudzu-icon.gif'
 import gmIcon from '../assets/imgs/gm.svg'
 import snakeIcon from '../assets/imgs/snake-hub-icon.png'
 import lotteryIcon from '../assets/imgs/lottery-icon.png'
+import tiltLottoHead from '../assets/imgs/tilt-lotto-head-3.png'
 import { platforms } from './socialsConfig'
 // import { sdk } from '@farcaster/miniapp-sdk'
 
@@ -250,46 +251,103 @@ export const possiblePoints = [
     link: gmLink
   },
 
-  // {
-  //   name: 'Follow Trifle on Farcaster',
-  //   id: 'trifle-fc-follow',
-  //   icon: farcasterIcon,
-  //   // description: 'Follow Trifle on Farcaster',
-  //   pachinkoBalls: 25,
-  //   kudzuBurn: 0,
-  //   claimed: false,
-  //   once: true,
-  //   enabled: true,
-  //   fid: 832276,
-  //   link: platforms.farcaster.url
-  // },
-
-  // {
-  //   name: "Like Trifle's casts on Farcaster",
-  //   id: 'trifle-fc-like',
-  //   icon: farcasterIcon,
-  //   description: "Earn 1🪩 for every like of Trifle's casts",
-  //   pachinkoBalls: '1+',
-  //   kudzuBurn: 0,
-  //   claimed: false,
-  //   once: false,
-  //   enabled: true,
-  //   fid: 832276,
-  //   link: platforms.farcaster.url
-  // },
-  // {
-  //   name: "Re-cast Trifle's casts on Farcaster",
-  //   id: 'trifle-fc-recast',
-  //   icon: farcasterIcon,
-  //   description: "Earn 1🪩 for every re-cast of Trifle's casts",
-  //   pachinkoBalls: '1+',
-  //   kudzuBurn: 0,
-  //   claimed: false,
-  //   once: false,
-  //   enabled: true,
-  //   fid: 832276,
-  //   link: platforms.farcaster.url
-  // },
+  {
+    name: 'Follow Trifle on Farcaster',
+    id: 'fc-follow',
+    icon: farcasterIcon,
+    pachinkoBalls: 10,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    fid: 832276,
+    link: platforms.farcaster.url
+  },
+  {
+    name: "Like Trifle's Farcaster casts",
+    id: 'fc-like',
+    icon: farcasterIcon,
+    description: "Earn 1🪩 for every like of Trifle's casts",
+    pachinkoBalls: '1+',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    fid: 832276,
+    link: platforms.farcaster.url
+  },
+  {
+    name: 'Quote-cast Trifle',
+    id: 'fc-quote-cast',
+    icon: farcasterIcon,
+    description: "Quote one of Trifle's casts for +20🪩",
+    pachinkoBalls: '20+',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    fid: 832276,
+    link: platforms.farcaster.url
+  },
+  {
+    name: 'Cast with Trifle mini-app link',
+    id: 'fc-mini-app-cast',
+    icon: farcasterIcon,
+    description: 'Include a trifle.life mini-app link in your cast for +20🪩',
+    pachinkoBalls: '20+',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: platforms.farcaster.url
+  },
+  {
+    name: 'Enable Trifle mini-app notifications',
+    id: 'fc-notifications',
+    icon: farcasterIcon,
+    pachinkoBalls: 5,
+    kudzuBurn: 0,
+    claimed: false,
+    once: true,
+    enabled: true,
+    link: platforms.farcaster.url
+  },
+  {
+    name: 'Crank the lotto',
+    id: 'crank',
+    icon: tiltLottoHead,
+    description: 'Earn BALL$ powering the lotto',
+    pachinkoBalls: '2+',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: lotteryLink
+  },
+  {
+    name: 'Crank the lotto on-chain',
+    id: 'crank-onchain',
+    icon: tiltLottoHead,
+    description: 'Bonus 4🪩 for cranking on-chain',
+    pachinkoBalls: '4+',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: lotteryLink
+  },
+  {
+    name: 'Yank lotto-balls from the lotto',
+    id: 'yank-onchain',
+    icon: tiltLottoHead,
+    description: 'Earn +1🪩 every 10 yanks',
+    pachinkoBalls: '1+',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: lotteryLink
+  },
   {
     name: 'Swap 🪩 to lotto-balls',
     id: 'award-pending',
