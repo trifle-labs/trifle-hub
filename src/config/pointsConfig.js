@@ -165,6 +165,42 @@ export const possiblePoints = [
     link: snakeLink + '/tutorial'
   },
   {
+    name: 'Crank the lotto',
+    id: 'crank',
+    icon: tiltLottoHead,
+    description: 'Earn BALL$ powering the lotto',
+    pachinkoBalls: '2/hr',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: lotteryLink
+  },
+  {
+    name: 'Crank the lotto on-chain',
+    id: 'crank-onchain',
+    icon: tiltLottoHead,
+    description: 'Bonus 4🪩 for cranking on-chain',
+    pachinkoBalls: '4/hr',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: lotteryLink
+  },
+  {
+    name: 'Yank lotto-balls from the lotto',
+    id: 'yank-onchain',
+    icon: tiltLottoHead,
+    description: 'Earn +1🪩 every 10 yanks',
+    pachinkoBalls: '1+',
+    kudzuBurn: 0,
+    claimed: false,
+    once: false,
+    enabled: true,
+    link: lotteryLink
+  },
+  {
     name: 'Play the GM Game',
     id: 'gm',
     icon: gmIcon,
@@ -189,7 +225,6 @@ export const possiblePoints = [
     enabled: true,
     link: gmLink
   },
-
   {
     name: 'Follow Trifle',
     id: 'fc-follow',
@@ -239,7 +274,7 @@ export const possiblePoints = [
     claimed: false,
     once: false,
     enabled: true,
-    link: platforms.farcaster.url
+    action: 'fcComposeCast'
   },
   {
     name: 'Enable Trifle mini-app notifications',
@@ -250,43 +285,8 @@ export const possiblePoints = [
     claimed: false,
     once: true,
     enabled: true,
-    link: platforms.farcaster.url
-  },
-  {
-    name: 'Crank the lotto',
-    id: 'crank',
-    icon: tiltLottoHead,
-    description: 'Earn BALL$ powering the lotto',
-    pachinkoBalls: '2/hr',
-    kudzuBurn: 0,
-    claimed: false,
-    once: false,
-    enabled: true,
-    link: lotteryLink
-  },
-  {
-    name: 'Crank the lotto on-chain',
-    id: 'crank-onchain',
-    icon: tiltLottoHead,
-    description: 'Bonus 4🪩 for cranking on-chain',
-    pachinkoBalls: '4/hr',
-    kudzuBurn: 0,
-    claimed: false,
-    once: false,
-    enabled: true,
-    link: lotteryLink
-  },
-  {
-    name: 'Yank lotto-balls from the lotto',
-    id: 'yank-onchain',
-    icon: tiltLottoHead,
-    description: 'Earn +1🪩 every 10 yanks',
-    pachinkoBalls: '1+',
-    kudzuBurn: 0,
-    claimed: false,
-    once: false,
-    enabled: true,
-    link: lotteryLink
+    platforms: ['farcaster'],
+    action: 'fcEnableNotifications'
   },
   {
     name: 'Swap 🪩 to lotto-balls',

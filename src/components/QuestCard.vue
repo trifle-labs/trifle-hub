@@ -1,7 +1,13 @@
 <template>
   <component
     :is="
-      quest.link && !isTwitterEngagement ? (typeof quest.link === 'string' ? 'a' : 'button') : 'div'
+      quest.link && !isTwitterEngagement
+        ? typeof quest.link === 'string'
+          ? 'a'
+          : 'button'
+        : quest.action
+          ? 'button'
+          : 'div'
     "
     :fid="quest.fid"
     :href="typeof quest.link === 'string' && !isTwitterEngagement ? quest.link : undefined"
@@ -22,7 +28,7 @@
       class="_bg-metallic-linear _shadow-panel _w-full _p-2 _px-2.5 _pr-3 _rounded-lg _transition-colors _relative _flex _flex-col _gap-0.5 _min-h-14 _justify-center"
       :class="[
         {
-          'mouse:hover:_scale-[1.006] _duration-100': quest.link,
+          'mouse:hover:_scale-[1.006] _duration-100': quest.link || quest.action,
           '_opacity-40': quest.completed && quest.once
         }
       ]"
@@ -123,6 +129,7 @@ defineEmits(['points-updated', 'internal-link'])
 
 const hub = inject('hub')
 const { openHub } = hub
+const auth = inject('TrifleHub/store')
 
 const expanded = ref(false)
 
@@ -138,6 +145,18 @@ const handleClick = (e) => {
     expanded.value = !expanded.value
   } else if (props.quest.link?.to) {
     openHub(props.quest.link.to)
+  } else if (props.quest.action === 'fcEnableNotifications') {
+    auth.fcEnableNotifications()
+  } else if (props.quest.action === 'fcComposeCast') {
+    if (auth.isFarcaster) {
+      auth.fcComposeCast()
+    } else {
+      window.open(
+        'https://warpcast.com/~/compose?text=I%20❤%20trifle.life&embeds[]=https://trifle.life',
+        '_blank',
+        'noopener,noreferrer'
+      )
+    }
   }
 }
 </script>

@@ -211,7 +211,12 @@ const highlightQuestPinId = computed(() => hub.highlightQuestId?.value)
 // Compute filtered quests based on the selected filter
 const filteredQuests = computed(() => {
   let questsToDisplay = []
-  const visibleQuests = quests.value.filter((quest) => !quest.hiddenFromQuests)
+  const currentPlatform = auth.isFarcaster ? 'farcaster' : 'web'
+  const visibleQuests = quests.value.filter(
+    (quest) =>
+      !quest.hiddenFromQuests &&
+      (!quest.platforms || quest.platforms.includes(currentPlatform))
+  )
   if (filter.value === 'all') {
     questsToDisplay = visibleQuests
   } else if (filter.value === 'once') {
