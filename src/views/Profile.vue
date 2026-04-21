@@ -88,9 +88,9 @@
       >
         <TrifleBall
           v-if="doneAnimating"
-          :key="(user && user?.avatar) || 'smiley-face'"
+          :key="displayAvatar || 'smiley-face'"
           mode="glass-inner-wall"
-          :image-source="(user && user?.avatar) || smileyFaceSvg"
+          :image-source="displayAvatar || smileyFaceSvg"
           style="width: 175%; height: 175%"
           class="_cursor-grab"
         />
@@ -150,9 +150,7 @@
     </template>
     <template
       #description
-      v-if="
-        !isOwnProfile && (primaryDiscord || primaryTwitter || primaryTelegram || primaryFarcaster)
-      "
+      v-if="primaryDiscord || primaryTwitter || primaryTelegram || primaryFarcaster"
     >
       <div class="_flex _justify-center _gap-2 _h-10 _items-center">
         <a
@@ -234,50 +232,85 @@
       </div>
     </div> -->
 
-    <section
-      class="_whitespace-nowrap _overflow-x-scroll _no-scrollbar _align-top _-ml-[2px] _p-[2px]"
-    >
-      <section
-        class="_inline-flex _flex-col _mr-2 _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
-        @click="hub.openHub('leaderboard')"
-      >
-        <header class="_flex _justify-between _items-center _opacity-30 _text-base _leading-snug">
-          <h3 class="_weight-black">rank</h3>
-        </header>
-        <div class="_flex _justify-end _text-2xl _pl-6">
-          <span v-if="airdropLoading" class="_text-stroke-xl _animate-pulse-deep">...</span>
-          <span v-else class="_text-stroke-xl">{{ rankDisplay }}</span>
-        </div>
-      </section>
+    <ScrollMaskedX class="_whitespace-nowrap _align-top _-ml-[2px] _p-[2px]">
+      <div class="_inline-flex _gap-2">
+        <section
+          class="_inline-flex _flex-col _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
+        >
+          <header class="_flex _justify-between _leading-snug _text-mlg _weight-bold _opacity-30">
+            <h3>balance</h3>
+          </header>
+          <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-4">
+            <span v-if="!loading">🪩</span>
+            <span v-if="loading" class="_text-stroke-xl _animate-pulse-deep">...</span>
+            <span v-else class="_text-stroke-xl">
+              {{ user?.totalPoints?.toLocaleString() || 0 }}
+            </span>
+          </div>
+        </section>
 
-      <section
-        class="_inline-flex _flex-col _mr-2 _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
-      >
-        <header class="_flex _justify-between _items-center _opacity-30 _text-base _leading-snug">
-          <h3 class="_weight-black">airdrop points</h3>
-          <!-- <button class="_text-em-xs">ⓘ</button> -->
-        </header>
-        <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-6">
-          <span v-if="airdropLoading" class="_text-stroke-xl _animate-pulse-deep">...</span>
-          <span v-else class="_text-stroke-xl">
-            {{ airdropPointsDisplay }}
-          </span>
-          <span v-if="!airdropLoading">🪂</span>
+        <section
+          class="_inline-flex _flex-col _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
+        >
+          <header
+            class="_flex _justify-between _items-center _leading-snug _text-mlg _weight-bold _opacity-30"
+          >
+            <h3>airdrop pts.</h3>
+            <!-- <button class="_text-em-xs">ⓘ</button> -->
+          </header>
+          <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-4">
+            <span v-if="!airdropLoading">🪂</span>
+            <span v-if="airdropLoading" class="_text-stroke-xl _animate-pulse-deep">...</span>
+            <span v-else class="_text-stroke-xl">
+              {{ airdropPointsDisplay }}
+            </span>
+          </div>
+        </section>
+
+        <section
+          class="_inline-flex _flex-col _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
+          :class="{ '_order-first': airdropRank < 100 || !isOwnProfile }"
+          @click="hub.openHub('leaderboard')"
+        >
+          <header
+            class="_flex _justify-between _items-center _leading-snug _text-mlg _weight-bold _opacity-30"
+          >
+            <h3>rank</h3>
+          </header>
+          <div class="_flex _justify-end _text-2xl _pl-4">
+            <span v-if="airdropLoading" class="_text-stroke-xl _animate-pulse-deep">...</span>
+            <span v-else class="_text-stroke-xl">{{ rankDisplay }}</span>
+          </div>
+        </section>
+      </div>
+    </ScrollMaskedX>
+
+    <section v-if="isOwnProfile" class="_w-full _max-w-2xl">
+      <section class="_bg-metallic-linear _shadow-panel _p-4 _space-y-2 _rounded-lg">
+        <div class="_flex _items-center _justify-between _-mt-1.5">
+          <h3 class="_text-mlg _weight-bold">
+            <span class="_opacity-30">quests</span>
+          </h3>
         </div>
-      </section>
-      <section
-        class="_inline-flex _flex-col _bg-metallic-linear _shadow-panel _px-3 _py-2 _pb-1.5 _rounded-lg"
-      >
-        <header class="_flex _justify-between _opacity-30 _text-base _leading-snug">
-          <h3 class="_weight-black">balance</h3>
-        </header>
-        <div class="_flex _justify-end _text-2xl _gap-[0.1em] _pl-6">
-          <span v-if="loading" class="_text-stroke-xl _animate-pulse-deep">...</span>
-          <span v-else class="_text-stroke-xl">
-            {{ user?.totalPoints?.toLocaleString() || 0 }}
-          </span>
-          <span v-if="!loading">🪩</span>
-        </div>
+        <ScrollMaskedX class="_whitespace-nowrap _align-top _-mx-[2px] _p-[2px]">
+          <div class="_inline-flex _gap-2 _items-start">
+            <div
+              v-for="(quest, i) in profileQuests"
+              :key="quest.id"
+              class="_inline-block _align-top"
+              :class="{ '_max-w-[14em]': !i }"
+            >
+              <QuestCard :quest="quest" @points-updated="fetchProfileQuests" />
+            </div>
+            <button
+              class="_bubble-btn _px-5 _py-4.5 _inline-flex _items-center _justify-center _text-stroke-xl _whitespace-nowrap"
+              style="filter: hue-rotate(20deg) saturate(3)"
+              @click="openEarn"
+            >
+              view all Quests
+            </button>
+          </div>
+        </ScrollMaskedX>
       </section>
     </section>
 
@@ -344,6 +377,9 @@ import AccountSettings from '../components/AccountSettings.vue'
 import ReferralSection from '../components/ReferralSection.vue'
 import smileyFaceSvg from '../assets/imgs/smiley-face-dashed-outline.svg'
 import PointCard from '../components/PointCard.vue'
+import QuestCard from '../components/QuestCard.vue'
+import ScrollMaskedX from '../components/ScrollMaskedX.vue'
+import { possiblePoints } from '../config/pointsConfig'
 const TrifleBall = defineAsyncComponent(() => import('../components/TrifleBall/TrifleBall.vue'))
 const hub = inject('hub')
 const auth = inject('TrifleHub/store')
@@ -365,6 +401,62 @@ const totalCount = ref(0)
 // }
 
 const totalPages = computed(() => Math.max(1, Math.ceil(totalCount.value / pageSize)))
+
+const DEFAULT_PROFILE_QUEST_IDS = ['follow-trifle-twitter', 'trifler']
+const POST_FOLLOW_PROFILE_QUEST_IDS = ['twitter-like-tweet', 'twitter-reply-tweet', 'trifler']
+const profileQuestIds = ref([...DEFAULT_PROFILE_QUEST_IDS])
+let profileQuestsInitialized = false
+const profileQuests = ref(
+  profileQuestIds.value.map((id) => {
+    const q = possiblePoints.find((p) => p.id === id)
+    return {
+      ...q,
+      completed: false,
+      enabled: q?.enabled !== undefined ? q.enabled : true,
+      link: q?.link || null
+    }
+  })
+)
+
+const fetchProfileQuests = async () => {
+  if (!isOwnProfile.value || !authUser.value?.id) return
+  try {
+    const response = await fetch(`${backendUrl.value}/balls/point-categories-with-counts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: authUser.value.id })
+    })
+    if (!response.ok) return
+    const data = await response.json()
+    // Lock the displayed X-quest set to what was true at mount time: if the
+    // user had already completed follow-trifle-twitter, swap in like/reply
+    // instead. Completing follow mid-session intentionally does NOT mutate
+    // the list, so the follow card stays visible to show its success state.
+    if (!profileQuestsInitialized) {
+      const followCompleted = data.balls.data.some((p) => p.name === 'follow-trifle-twitter')
+      profileQuestIds.value = followCompleted
+        ? [...POST_FOLLOW_PROFILE_QUEST_IDS]
+        : [...DEFAULT_PROFILE_QUEST_IDS]
+      profileQuestsInitialized = true
+    }
+    profileQuests.value = profileQuestIds.value.map((id) => {
+      const q = possiblePoints.find((p) => p.id === id)
+      const completed = data.balls.data.some((p) => p.name === id)
+      return {
+        ...q,
+        completed,
+        enabled: q?.enabled !== undefined ? q.enabled : true,
+        link: q?.link || null
+      }
+    })
+  } catch (e) {
+    console.error('Failed to fetch profile quests', e)
+  }
+}
+
+const openEarn = () => {
+  hub.openHub('earn')
+}
 
 const airdropRank = ref(null)
 const airdropPoints = ref(0)
@@ -391,6 +483,10 @@ const isOwnProfile = computed(() => {
   return authUser.value.username === currentProfileUsername.value
 })
 
+const displayAvatar = computed(() =>
+  isOwnProfile.value ? authUser.value?.avatar : user.value?.avatar
+)
+
 // For the profile view, we want socials belonging to the profile user.
 // If you're viewing your own profile, we reuse the authenticated user's linked accounts.
 // If you're viewing another player, we rely on any linkedAccounts returned from /auth/by-username;
@@ -414,8 +510,12 @@ const telegramAuths = computed(() => {
   return list.filter((t) => t.username)
 })
 const farcasterAuths = computed(() => {
-  if (isOwnProfile.value) return auth.getPlatformData('farcaster') || []
-  return user.value?.linkedAccounts?.farcaster || []
+  const list = isOwnProfile.value
+    ? auth.getPlatformData('farcaster') || []
+    : user.value?.linkedAccounts?.farcaster || []
+  // Guard against incomplete records (e.g. FID added via follower sync before
+  // profile fetch completed) — without a username we can't build a valid link.
+  return list.filter((f) => f.username)
 })
 
 const primaryDiscord = computed(() => discordAuths.value[0] || null)
@@ -534,7 +634,7 @@ const loadProfileData = async () => {
     return
   }
   await fetchUser()
-  await Promise.all([fetchAirdropInfo(), fetchPoints()])
+  await Promise.all([fetchAirdropInfo(), fetchPoints(), fetchProfileQuests()])
 }
 
 onMounted(async () => {
@@ -544,7 +644,10 @@ onMounted(async () => {
 
 watch(currentProfileUsername, async (newVal, oldVal) => {
   if (!newVal || newVal === oldVal) return
+  user.value = null
   page.value = 1
+  profileQuestsInitialized = false
+  profileQuestIds.value = [...DEFAULT_PROFILE_QUEST_IDS]
   await loadProfileData()
 })
 

@@ -5,8 +5,8 @@ import { mainnet, base } from '@reown/appkit/networks'
 const defaultConfig = {
   projectId: '',
   metadata: {
-    name: 'Trifle Auth',
-    description: 'Authenticate your account with Trifle',
+    name: 'Trifle ♧',
+    description: 'Link a wallet to your Trifle account',
     url: typeof window !== 'undefined' ? window.location.origin : '',
     icons: []
   },
@@ -15,9 +15,18 @@ const defaultConfig = {
   allowUnsupportedChain: true,
   features: {
     analytics: true,
+    connectMethodsOrder: ['email', 'social', 'wallet'],
     email: true,
-    socials: [], //['google', 'x', 'github', 'discord', 'apple', 'facebook', 'farcaster'],
-    emailShowWallets: true
+    emailShowWallets: true, // weirdly named, but if false, wallets are hidden behind a button click
+    socials: [
+      'google',
+      'x',
+      // 'github',
+      'discord',
+      'apple'
+      // 'facebook',
+      // 'farcaster'
+    ]
   },
   // coinbasePreference: 'smartWalletOnly',
   featuredWalletIds: [

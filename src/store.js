@@ -528,6 +528,26 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    async fcEnableNotifications() {
+      try {
+        await sdk.actions.addFrame()
+        this.isFarcaster = await sdk.context
+      } catch (e) {
+        console.warn('non-fatal error enabling notifications', e)
+      }
+    },
+
+    async fcComposeCast() {
+      try {
+        await sdk.actions.composeCast({
+          text: 'I ❤ @trifle',
+          embeds: ['https://trifle.life']
+        })
+      } catch (e) {
+        console.warn('non-fatal error composing cast', e)
+      }
+    },
+
     async connectDiscord() {
       this.loading = true
       this.error = null
@@ -1074,8 +1094,7 @@ export const useAuthStore = defineStore('auth', {
         const wallets = get()
         const solanaWallet = wallets.find(
           (w) =>
-            w.chains?.some((c) => c.startsWith('solana:')) &&
-            w.features?.['solana:signMessage']
+            w.chains?.some((c) => c.startsWith('solana:')) && w.features?.['solana:signMessage']
         )
         if (solanaWallet) return { type: 'standard', wallet: solanaWallet }
       } catch (e) {
@@ -1095,7 +1114,9 @@ export const useAuthStore = defineStore('auth', {
 
         const walletInfo = this._getSolanaWallet()
         if (!walletInfo) {
-          throw new Error('No Solana wallet found. Please install Phantom, MetaMask, or another Solana wallet.')
+          throw new Error(
+            'No Solana wallet found. Please install Phantom, MetaMask, or another Solana wallet.'
+          )
         }
 
         let publicKey
@@ -1205,7 +1226,12 @@ export const useAuthStore = defineStore('auth', {
         // Encode signature as base58 (required by @web3auth/sign-in-with-solana verify)
         const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
         const toBase58 = (bytes) => {
-          let num = BigInt('0x' + Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(''))
+          let num = BigInt(
+            '0x' +
+              Array.from(bytes)
+                .map((b) => b.toString(16).padStart(2, '0'))
+                .join('')
+          )
           let result = ''
           while (num > 0n) {
             result = BASE58_ALPHABET[Number(num % 58n)] + result
@@ -1343,11 +1369,7 @@ export const useAuthStore = defineStore('auth', {
       console.log('disconnecting')
       try {
         console.log('disconnecting account', this.accountConnected)
-        if (this.accountConnected) {
-          await this._appKitInstance.disconnect()
-          const connected = this._appKitInstance.getIsConnectedState()
-          if (connected) throw new Error('Failed to disconnect')
-        }
+        await this.disconnectWalletConnection()
 
         // Clear Discord auth
         localStorage.removeItem('authToken')
@@ -1372,6 +1394,18 @@ export const useAuthStore = defineStore('auth', {
         console.error('Disconnect error:', error)
         throw error
       }
+    },
+    async disconnectWalletConnection() {
+      if (this.accountConnected) {
+        await this._appKitInstance.disconnect()
+        const connected = this._appKitInstance.getIsConnectedState()
+        if (connected) throw new Error('Failed to disconnect wallet connection')
+      }
+
+      this.accountAddress = null
+      this.accountChainId = null
+      this.accountConnected = false
+      this.needsWalletAuth = false
     },
 
     saveSession() {
@@ -1638,6 +1672,17 @@ export const useAuthStore = defineStore('auth', {
           throw new Error('Failed to disconnect platform instance')
         }
         console.log('disconnectPlatformInstance')
+
+        // If the removed wallet is the currently connected one, fully disconnect
+        // from wagmi/reown so the sign-message UI doesn't linger and the next
+        // "Wallet Login" click opens a fresh connect dialog instead.
+        if (
+          platform === 'wallet' &&
+          instanceId?.toLowerCase() === this.accountAddress?.toLowerCase()
+        ) {
+          await this.disconnectWalletConnection()
+        }
+
         await this.fetchUserStatus()
       } catch (error) {
         console.error('Failed to disconnect platform instance:', error)

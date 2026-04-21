@@ -37,7 +37,7 @@
           <img
             :src="
               auth.user
-                ? auth.user?.avatar || auth.isFarcaster?.user?.avatar || defaultAvatar
+                ? auth.user?.avatar || defaultAvatar
                 : trifleBallStill
             "
             :style="{
@@ -252,7 +252,7 @@ const { openHub } = inject('hub')
 const auth = inject('TrifleHub/store')
 
 const authUserAvatar = computed(() =>
-  !auth.user ? undefined : auth.user?.avatar || auth.isFarcaster?.user?.avatar || smileyFaceSvg
+  !auth.user ? undefined : auth.user?.avatar || smileyFaceSvg
 )
 
 const trifleBall = ref(null)

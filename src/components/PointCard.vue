@@ -50,10 +50,10 @@
       <div class="_flex _items-center _h-9 _text-em-sm _flex-shrink-0 sm:_text-mlg">
         <!-- points -->
         <div
-          class="_rounded-full _bg-metallic-linear _shadow-panel _pl-[0.5em] _pr-[0.25em] _flex _gap-[0.15em]"
+          class="_rounded-full _bg-metallic-linear _shadow-panel _pr-[0.4em] _pl-[0.25em] _flex _gap-[0.15em]"
         >
-          <span>{{ formatPoints(point.value) }}</span>
           <div>🪩</div>
+          <span>{{ formatPoints(point.value) }}</span>
         </div>
       </div>
     </header>
@@ -83,6 +83,7 @@ const formatDate = (date) => {
   const diffMonths = Math.floor(diffDays / 30)
   const diffYears = Math.floor(diffDays / 365)
 
+  if (diffMins < 1) return `<1m`
   if (diffMins < 60) return `${diffMins}m`
   if (diffHours < 24) return `${diffHours}h`
   if (diffDays < 7) return `${diffDays}d`

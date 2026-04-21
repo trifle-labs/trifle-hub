@@ -27,13 +27,13 @@
         </p>
       </template>
       <template v-else>
-        <div class="_w-full _flex _items-center _justify-evenly _text-em-smff">
+        <div class="_w-full _flex-wrap _gap-2 _flex _items-center _justify-evenly _text-em-smff">
           <template v-if="mode === 'follow'">
             <a
               :href="followUrl"
               target="_blank"
               rel="noopener noreferrer"
-              class="_underline _inline-block _animate-wiggle-sm"
+              class="_underline _inline-block _animate-wiggle-sm _p-[0.25em]"
               @click.stop
             >
               Follow on X
@@ -120,7 +120,8 @@ const errorMsg = ref(null)
 const successMsg = ref(null)
 const needsReconnect = ref(false)
 
-const followUrl = 'https://trifle.life/twitter'
+// const followUrl = 'https://trifle.life/twitter'
+const followUrl = 'https://x.com/intent/follow?screen_name=triflelife'
 
 const isVerifiedForCurrentTweet = computed(() => {
   if (!twitterEngagement.value) return false

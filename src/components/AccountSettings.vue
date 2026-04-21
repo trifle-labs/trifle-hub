@@ -5,11 +5,11 @@
       class="_bg-metallic-linear _shadow-panel _p-4 _space-y-1.5 _rounded-lg"
       :class="{ '_order-last': !walletAuths?.length }"
     >
-      <div class="_flex _items-center _gap-2.5 _-mt-1.5">
+      <header v-if="walletAuths.length" class="_flex _items-center _gap-2.5 _-mt-1.5">
         <h3 class="_text-mlg _opacity-30 _weight-bold">
           wallet{{ walletAuths.length > 1 ? 's' : '' }}
         </h3>
-      </div>
+      </header>
       <ul class="_flex _flex-col _gap-0.5">
         <!-- wallets... -->
         <li
@@ -115,18 +115,23 @@
           </template>
         </li>
         <!-- (authenticate wallet button) -->
-        <SplitWalletButton
-          v-if="isAuthenticated && auth.accountConnected && auth.currentWalletNeedsAuth"
+        <AuthenticateWalletSection
+          v-if="
+            isAuthenticated &&
+            auth.accountConnected &&
+            auth.currentWalletNeedsAuth &&
+            !isFarcaster
+          "
           :wallet-address="auth.accountAddress"
           :wallet-avatar="currentWallet?.avatar"
           :display-name="currentWallet?.username || accountAddress"
           :disabled="auth.isSimulationMode"
         >
           Authenticate {{ truncateAddress(auth.accountAddress) }}
-        </SplitWalletButton>
-        <!-- (link wallet button) -->
+        </AuthenticateWalletSection>
+        <!-- (link wallet button) — hidden in Farcaster context -->
         <AuthButton
-          v-if="isAuthenticated && !auth.accountConnected"
+          v-if="isAuthenticated && !auth.accountConnected && !isFarcaster"
           platform="wallet"
           :points="!walletAuths.length ? '+10' : undefined"
           :disabled="auth.isSimulationMode"
@@ -188,7 +193,7 @@
           </template>
         </li>
         <AuthButton
-          v-if="!hasSolanaAuth"
+          v-if="!hasSolanaAuth && !isFarcaster"
           platform="solana"
           :points="!solanaAuths.length ? '+10' : undefined"
           :disabled="auth.isSimulationMode"
@@ -476,7 +481,7 @@
     <!-- farcaster -->
     <section
       class="_bg-metallic-linear _shadow-panel _p-4 _space-y-1.5 _rounded-lg"
-      :class="{ '_order-first': auth.isFarcaster }"
+      :class="{ '_order-first': isFarcaster }"
     >
       <div v-if="farcasterAuths.length" class="_flex _items-center _gap-2.5 _-mt-1.5">
         <h3 class="_text-mlg _opacity-30 _weight-bold">farcaster</h3>
@@ -561,7 +566,7 @@
           {{ farcasterAuths.length > 0 ? 'Link Another Farcaster' : 'Link Farcaster' }}
         </AuthButton>
         <!-- (add mini-app to farcaster button) - only show on super app domains -->
-        <template v-if="isFarcaster && !isFarcaster.client.added && isSuperApp">
+        <template v-if="isFarcaster && !auth.isFarcaster?.client?.added && isSuperApp">
           <AuthButton
             platform="farcaster"
             points="+10"
@@ -589,12 +594,14 @@
 import { computed, ref, inject, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import AuthButton from './AuthButton.vue'
-import SplitWalletButton from './AuthenticateWalletSection.vue'
+import AuthenticateWalletSection from './AuthenticateWalletSection.vue'
 
 const auth = inject('TrifleHub/store')
 const { isAuthenticated, backendUrl } = storeToRefs(auth)
 
-const isFarcaster = computed(() => auth.isFarcaster)
+// Coerce isFarcaster to a real Boolean (store's isFarcaster is an object
+// when in a Farcaster mini-app — raw object breaks type-checked props)
+const isFarcaster = computed(() => !!auth.isFarcaster)
 const isSuperApp = computed(() => auth.isSuperApp)
 
 const addFrame = async () => {

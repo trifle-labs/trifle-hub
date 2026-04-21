@@ -37,6 +37,7 @@
     "build": "vite build",
     "dev": "cd dev && vite",
     "watch": "vite build --watch",
+    "prepare": "[ -f dist/index.es.js ] || yarn build",
     "prepublishOnly": "yarn build",
     "patch": "npm version patch && npm publish && git push"
   },

@@ -57,7 +57,7 @@
         class="_bubble-btn _px-4.5 _h-16"
         :class="{ '_animate-wiggle-sm': selectedTab === 'earn' }"
         @click="selectedTab = 'earn'"
-        :style="selectedTab === 'earn' ? 'filter: hue-rotate(-70deg) saturate(2.1)' : ''"
+        :style="selectedTab === 'earn' ? 'filter: hue-rotate(-70deg) saturate(1.6)' : ''"
       >
         earn
       </button>
@@ -134,145 +134,13 @@
             </div> -->
 
           <!-- quests... -->
-          <component
+          <QuestCard
             v-for="quest in filteredQuests"
-            :is="
-              quest.link && !isTwitterEngagementQuestId(quest.id)
-                ? typeof quest.link === 'string'
-                  ? 'a'
-                  : 'button'
-                : 'div'
-            "
             :key="quest.id"
-            :fid="quest.fid"
-            :href="
-              typeof quest.link === 'string' && !isTwitterEngagementQuestId(quest.id)
-                ? quest.link
-                : undefined
-            "
-            :target="
-              typeof quest.link === 'string' && !isTwitterEngagementQuestId(quest.id)
-                ? '_blank'
-                : undefined
-            "
-            :rel="
-              typeof quest.link === 'string' && !isTwitterEngagementQuestId(quest.id)
-                ? 'noopener noreferrer'
-                : undefined
-            "
-            @click="handleQuestClick(quest)"
-            class="_w-full _block _relative"
-            :class="{ '_pointer-events-none': quest.completed && quest.once }"
-          >
-            <!-- main body, faded if completed -->
-            <div
-              class="_bg-metallic-linear _w-full _flex _flex-col _gap-0.5 _p-[0.5em] _rounded-lg _transition-colors _text-base md:_text-mlg _relative _justify-center"
-              :class="[
-                {
-                  'mouse:hover:_scale-[1.006] _duration-100': quest.link,
-                  '_opacity-40': quest.completed && quest.once,
-                  '_shadow-panel': !(quest.completed && quest.conce)
-                }
-              ]"
-            >
-              <header class="_flex _w-full _gap-2.5 _cursor-pointer">
-                <!-- icon -->
-                <div class="_size-[1.7em]">
-                  <img :src="quest.icon" class="_w-full _h-full _rounded-lg _block" />
-                </div>
-                <div class="_flex-1">
-                  <!-- title -->
-
-                  <div
-                    class="_min-h-[1.7em] _flex _items-center _justify-start _text-left _py-[0.06em] _text-stroke-xl _leading-snug"
-                    :class="{ '_line-through': quest.completed && quest.once }"
-                  >
-                    {{ quest.name }}
-                  </div>
-                </div>
-                <!-- right group -->
-                <div class="_flex _items-center _h-[1.7em] _gap-0.5 _relative _text-em-sm">
-                  <div
-                    v-if="!quest.enabled"
-                    class="_rounded-full _bg-metallic-cone _shadow-panel _px-[0.5em]"
-                  >
-                    soon
-                  </div>
-                  <div
-                    v-else
-                    class="_rounded-full _bg-metallic-cone _shadow-panel _pr-[0.5em] _pl-[0.25em] _flex _gap-[0.1em]"
-                  >
-                    <div>🪩</div>
-                    <span v-if="typeof quest.pachinkoBalls === 'string'">
-                      {{ quest.pachinkoBalls }}
-                    </span>
-                    <span v-else>{{ quest.pachinkoBalls }} </span>
-                  </div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="black"
-                    stroke-width="0.75"
-                    stroke="black"
-                    class="_size-6 sm:_size-7 _opacity-30 sm:_ml-0.5"
-                    :class="[
-                      {
-                        '_invisible _ml-4.5': quest.completed && quest.once,
-                        '_rotate-90':
-                          isTwitterEngagementQuestId(quest.id) && expandedTwitterTasks[quest.id]
-                      }
-                    ]"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </div>
-              </header>
-              <!-- (description) -->
-              <div
-                v-if="
-                  quest.description &&
-                  !(isTwitterEngagementQuestId(quest.id) && expandedTwitterTasks[quest.id])
-                "
-                class="_flex _items-start _gap-3 _pr-3"
-              >
-                <div class="_w-[1.7em] _flex-shrink-0"></div>
-                <p
-                  class="_flex-1 _text-em-xs _text-zinc-500 _text-stroke-lg _text-left"
-                  v-html="quest.description"
-                ></p>
-              </div>
-              <TwitterEngagementQuest
-                v-if="isTwitterEngagementQuestId(quest.id) && expandedTwitterTasks[quest.id]"
-                :mode="
-                  quest.id === 'twitter-like-tweet'
-                    ? 'like'
-                    : quest.id === 'twitter-reply-tweet'
-                      ? 'reply'
-                      : 'follow'
-                "
-                @points-updated="fetchUserPoints"
-              />
-              <!-- (progress) -->
-              <!-- <div v-if="quest.progress" class="_mt-2">
-                  <div class="_bg-zinc-300 _rounded-full _h-2">
-                    <div
-                      class="_bg-blue-600 _rounded-full _h-2"
-                      :style="{ width: `${quest.progress}%` }"
-                    ></div>
-                  </div>
-                </div> -->
-            </div>
-            <div
-              v-if="quest.completed && quest.once"
-              class="_absolute _top-0 _right-1 _flex _items-center _justify-center"
-            >
-              <img src="../assets/imgs/checkmark-icon-glass.png" class="_size-[2.5em]" />
-            </div>
-          </component>
+            :quest="quest"
+            :highlight="quest.id === highlightQuestPinId"
+            @points-updated="fetchUserPoints"
+          />
         </div>
       </div>
 
@@ -290,8 +158,7 @@
           </header>
           <div class="_flex _items-center _gap-[0.5em]">
             <p class="_flex-1 _text-center _text-stroke-2xl">
-              Swap BALL$ for <span class="_inline-block">lotto-balls</span><br />
-              in the
+              Add <span class="_inline-block">lotto-balls</span> to the next
               <button class="_underline" @click="openHub('games')">weekly USDC lottery</button>!
             </p>
           </div>
@@ -315,15 +182,16 @@
 <script setup>
 import HubPageHeader from '../components/HubPageHeader.vue'
 import { storeToRefs } from 'pinia'
-import { ref, onMounted, inject, watch, computed } from 'vue'
+import { ref, onMounted, inject, watch, computed, nextTick } from 'vue'
 import { possiblePoints } from '../config/pointsConfig'
 import SocialsButtons from '../components/SocialsButtons.vue'
 import SwapBalls from '../components/SwapBalls.vue'
 import TicketEmoji from '../components/TicketEmoji.vue'
-import TwitterEngagementQuest from '../components/TwitterEngagementQuest.vue'
+import QuestCard from '../components/QuestCard.vue'
 
 const auth = inject('TrifleHub/store')
-const { openHub } = inject('hub')
+const hub = inject('hub')
+const { openHub } = hub
 const quests = ref([])
 const loading = ref(true)
 const error = ref(null)
@@ -331,41 +199,24 @@ const totalBalls = ref(0)
 const filter = ref('all') // 'all', 'once', 'ongoing'
 const selectedTab = ref('earn')
 
-const expandedTwitterTasks = ref({})
-
 const { backendUrl, isAuthenticated } = storeToRefs(auth)
 
-const isTwitterEngagementQuestId = (id) =>
-  id === 'twitter-like-tweet' || id === 'twitter-reply-tweet' || id === 'follow-trifle-twitter'
-
-const handleQuestClick = (quest) => {
-  if (isTwitterEngagementQuestId(quest.id)) {
-    const current = expandedTwitterTasks.value[quest.id]
-    expandedTwitterTasks.value = {
-      ...expandedTwitterTasks.value,
-      [quest.id]: !current
-    }
-  } else if (quest.link?.to) {
-    handleLink(quest.link.to)
-  }
-}
-
-const handleLink = (link) => {
-  if (link == 'spend') {
-    selectedTab.value = 'spend'
-  } else {
-    openHub(link)
-  }
-}
 const openProfile = () => {
   auth.setProfileUsername(auth.user?.username)
   openHub('profile')
 }
 
+const highlightQuestPinId = computed(() => hub.highlightQuestId?.value)
+
 // Compute filtered quests based on the selected filter
 const filteredQuests = computed(() => {
   let questsToDisplay = []
-  const visibleQuests = quests.value.filter((quest) => !quest.hiddenFromQuests)
+  const currentPlatform = auth.isFarcaster ? 'farcaster' : 'web'
+  const visibleQuests = quests.value.filter(
+    (quest) =>
+      !quest.hiddenFromQuests &&
+      (!quest.platforms || quest.platforms.includes(currentPlatform))
+  )
   if (filter.value === 'all') {
     questsToDisplay = visibleQuests
   } else if (filter.value === 'once') {
@@ -376,7 +227,7 @@ const filteredQuests = computed(() => {
     questsToDisplay = visibleQuests
   }
 
-  return questsToDisplay.slice().sort((a, b) => {
+  const sorted = questsToDisplay.slice().sort((a, b) => {
     // Sort by enabled status first (enabled quests on top)
     if (a.enabled && !b.enabled) return -1
     if (!a.enabled && b.enabled) return 1
@@ -391,6 +242,17 @@ const filteredQuests = computed(() => {
 
     return 0 // Keep original array order for everything else
   })
+
+  const pinId = hub.highlightQuestId?.value
+  if (pinId) {
+    const idx = sorted.findIndex((q) => q.id === pinId)
+    if (idx > 0) {
+      const [item] = sorted.splice(idx, 1)
+      sorted.unshift(item)
+    }
+  }
+
+  return sorted
 })
 
 const fetchUserPoints = async () => {
@@ -475,6 +337,19 @@ watch(isAuthenticated, () => {
 onMounted(() => {
   fetchUserPoints()
 })
+
+watch(
+  () => [hub.highlightQuestId?.value, loading.value],
+  async ([pinId, isLoading]) => {
+    if (!pinId || isLoading) return
+    await nextTick()
+    document.getElementById(`thub-quest-${pinId}`)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest'
+    })
+  },
+  { flush: 'post' }
+)
 </script>
 
 <style scoped>
