@@ -35,11 +35,7 @@
           :disabled="trifleBallVisible && props.avatar3d !== false"
         >
           <img
-            :src="
-              auth.user
-                ? auth.user?.avatar || defaultAvatar
-                : trifleBallStill
-            "
+            :src="auth.user ? auth.user?.avatar || defaultAvatar : trifleBallStill"
             :style="{
               width: 'calc(100% / 3.15 * 2)',
               height: 'calc(100% / 3.15 * 2)'
@@ -146,7 +142,7 @@
                 class="_h-[5em] sm:_h-[6em] _origin-bottom"
                 :class="{ '_animate-wiggle-sm': props.hubPageKey === 'games' }"
               />
-              play
+              games
             </button>
             <button
               class="_flex _flex-col _items-center _gap-2 _pointer-events-auto _relative"
@@ -172,7 +168,7 @@
                 class="_h-11 sm:_h-14 _origin-bottom"
                 :class="{ '_animate-wiggle': props.hubPageKey === 'earn' }"
               />
-              earn
+              ball$
             </button>
             <button
               class="_flex _flex-col _items-center _gap-2 _pointer-events-auto _relative"
@@ -201,7 +197,7 @@
                   tabindex="-1"
                 ></object>
               </div>
-              account
+              profile
             </button>
           </nav>
           <!-- pages, scrollable -->
@@ -251,9 +247,7 @@ const menuButtonStyle = computed(() => {
 const { openHub } = inject('hub')
 const auth = inject('TrifleHub/store')
 
-const authUserAvatar = computed(() =>
-  !auth.user ? undefined : auth.user?.avatar || smileyFaceSvg
-)
+const authUserAvatar = computed(() => (!auth.user ? undefined : auth.user?.avatar || smileyFaceSvg))
 
 const trifleBall = ref(null)
 const trifleBallVisible = ref(false)

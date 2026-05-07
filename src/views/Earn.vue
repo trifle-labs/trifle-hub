@@ -158,8 +158,10 @@
           </header>
           <div class="_flex _items-center _gap-[0.5em]">
             <p class="_flex-1 _text-center _text-stroke-2xl">
-              Add <span class="_inline-block">lotto-balls</span> to the next
-              <button class="_underline" @click="openHub('games')">weekly USDC lottery</button>!
+              Add <span class="_inline-block">balls</span> to next week's
+              <button class="_underline" @click="openHub('games', false, { tab: 'lotteries' })">
+                USDC contest</button
+              >!
             </p>
           </div>
           <SwapBalls @getBallsClick="selectedTab = 'earn'" />
@@ -214,8 +216,7 @@ const filteredQuests = computed(() => {
   const currentPlatform = auth.isFarcaster ? 'farcaster' : 'web'
   const visibleQuests = quests.value.filter(
     (quest) =>
-      !quest.hiddenFromQuests &&
-      (!quest.platforms || quest.platforms.includes(currentPlatform))
+      !quest.hiddenFromQuests && (!quest.platforms || quest.platforms.includes(currentPlatform))
   )
   if (filter.value === 'all') {
     questsToDisplay = visibleQuests

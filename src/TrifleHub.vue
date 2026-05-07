@@ -48,6 +48,14 @@ const highlightQuestId = ref(
     ? String(Array.isArray(route.query.quest) ? route.query.quest[0] : route.query.quest)
     : null
 )
+const openTab = ref(
+  route.query.hub && route.query.tab
+    ? {
+        page: String(Array.isArray(route.query.hub) ? route.query.hub[0] : route.query.hub),
+        tab: String(Array.isArray(route.query.tab) ? route.query.tab[0] : route.query.tab)
+      }
+    : null
+)
 
 const watcherCleanup = { stop: null, timeout: null }
 let resolveFunction = null
@@ -56,7 +64,7 @@ const hubActions = {
   openHub: (
     page,
     closeAfterLogin = false,
-    { timeoutPeriod = 5 * 60 * 1_000, quest } = {}
+    { timeoutPeriod = 5 * 60 * 1_000, quest, tab } = {}
   ) => {
     if (page) {
       hubPageKey.value = page
@@ -65,6 +73,7 @@ const hubActions = {
       } else {
         highlightQuestId.value = null
       }
+      openTab.value = tab !== undefined ? { page, tab } : null
     }
 
     hubOpen.value = true
@@ -114,6 +123,7 @@ const hubActions = {
   closeHub: async () => {
     hubOpen.value = false
     highlightQuestId.value = null
+    openTab.value = null
     // Clean up watcher/timeout on close
     if (watcherCleanup.stop) {
       watcherCleanup.stop()
@@ -136,8 +146,10 @@ const hubActions = {
     if (page !== 'earn') {
       highlightQuestId.value = null
     }
+    openTab.value = null
   },
   highlightQuestId,
+  openTab,
   getAvailablePages: () => Object.keys(hubPages)
 }
 store.setCloseHubCallback(hubActions.closeHub)

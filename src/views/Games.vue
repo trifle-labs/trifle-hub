@@ -30,7 +30,7 @@
         @click="selectedTab = 'lotteries'"
         :style="selectedTab === 'lotteries' ? 'filter: hue-rotate(103deg) saturate(2)' : ''"
       >
-        lotteries
+        prizes
       </button>
     </nav>
     <!-- <div class="_grid _grid-cols-2 _gap-4">
@@ -141,12 +141,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, inject, watch } from 'vue'
 import HubPageHeader from '../components/HubPageHeader.vue'
 import anybodyTitleImg from '../assets/imgs/anybody-title.png'
 import SocialsButtons from '../components/SocialsButtons.vue'
 // import { sdk } from '@farcaster/miniapp-sdk'
 const today = new Date()
+const hub = inject('hub')
 
 const selectedTab = ref('games')
 
@@ -199,8 +200,8 @@ const games = [
 const lotteries = [
   {
     name: 'like-lottery',
-    title: 'WEEKLY LOTTOS',
-    link: 'https://trifle.life/lotteries',
+    title: 'WEEKLY PRIZES',
+    link: 'https://trifle.life/prizes',
     description: 'get BALL$ <span class="_not-italic">🪩</span> → win USDC',
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1757079745/lottery-gif-loop-better-shorter__16-9__240p-400br_f5bx63.mp4',
@@ -210,6 +211,18 @@ const lotteries = [
 ]
 
 const currentList = computed(() => (selectedTab.value === 'lotteries' ? lotteries : games))
+
+const applyOpenTab = (nextOpenTab) => {
+  if (!nextOpenTab || nextOpenTab.page !== 'games') return
+  selectedTab.value = nextOpenTab.tab === 'lotteries' ? 'lotteries' : 'games'
+}
+
+applyOpenTab(hub?.openTab?.value)
+
+watch(
+  () => hub?.openTab?.value,
+  (nextOpenTab) => applyOpenTab(nextOpenTab)
+)
 </script>
 
 <style scoped>
