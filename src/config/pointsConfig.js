@@ -165,10 +165,10 @@ export const possiblePoints = [
     link: snakeLink + '/tutorial'
   },
   {
-    name: 'Crank the lotto',
+    name: 'Crank Tilt',
     id: 'crank',
     icon: tiltLottoHead,
-    description: 'Earn BALL$ powering the lotto',
+    description: 'He likes to go fast',
     pachinkoBalls: '2/hr',
     kudzuBurn: 0,
     claimed: false,
@@ -177,10 +177,10 @@ export const possiblePoints = [
     link: lotteryLink
   },
   {
-    name: 'Crank the lotto on-chain',
+    name: 'Crank Tilt onchain',
     id: 'crank-onchain',
     icon: tiltLottoHead,
-    description: 'Bonus 4🪩 for cranking on-chain',
+    description: 'Bonus 4🪩 for cranking onchain',
     pachinkoBalls: '4/hr',
     kudzuBurn: 0,
     claimed: false,
@@ -189,7 +189,7 @@ export const possiblePoints = [
     link: lotteryLink
   },
   {
-    name: 'Yank lotto-balls from the lotto',
+    name: 'Yank weekly contests',
     id: 'yank-onchain',
     icon: tiltLottoHead,
     description: 'Earn +1🪩 every 10 yanks',
@@ -293,7 +293,7 @@ export const possiblePoints = [
     id: 'award-pending',
     icon: lotteryIcon,
     hiddenFromQuests: true,
-    // description: 'Swap unlimited 🪩 BALL$ for lotto-balls.',
+    // description: 'Swap unlimited 🪩 ball$ for lotto-balls.',
     // pachinkoBalls: '1+',
     // lottoBalls: '1+',
     // claimed: false,

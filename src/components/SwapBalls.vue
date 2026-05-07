@@ -179,7 +179,7 @@
         class="_flex-1 _bubble-btn _px-6 _h-16 _flex _items-center _justify-center _text-xl _text-stroke-2xl"
         :style="{ filter: canSwap ? 'hue-rotate(-345deg) saturate(2.5)' : 'none' }"
       >
-        <div :class="{ '_animate-scaleup-sm': canSwap }">ADD TO LOTTO</div>
+        <div :class="{ '_animate-scaleup-sm': canSwap }">ADD TO CONTEST</div>
       </button>
     </footer>
   </form>
