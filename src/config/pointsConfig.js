@@ -10,6 +10,7 @@ import gmIcon from '../assets/imgs/gm.svg'
 import snakeIcon from '../assets/imgs/snake-hub-icon.png'
 import lotteryIcon from '../assets/imgs/lottery-icon.png'
 import tiltLottoHead from '../assets/imgs/tilt-lotto-head-3.png'
+import airdropIcon from '../assets/imgs/disco-ball-emoji.png'
 import { platforms } from './socialsConfig'
 // import { sdk } from '@farcaster/miniapp-sdk'
 
@@ -151,6 +152,13 @@ export const possiblePoints = [
     icon: snakeIcon,
     hiddenFromQuests: true,
     link: snakeLink
+  },
+  {
+    name: 'Airdrop',
+    id: 'airdrop',
+    icon: airdropIcon,
+    activityText: 'Received an airdrop',
+    hiddenFromQuests: true
   },
   {
     name: 'Snake Tutorial',
