@@ -640,6 +640,9 @@ export class BallVisualizer {
 
     if (this.renderer) {
       this.renderer.dispose()
+      this.renderer.forceContextLoss() // dispose() frees GPU caches but not the GL context; this releases it
+      this.renderer.domElement?.remove() // detach the canvas Three appended in init()
+      this.renderer = null // drop the ref so the canvas/context can be GC'd
     }
   }
 
