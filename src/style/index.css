@@ -1,15 +1,11 @@
-/* fonts should not be loaded in a layer! */
 @import 'fonts.css';
 @import 'reset.css';
 
-/* other styles in a layer so you can order them in consumer app no matter when they're loaded */
-/* i.e with `@layer trifle-hub, app` */
-@layer trifle-hub {
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  :root {
+:root {
     --thub-color-blue: #4100ff;
     --thub-color-rot: #f43c34;
 
@@ -238,4 +234,3 @@
       border-image-width: 19px;
     }
   }
-}

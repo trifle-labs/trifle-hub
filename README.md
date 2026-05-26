@@ -69,6 +69,89 @@ Add the TrifleHub component to your app layout:
 </script>
 ```
 
+## Styles
+
+CSS is automatically injected when the plugin is registered — no separate stylesheet import is required.
+
+Since v1.1.0, all compiled styles ship inside `@layer trifle-hub`. This keeps trifle-hub's styles from polluting the global cascade and lets you control where they sit relative to your own CSS.
+
+trifle-hub ships its own element reset (preflight) inside `@layer trifle-hub.base`. If your app has no preflight of its own, trifle-hub provides the baseline for buttons, inputs, etc.
+
+### Layer order
+
+For trifle-hub's utility classes (e.g. `_bg-metallic-linear`, `_shadow-panel`) to correctly override element resets on tags like `<button>`, `trifle-hub` must be declared **after** `base` in the layer order. This ensures trifle-hub utility classes beat preflight resets, while your own app utilities still win over trifle-hub when they conflict.
+
+#### Why `index.html` — not your CSS file
+
+trifle-hub injects its CSS via JavaScript at runtime. Because CSS layer order is locked by the **first** appearance of each layer name, any `@layer` declaration in your app's CSS file may arrive too late if trifle-hub's JS runs first (which depends on import order in `main.js`).
+
+The safest approach for any Vite app is to declare the layer order as a `<style>` tag in `index.html`. It is processed by the browser before any JavaScript runs, so trifle-hub's injection always lands in the correct position.
+
+```html
+<!-- index.html <head> — before any <script> tags -->
+<style>@layer theme, base, trifle-hub, components, utilities;</style>
+```
+
+Include `theme` if you use Tailwind v4 (it has an extra `@layer properties, theme, ...` that v3 does not).
+
+#### Tailwind v4
+
+In `index.html`:
+
+```html
+<style>@layer properties, theme, base, trifle-hub, components, utilities;</style>
+```
+
+Your `style.css` needs no extra layer declaration:
+
+```css
+@import "tailwindcss";
+```
+
+#### Tailwind v3 — with your own preflight
+
+In `index.html`:
+
+```html
+<style>@layer base, trifle-hub, components, utilities;</style>
+```
+
+Tailwind v3 outputs **unlayered** CSS by default, which unconditionally beats any `@layer` rule. To opt in to the layer system, wrap each directive in an explicit `@layer` block in your CSS:
+
+```css
+@layer base {
+  @tailwind base;
+}
+@layer components {
+  @tailwind components;
+}
+@layer utilities {
+  @tailwind utilities;
+}
+```
+
+Any styles written outside a `@layer` block remain unlayered and beat everything above.
+
+#### Tailwind v3 — without your own preflight
+
+In `index.html`:
+
+```html
+<style>@layer trifle-hub;</style>
+```
+
+If your app has `@tailwind base` commented out (relying on trifle-hub's built-in reset), your unlayered `@tailwind components/utilities` output naturally beats `@layer trifle-hub` without needing any wrapping:
+
+```css
+/* @tailwind base; */   ← leave commented out
+@tailwind components;
+@tailwind utilities;
+```
+
+### Standalone CSS file
+
+The compiled stylesheet is available at `dist/trifle-hub.css` if you prefer to manage it explicitly (e.g., for SSR, critical CSS extraction, or strict layer ordering). The `style` field in the package manifest points to this file. If importing it directly, note that the JS bundle also auto-injects the CSS — disable one or the other to avoid loading styles twice.
+
 ## Available Provide/Inject Resources
 
 The TrifleHub plugin provides several resources via Vue's provide/inject system:
