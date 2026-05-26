@@ -69,6 +69,39 @@ Add the TrifleHub component to your app layout:
 </script>
 ```
 
+## Styles
+
+CSS is automatically injected when the plugin is registered — no separate stylesheet import is required.
+
+Since v1.1.0, all compiled styles ship inside `@layer trifle-hub`. This means:
+
+- **Tailwind v4 apps**: trifle-hub styles fall below your app's utilities in the default layer order, so your own classes always win.
+- **Tailwind v3 apps**: behavior is unchanged — unlayered app CSS still takes precedence over layered library styles.
+- **No Tailwind**: styles work as before; the `@layer` block is ignored by browsers that don't use cascade layers.
+
+### Controlling layer order
+
+If you need trifle-hub styles to appear at a specific position in your cascade (e.g., between base and your components), declare the order explicitly before your first import:
+
+```css
+/* Tailwind v4 */
+@layer trifle-hub, components, utilities;
+@import "tailwindcss";
+@import "@trifle/trifle-hub/dist/trifle-hub.css";
+```
+
+```css
+/* Tailwind v3 */
+@layer trifle-hub, components, utilities;
+@import "@trifle/trifle-hub/dist/trifle-hub.css";
+```
+
+When importing the standalone CSS file directly, the CSS auto-injection from the JS bundle is still active. To avoid loading styles twice, either remove the direct import or disable CSS injection from the JS side.
+
+### Standalone CSS file
+
+The compiled stylesheet is available at `dist/trifle-hub.css` if you prefer to manage it explicitly (e.g., for SSR, critical CSS extraction, or strict layer ordering). The `style` field in the package manifest points to this file.
+
 ## Available Provide/Inject Resources
 
 The TrifleHub plugin provides several resources via Vue's provide/inject system:
