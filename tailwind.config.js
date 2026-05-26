@@ -16,7 +16,6 @@ const emSizing = {
 }
 export default {
   prefix: '_',
-  corePlugins: { preflight: false },
   content: [
     // for vite build
     './src/**/*.{vue,js,ts,jsx,tsx}',

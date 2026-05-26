@@ -73,34 +73,58 @@ Add the TrifleHub component to your app layout:
 
 CSS is automatically injected when the plugin is registered — no separate stylesheet import is required.
 
-Since v1.1.0, all compiled styles ship inside `@layer trifle-hub`. This means:
+Since v1.1.0, all compiled styles ship inside `@layer trifle-hub`. This keeps trifle-hub's styles from polluting the global cascade and lets you control where they sit relative to your own CSS.
 
-- **Tailwind v4 apps**: trifle-hub styles fall below your app's utilities in the default layer order, so your own classes always win.
-- **Tailwind v3 apps**: behavior is unchanged — unlayered app CSS still takes precedence over layered library styles.
-- **No Tailwind**: styles work as before; the `@layer` block is ignored by browsers that don't use cascade layers.
+trifle-hub ships its own element reset (preflight) inside `@layer trifle-hub.base`. If your app has no preflight of its own, trifle-hub provides the baseline for buttons, inputs, etc.
 
-### Controlling layer order
+### Layer order
 
-If you need trifle-hub styles to appear at a specific position in your cascade (e.g., between base and your components), declare the order explicitly before your first import:
+For trifle-hub's utility classes (e.g. `_bg-metallic-linear`, `_shadow-panel`) to correctly override element resets on tags like `<button>`, `trifle-hub` must be declared **after** `base` in the layer order. This ensures trifle-hub utility classes beat preflight resets, while your own app utilities still win over trifle-hub when they conflict.
+
+#### Tailwind v4
+
+Declare the layer order before your Tailwind import. Include `base` explicitly so `trifle-hub` lands above it:
 
 ```css
-/* Tailwind v4 */
-@layer trifle-hub, components, utilities;
+@layer base, trifle-hub, components, utilities;
 @import "tailwindcss";
-@import "@trifle/trifle-hub/dist/trifle-hub.css";
 ```
+
+#### Tailwind v3 — with your own preflight
+
+Tailwind v3 outputs **unlayered** CSS by default, which unconditionally beats any `@layer` rule. To opt in to the layer system, wrap each directive in an explicit `@layer` block:
 
 ```css
-/* Tailwind v3 */
-@layer trifle-hub, components, utilities;
-@import "@trifle/trifle-hub/dist/trifle-hub.css";
+@layer base, trifle-hub, components, utilities;
+
+@layer base {
+  @tailwind base;
+}
+@layer components {
+  @tailwind components;
+}
+@layer utilities {
+  @tailwind utilities;
+}
 ```
 
-When importing the standalone CSS file directly, the CSS auto-injection from the JS bundle is still active. To avoid loading styles twice, either remove the direct import or disable CSS injection from the JS side.
+Any styles written outside a `@layer` block remain unlayered and beat everything above.
+
+#### Tailwind v3 — without your own preflight
+
+If your app has `/* @tailwind base; */` commented out (relying on trifle-hub's built-in reset), just declare the `trifle-hub` layer. Your unlayered `@tailwind components/utilities` output naturally beats `@layer trifle-hub` without needing any wrapping:
+
+```css
+@layer trifle-hub;
+
+/* @tailwind base; */   ← leave commented out
+@tailwind components;
+@tailwind utilities;
+```
 
 ### Standalone CSS file
 
-The compiled stylesheet is available at `dist/trifle-hub.css` if you prefer to manage it explicitly (e.g., for SSR, critical CSS extraction, or strict layer ordering). The `style` field in the package manifest points to this file.
+The compiled stylesheet is available at `dist/trifle-hub.css` if you prefer to manage it explicitly (e.g., for SSR, critical CSS extraction, or strict layer ordering). The `style` field in the package manifest points to this file. If importing it directly, note that the JS bundle also auto-injects the CSS — disable one or the other to avoid loading styles twice.
 
 ## Available Provide/Inject Resources
 
