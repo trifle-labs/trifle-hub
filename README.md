@@ -81,22 +81,44 @@ trifle-hub ships its own element reset (preflight) inside `@layer trifle-hub.bas
 
 For trifle-hub's utility classes (e.g. `_bg-metallic-linear`, `_shadow-panel`) to correctly override element resets on tags like `<button>`, `trifle-hub` must be declared **after** `base` in the layer order. This ensures trifle-hub utility classes beat preflight resets, while your own app utilities still win over trifle-hub when they conflict.
 
+#### Why `index.html` — not your CSS file
+
+trifle-hub injects its CSS via JavaScript at runtime. Because CSS layer order is locked by the **first** appearance of each layer name, any `@layer` declaration in your app's CSS file may arrive too late if trifle-hub's JS runs first (which depends on import order in `main.js`).
+
+The safest approach for any Vite app is to declare the layer order as a `<style>` tag in `index.html`. It is processed by the browser before any JavaScript runs, so trifle-hub's injection always lands in the correct position.
+
+```html
+<!-- index.html <head> — before any <script> tags -->
+<style>@layer theme, base, trifle-hub, components, utilities;</style>
+```
+
+Include `theme` if you use Tailwind v4 (it has an extra `@layer properties, theme, ...` that v3 does not).
+
 #### Tailwind v4
 
-Declare the layer order before your Tailwind import. Include `base` explicitly so `trifle-hub` lands above it:
+In `index.html`:
+
+```html
+<style>@layer properties, theme, base, trifle-hub, components, utilities;</style>
+```
+
+Your `style.css` needs no extra layer declaration:
 
 ```css
-@layer base, trifle-hub, components, utilities;
 @import "tailwindcss";
 ```
 
 #### Tailwind v3 — with your own preflight
 
-Tailwind v3 outputs **unlayered** CSS by default, which unconditionally beats any `@layer` rule. To opt in to the layer system, wrap each directive in an explicit `@layer` block:
+In `index.html`:
+
+```html
+<style>@layer base, trifle-hub, components, utilities;</style>
+```
+
+Tailwind v3 outputs **unlayered** CSS by default, which unconditionally beats any `@layer` rule. To opt in to the layer system, wrap each directive in an explicit `@layer` block in your CSS:
 
 ```css
-@layer base, trifle-hub, components, utilities;
-
 @layer base {
   @tailwind base;
 }
@@ -112,11 +134,15 @@ Any styles written outside a `@layer` block remain unlayered and beat everything
 
 #### Tailwind v3 — without your own preflight
 
-If your app has `/* @tailwind base; */` commented out (relying on trifle-hub's built-in reset), just declare the `trifle-hub` layer. Your unlayered `@tailwind components/utilities` output naturally beats `@layer trifle-hub` without needing any wrapping:
+In `index.html`:
+
+```html
+<style>@layer trifle-hub;</style>
+```
+
+If your app has `@tailwind base` commented out (relying on trifle-hub's built-in reset), your unlayered `@tailwind components/utilities` output naturally beats `@layer trifle-hub` without needing any wrapping:
 
 ```css
-@layer trifle-hub;
-
 /* @tailwind base; */   ← leave commented out
 @tailwind components;
 @tailwind utilities;
