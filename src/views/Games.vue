@@ -201,10 +201,9 @@ const games = [
 const lotteries = [
   {
     name: 'like-lottery',
-    title: 'NEW PRIZES SOON',
+    title: 'WEEKLY PRIZES',
     link: 'https://trifle.life/prizes',
-    linkDisabled: true,
-    // description: 'get BALL$ <span class="_not-italic">🪩</span> → win USDC',
+    description: 'get BALL$ <span class="_not-italic">🪩</span> → win USDC',
     // NOTE THIS ASSET IS ALSO USED ON THE EARN PAGE
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1757079745/lottery-gif-loop-better-shorter__16-9__240p-400br_f5bx63.mp4',
