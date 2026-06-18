@@ -47,8 +47,8 @@
         <div :key="selectedTab" class="_space-y-1">
           <section v-for="game in currentList" :key="game.name" class="_relative _group">
             <a
-              :href="game.link"
-              class="_block _pointer-events-auto _cursor-pointer _scale-[1.05] mouse:hover:_scale-[1.1] _duration-500"
+              :href="game.linkDisabled ? null : game.link"
+              class="_block _pointer-events-auto _scale-[1.05] mouse:hover:_scale-[1.1] _duration-500"
             >
               <figure
                 class="masked-oval _relative _flex _items-center _justify-center _pointer-events-none"
@@ -84,8 +84,8 @@
                 class="_bg-metallic-linearff _shadow-panel-insetff _rounded-lg _flex _items-center _w-fullff _justify-between _flex-col _gap-1 _shadow-panel-insetff _rounded-full _w-full _pb-5"
               >
                 <a
-                  :href="game.link"
-                  class="_-mt-8 _relative _z-10 _bg-metallic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _text-em-2xl sm:_text-em-3xl mouse:hover:_scale-[1.05] _duration-150"
+                  :href="game.linkDisabled ? null : game.link"
+                  class="_-mt-8 _relative _z-10 _bg-metallic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _text-em-2xl sm:_text-em-3xl mouse:hover:_scale-[1.05] _duration-150 _select-none"
                   :class="{
                     '_animate-rainbow-wiggle': game.isNewUntil > today && !game.title,
                     '_animate-rainbow-wiggle-sm': game.isNewUntil > today && game.title,
@@ -130,7 +130,7 @@
         <div class="_mt-4"></div>
 
         <div class="_opacity-[0.35] _animate-wiggle-sm _mb-0.5 _text-lg _text-stroke-mdff">
-          + blah blah blah's
+          follow for updates
         </div>
         <div class="_grid _grid-cols-2 _gap-2">
           <SocialsButtons />
@@ -166,6 +166,16 @@ const games = [
     isNewUntil: new Date('March 15, 2026')
   },
   {
+    name: 'anybody',
+    description: 'daily puzzle-shooter, win <span class="_not-italic">🪩</span>',
+    // link: anybodyLink,
+    link: 'https://anybody.gg',
+    bgVideo:
+      'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/c_scale,f_auto,q_auto:eco,w_400/v1748287290/anybody-gameplay-clip-2_cf6p3x.mov',
+    titleImg: anybodyTitleImg,
+    bgBlur: 2
+  },
+  {
     name: 'gm-game',
     title: 'GM GAME',
     // link: 'https://gm.trifle.life',
@@ -178,17 +188,8 @@ const games = [
     isNewUntil: new Date('July 15, 2025')
   },
   {
-    name: 'anybody',
-    description: 'daily puzzle-shooter, win <span class="_not-italic">🪩</span>',
-    // link: anybodyLink,
-    link: 'https://anybody.gg',
-    bgVideo:
-      'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/c_scale,f_auto,q_auto:eco,w_400/v1748287290/anybody-gameplay-clip-2_cf6p3x.mov',
-    titleImg: anybodyTitleImg,
-    bgBlur: 2
-  },
-  {
     name: 'kudzu',
+    title: 'ENDED',
     link: 'https://kudzu.rodeo',
     description: 'burn NFTs → win $TIA',
     bgVideo:
@@ -200,9 +201,11 @@ const games = [
 const lotteries = [
   {
     name: 'like-lottery',
-    title: 'WEEKLY PRIZES',
+    title: 'NEW PRIZES SOON',
     link: 'https://trifle.life/prizes',
-    description: 'get BALL$ <span class="_not-italic">🪩</span> → win USDC',
+    linkDisabled: true,
+    // description: 'get BALL$ <span class="_not-italic">🪩</span> → win USDC',
+    // NOTE THIS ASSET IS ALSO USED ON THE EARN PAGE
     bgVideo:
       'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1757079745/lottery-gif-loop-better-shorter__16-9__240p-400br_f5bx63.mp4',
     bgBlur: 0,
@@ -225,63 +228,6 @@ watch(
 )
 </script>
 
-<style scoped>
-.masked-oval {
-  --oval-mask: radial-gradient(
-    ellipse 80% 48% at 50% 50%,
-    rgba(0, 0, 0, 1) 70%,
-    rgba(0, 0, 0, 0.7) 78%,
-    rgba(0, 0, 0, 0.4) 86%,
-    rgba(0, 0, 0, 0.15) 93%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  -webkit-mask-image: var(--oval-mask);
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-image: var(--oval-mask);
-  mask-repeat: no-repeat;
-  mask-size: 100% 100%;
-}
-</style>
+<style scoped></style>
 
-<style>
-@layer trifle-hub {
-  ._animate-rainbow-wiggle {
-    animation: rainbow-wiggle 1s ease-in-out infinite;
-  }
-
-  ._animate-rainbow-wiggle-sm {
-    animation: rainbow-wiggle-sm 1s ease-in-out infinite;
-  }
-
-  @keyframes rainbow-wiggle {
-    0% {
-      filter: hue-rotate(0deg) brightness(1) contrast(1) saturate(3);
-      transform: rotate(-8deg);
-    }
-    50% {
-      filter: hue-rotate(180deg) brightness(1) contrast(1) saturate(3);
-      transform: rotate(8deg);
-    }
-    100% {
-      filter: hue-rotate(360deg) brightness(1) contrast(1) saturate(3);
-      transform: rotate(-8deg);
-    }
-  }
-
-  @keyframes rainbow-wiggle-sm {
-    0% {
-      filter: hue-rotate(0deg) brightness(1) contrast(1) saturate(3);
-      transform: rotate(-4deg);
-    }
-    50% {
-      filter: hue-rotate(180deg) brightness(1) contrast(1) saturate(3);
-      transform: rotate(4deg);
-    }
-    100% {
-      filter: hue-rotate(360deg) brightness(1) contrast(1) saturate(3);
-      transform: rotate(-4deg);
-    }
-  }
-}
-</style>
+<style></style>

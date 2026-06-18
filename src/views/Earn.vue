@@ -67,7 +67,7 @@
         @click="selectedTab = 'spend'"
         :style="selectedTab === 'spend' ? 'filter: hue-rotate(-345deg) saturate(2.5)' : ''"
       >
-        redeem
+        spend
       </button>
     </nav>
 
@@ -147,6 +147,80 @@
       <!-- (spend) -->
       <div v-if="selectedTab === 'spend'" class="_space-y-3">
         <section
+          class="_bg-metallic-coneff _-mx-2 _p-2.5ff _rounded-lg_shadow-panel-inset _text-center _flex _flex-col _gap-4"
+        >
+          <section v-for="game in lotteries" :key="game.name" class="_relative _group">
+            <a
+              :href="game.linkDisabled ? null : game.link"
+              class="_block _pointer-events-auto _cursor-pointer _scale-[1.05] mouse:hover:_scale-[1.1] _duration-500"
+            >
+              <figure
+                class="masked-oval _relative _flex _items-center _justify-center _pointer-events-none"
+                style="aspect-ratio: 14.5/9"
+              >
+                <video
+                  :src="game.bgVideo"
+                  autoplay
+                  muted
+                  playsinline
+                  webkit-playsinline
+                  preload="auto"
+                  loop
+                  class="_absolute _top-0 _left-0 _w-full _h-full _object-cover"
+                  :style="{
+                    filter: game.bgBlur ? `blur(${game.bgBlur}px)` : 'none'
+                    // imageRendering: 'pixelated'
+                  }"
+                  loading="lazy"
+                ></video>
+              </figure>
+            </a>
+            <div class="_px-2.5 _mx-6 _flex _justify-center _-mt-5 _relative _p-2">
+              <div
+                class="_bg-metallic-linearff _shadow-panel-insetff _rounded-lg _flex _items-center _w-fullff _justify-between _flex-col _gap-1 _shadow-panel-insetff _rounded-full _w-full _pb-5"
+              >
+                <a
+                  :href="game.linkDisabled ? null : game.link"
+                  class="_-mt-8 _relative _z-10 _bg-metallic-cone _shadow-panel _rounded-full _px-8 _py-1.5 _weight-black _text-em-2xl sm:_text-em-3xl mouse:hover:_scale-[1.05] _duration-150"
+                  :class="{
+                    '_animate-rainbow-wiggle-sm': true,
+                    // '_tracking-[0.2em]': !game.title,
+                    '_tracking-[0.05em]': game.title
+                  }"
+                >
+                  {{ game.title }}
+                  <!-- <template v-if="game.title">{{ game.title }}</template>
+                  <template v-else-if="game.isNewUntil > today">
+                    <span class="mouse:group-hover:_hidden">NEW</span>
+                    <span class="mouse:group-hover:_inline _hidden">PLAY</span>
+                  </template>
+                  <template v-else> PLAY </template> -->
+                </a>
+                <div
+                  v-if="game.description"
+                  class="_relative _-mt-3 _shadow-panel-inset _rounded-md"
+                >
+                  <p
+                    class="_px-4.5 _leading-none _py-4.5 _italic _opacity-50ff _whitespace-nowrap _text-stroke-lg _tracking-[0.01em]"
+                    v-html="game.description"
+                  ></p>
+                  <!-- (new badge) -->
+                  <!-- <div
+                  v-if="game.isNewUntil > today"
+                  class="_absolute _bottom-0 _right-0 _translate-x-[55%] _translate-y-[40%]"
+                >
+                  <div
+                    class="_bg-metallic-cone _shadow-panel _rounded-full _text-em-lg _weight-semibold _tracking-wide _px-[0.75em] _leading-none _pt-[0.2em] _pb-[0.27em] _animate-rainbow-wiggle"
+                  >
+                    new
+                  </div>
+                </div> -->
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+        <!-- <section
           class="_text-mlg _bg-metallic-linearff _p-2.5 _rounded-lg _shadow-panel-insetff _border-4 _border-dashed _border-black/20 _text-center _flex _flex-col _gap-4"
         >
           <header
@@ -165,14 +239,14 @@
             </p>
           </div>
           <SwapBalls @getBallsClick="selectedTab = 'earn'" />
-        </section>
+        </section> -->
       </div>
     </transition-group>
 
     <section
-      class="_mt-6 _bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3.5 _pb-5"
+      class="_mt-6 _bg-metallic-linear _p-4 _rounded-lg _shadow-panel _text-center _flex _flex-col _gap-3 _pb-5"
     >
-      <div class="_opacity-30 _animate-wiggle-sm">follow for more BALL$</div>
+      <header class="_-mt-0.5 _opacity-30 _animate-wiggle-sm">follow for updates</header>
 
       <div class="_grid _grid-cols-2 _gap-2">
         <SocialsButtons />
@@ -187,8 +261,8 @@ import { storeToRefs } from 'pinia'
 import { ref, onMounted, inject, watch, computed, nextTick } from 'vue'
 import { possiblePoints } from '../config/pointsConfig'
 import SocialsButtons from '../components/SocialsButtons.vue'
-import SwapBalls from '../components/SwapBalls.vue'
-import TicketEmoji from '../components/TicketEmoji.vue'
+// import SwapBalls from '../components/SwapBalls.vue'
+// import TicketEmoji from '../components/TicketEmoji.vue'
 import QuestCard from '../components/QuestCard.vue'
 
 const auth = inject('TrifleHub/store')
@@ -351,6 +425,19 @@ watch(
   },
   { flush: 'post' }
 )
+
+const lotteries = [
+  {
+    name: 'like-lottery',
+    title: 'NEW PRIZES SOON',
+    link: 'https://trifle.life/prizes',
+    linkDisabled: true,
+    bgVideo:
+      'https://gm-trifle.b-cdn.net/dsiwc6udm/video/upload/q_auto:eco/v1757079745/lottery-gif-loop-better-shorter__16-9__240p-400br_f5bx63.mp4',
+    bgBlur: 0,
+    isNewUntil: new Date('September 30, 2099')
+  }
+]
 </script>
 
 <style scoped>
